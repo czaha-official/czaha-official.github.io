@@ -6,35 +6,34 @@
     <meta name="google-site-verification" content="fMwnTMC8e_Fh-Q7RFGHXVuUYoOYzrnqw9fA65CAekn8" />
     <title>C'zaha Chell Tia Official Site</title>
 
-    <meta name="description" content="フリーな個人開発者、Japanituremod制作者、MTR向けアドオン Yunzhu Transit Extensionの日本語翻訳者C'zaha Chell Tia(略してザハ)の公式サイトです。MinecraftのMod開発、C#、C++、Javaについて紹介しています。">
-    <meta name="keywords" content="C'zaha Chell Tia, ザハ, Japanituremod, MTRJapanUsers, MJaS, Minecraft Mod">
+    <meta name="description" content="フリーな個人開発者、Japanituremod制作者、MTR向けアドオン Yunzhu Transit Extensionの日本語翻訳者C'zaha Chell Tia(略してザハ)の公式サイトです。">
+    <meta name="keywords" content="C'zaha Chell Tia, ザハ, Japanituremod, MTR, Minecraft Mod">
     <link rel="canonical" href="https://warudora.github.io/">
 
     <meta property="og:title" content="warudora Official Hub">
-    <meta property="og:description" content="Minecraft Mod Developer/どこにでもいるトランペット奏者/フリーの個人開発者 C'zaha Chell Tia OFFCIALSITE">
+    <meta property="og:description" content="Minecraft Mod Developer C'zaha Chell Tia OFFICIAL SITE">
     <meta property="og:url" content="https://czaha-official.github.io/">
     <meta property="og:image" content="https://czaha-official.github.io/profile_top.jpg">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@warudora36">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
+        /* ----------------------------------
+           1. 変数定義・基本設定
+        ---------------------------------- */
         :root {
             --primary-color: #2c3e50;
             --accent-color: #3498db;
-            --tool-color: #27ae60;
-            --link-color: #e67e22;
+            --bg-color: #f0f2f5;
+            --text-color: #2c3e50;
+            --white: #ffffff;
             --x-color: #000000;
             --insta-color: #E1306C;
             --yt-color: #FF0000;
             --discord-color: #5865F2;
-            --bg-color: #f0f2f5;
-            --text-color: #2c3e50;
-            --white: #ffffff;
-            --brand-color: #6c5ce7;
-            --server-color: #d35400;
-            --iriam-btn-grad: linear-gradient(135deg, #81ecec 0%, #45aaf2 100%);
         }
 
         body {
@@ -50,6 +49,9 @@
             -webkit-text-size-adjust: 100%;
         }
 
+        /* ----------------------------------
+           2. ヘッダー & ナビゲーション
+        ---------------------------------- */
         nav.top-nav {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(5px);
@@ -66,7 +68,6 @@
         .logo-area img { 
             height: 30px; 
             width: auto; 
-            transition: transform 0.3s; 
         }
 
         header {
@@ -83,6 +84,9 @@
             letter-spacing: 1px; 
         }
 
+        /* ----------------------------------
+           3. レイアウトコンテナ
+        ---------------------------------- */
         .container {
             max-width: 1200px;
             width: 90%;
@@ -91,6 +95,16 @@
             flex-grow: 1;
         }
 
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 1.8rem;
+        }
+
+        /* ----------------------------------
+           4. プロフィールカード
+        ---------------------------------- */
         .profile-card {
             background: var(--white);
             border-radius: 20px;
@@ -114,42 +128,10 @@
             flex-shrink: 0;
         }
 
-        @media (max-width: 768px) {
-            header { padding: 4rem 1rem 6rem; }
-            header h1 { font-size: 1.8rem; }
-            
-            .container { 
-                width: 94%; 
-                margin-top: -10px;
-            }
-            
-            .profile-card { 
-                flex-direction: column; 
-                align-items: center; 
-                text-align: center; 
-                padding: 2rem 1.5rem; 
-                gap: 20px;
-            }
-
-            .profile-thumb {
-                width: 130px;
-                height: 130px;
-            }
-
-            .button-group { justify-content: center; }
-            
-            .iriam-banner { padding: 3rem 1.5rem; }
-            .btn-iriam-custom { width: 100%; box-sizing: border-box; }
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.8rem;
-            margin-bottom: 1.8rem;
-        }
-
-        section {
+        /* ----------------------------------
+           5. ユニット（共通カード）化スタイル
+        ---------------------------------- */
+        .card {
             background: var(--white);
             border-radius: 16px;
             padding: 1.8rem;
@@ -157,28 +139,42 @@
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
         }
 
-        section:hover { 
+        .card:hover { 
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
 
-        h2 {
-            font-size: 1.3rem;
-            margin-top: 0;
-            padding-bottom: 0.8rem;
+        .card-header {
             border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-header h2 {
+            font-size: 1.3rem;
+            margin: 0;
             color: var(--primary-color);
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .work-item h3 { margin: 12px 0 6px 0; font-size: 1.05rem; }
-        .work-item p { font-size: 0.88rem; color: #666; margin-bottom: 12px; }
+        .card-body h3 {
+            margin: 10px 0 6px 0;
+            font-size: 1.1rem;
+        }
 
-        .badge {
+        .card-body p {
+            font-size: 0.88rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        /* 共通タグ */
+        .card-tag {
             display: inline-block;
             font-size: 0.65rem;
             font-weight: bold;
@@ -187,13 +183,18 @@
             background: #edf2f7;
             color: var(--accent-color);
         }
-        .badge-tool { background: #e6fffa; color: var(--tool-color); }
-        .badge-brand { background: #f3f0ff; color: var(--brand-color); }
-        .badge-server { background: #fff5eb; color: var(--server-color); }
 
-        .button-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
+        /* ----------------------------------
+           6. 共通ボタンユニット
+        ---------------------------------- */
+        .button-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: auto;
+        }
 
-        .link-btn {
+        .btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -207,75 +208,31 @@
             color: var(--text-color);
         }
 
-        .link-btn:hover { background: #f8f9fa; transform: translateY(-2px); }
-        .link-btn.btn-x:hover { background: var(--x-color); color: white; border-color: var(--x-color); }
-        .link-btn.btn-discord:hover { background: var(--discord-color); color: white; border-color: var(--discord-color); }
-        .link-btn.btn-primary { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .btn:hover { background: #f8f9fa; transform: translateY(-2px); }
+        .btn-x:hover { background: var(--x-color); color: white; border-color: var(--x-color); }
+        .btn-insta { color: var(--insta-color); border-color: var(--insta-color); }
+        .btn-yt { color: var(--yt-color); border-color: var(--yt-color); }
+        .btn-discord:hover { background: var(--discord-color); color: white; border-color: var(--discord-color); }
+        .btn-primary { background: var(--accent-color); color: white; border-color: var(--accent-color); }
 
-        /* IRIAMバナー設定 */
-        .iriam-banner {
-            background: var(--white);
-            color: var(--text-color);
-            text-align: center;
-            padding: 3.5rem 2rem;
-            position: relative;
-            overflow: hidden;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-            transition: all 0.3s ease;
-        }
-
-        .iriam-banner:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-
-        .iriam-banner h2 {
-            justify-content: center;
-            border-bottom: none;
-            padding-bottom: 0;
-            font-size: 1.6rem;
-            margin-top: 0.5rem; /* アイコンを消した分のバランスを調整 */
-        }
-
-        .iriam-divider {
-            width: 60%;
-            max-width: 400px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #3498db, transparent);
-            margin: 1.2rem auto 1.8rem;
-            opacity: 0.5;
-        }
-
-        .iriam-banner p {
-            font-size: 0.95rem;
-            max-width: 650px;
-            margin: 0 auto 2rem;
-            color: var(--text-color);
-        }
-
-        .btn-iriam-custom {
-            display: inline-block;
-            background: var(--iriam-btn-grad);
-            color: white;
-            padding: 14px 45px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.05rem;
-            box-shadow: 0 6px 15px rgba(69, 170, 242, 0.3);
-            transition: all 0.3s ease;
-            border: none;
-        }
-
-        .btn-iriam-custom:hover { transform: translateY(-3px) scale(1.02); filter: brightness(1.05); }
-
+        /* ----------------------------------
+           7. フッター & トップへ戻るボタン
+        ---------------------------------- */
         footer {
             background: var(--primary-color);
-            color: rgba(255,255,255,0.6);
+            color: rgba(255,255,255,0.7);
             text-align: center;
             padding: 3rem 1rem;
             margin-top: 3rem;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        footer p { margin: 0.5rem 0; }
+
+        .sqex-copyright {
+            color: #bdc3c7;
+            font-size: 0.8rem;
         }
 
         #back-to-top {
@@ -302,7 +259,15 @@
 
         #back-to-top.show { opacity: 1; visibility: visible; }
 
-        hr { border: 0; border-top: 1px solid #f0f2f5; margin: 1.2rem 0; }
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            header { padding: 4rem 1rem 6rem; }
+            header h1 { font-size: 1.8rem; }
+            .container { width: 94%; margin-top: -10px; }
+            .profile-card { flex-direction: column; align-items: center; text-align: center; padding: 2rem 1.5rem; gap: 20px; }
+            .profile-thumb { width: 130px; height: 130px; }
+            .button-group { justify-content: center; }
+        }
     </style>
 </head>
 <body>
@@ -319,6 +284,7 @@
 </header>
 
 <div class="container">
+    <!-- プロフィールユニット -->
     <div class="profile-card">
         <img src="profile_top.jpg" alt="warudora" class="profile-thumb" onerror="this.src='https://via.placeholder.com/150'">
         <div>
@@ -326,87 +292,61 @@
             <p>
                 Japanituremod制作者、Yunzhu Transit Extensionの日本語翻訳者の<strong>C'zaha Chell tia</strong>です。<br>
                 Japanituremodの制作陣、個人開発者として、クリエイティブな活動をしております。<br>
-                MinecraftのMod開発や便利なシステムの構築などを通じ、新しい体験を届けることを目標にしています。
+                MinecraftのMod開発などを通じ、新しい体験を届けることを目標にしています。
             </p>
             <div class="button-group">
-                <a href="https://x.com/warudora36" class="link-btn btn-x" target="_blank"><i class="fab fa-x-twitter"></i> X</a>
-                <a href="https://www.instagram.com/warudora36/?__pwa=1" class="link-btn" style="color:#E1306C; border-color:#E1306C;" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
-                <a href="https://www.youtube.com/@%E3%83%AF%E3%83%AB%E3%83%89%E3%83%A9" class="link-btn" style="color:#FF0000; border-color:#FF0000;" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+                <a href="https://x.com/warudora36" class="btn btn-x" target="_blank"><i class="fab fa-x-twitter"></i> X</a>
+                <a href="https://www.instagram.com/warudora36/?__pwa=1" class="btn btn-insta" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+                <a href="https://www.youtube.com/@%E3%83%AF%E3%83%AB%E3%83%89%E3%83%A9" class="btn btn-yt" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
             </div>
         </div>
     </div>
 
+    <!-- グリッド領域（各開発物・コンテンツをユニット化して配置） -->
     <div class="grid">
-        <section>
-            <h2><i class="fas fa-users"></i> Community</h2>
-            <div class="work-item">
-                <span class="badge">MTR Official JP Admin</span>
-                <h3>Yunzhu Transit Extansion</h3>
-                <p>エレベーターの操作盤や挙動を忠実に再現したMOD。MTRが前提　MTRのエレベーターがリアリティが凄まじくなるMODです。日本語翻訳はわたくしザハが担当しました。</p>
-                <div class="button-group">
-                    <a href="https://discord.gg/your-link" class="link-btn btn-discord" target="_blank"><i class="fab fa-discord"></i> Join Discord</a>
-                </div>
-            </div>
-            <hr>
-            <div class="work-item">
-                <span class="badge badge-server">Minecraft Server</span>
-                <h3>MJaS</h3>
-                <p>MTRModを使用したMTRJapanUsers公式の日本最大級のMinecraftサーバー。鉄道・建築の場を提供。</p>
-                <div class="button-group">
-                    <a href="http://pro1.ssnetwork.io:54103/homepage/home" class="link-btn btn-primary" target="_blank"><i class="fas fa-home"></i> Official HP</a>
-                    <a href="https://x.com/MJaS2024_MTR" class="link-btn btn-x" target="_blank"><i class="fab fa-x-twitter"></i> Official X</a>
-                </div>
-            </div>
-        </section>
 
-        <section>
-            <h2><i class="fas fa-laptop-code"></i> Projects & Sales</h2>
-            <div class="work-item">
-                <span class="badge badge-brand">Engineer / Sales</span>
-                <h3>5H1H0 Official Site</h3>
-                <p>所属ブランドの公式サイト。エンジニアとして構築を、販売担当としてプロダクト管理を行っています。</p>
-                <div class="button-group">
-                    <a href="https://shihomotozono.com/" class="link-btn btn-primary" target="_blank"><i class="fas fa-external-link-alt"></i> View Site</a>
+        <!-- ユニット1: Yunzhu Transit Extension (YTE) -->
+        <article class="card">
+            <div>
+                <div class="card-header">
+                    <h2><i class="fas fa-cube"></i> Mod Translation</h2>
+                </div>
+                <div class="card-body">
+                    <span class="card-tag">MTR Addon / Translation</span>
+                    <h3>Yunzhu Transit Extension</h3>
+                    <p>エレベーターの操作盤や挙動を忠実に再現したMOD（MTR前提）。エレベーターのリアリティが深まるMODです。日本語翻訳をザハが担当しました。</p>
                 </div>
             </div>
-            <hr>
-            <div class="work-item">
-                <span class="badge badge-tool">Desktop Tool (exe)</span>
-                <h3>駅名標エディター</h3>
-                <p>高品質な駅名標をデザインできるツール。Googleドライブからexeファイルをダウンロード可能です。</p>
-                <div class="button-group">
-                    <a href="https://drive.google.com/drive/folders/19q8T3CVB1trJgwMbGFnxpcy8ti7r1VvV" class="link-btn" target="_blank"><i class="fas fa-download"></i> Download</a>
-                </div>
+            <div class="button-group">
+                <a href="https://modrinth.com/mod/yunzhu-transit-extension" class="btn btn-primary" target="_blank"><i class="fas fa-download"></i> Download</a>
             </div>
-        </section>
+        </article>
 
-        <section>
-            <h2><i class="fas fa-cube"></i> Mod Development</h2>
-            <div class="work-item">
-                <span class="badge">Minecraft Mod</span>
-                <h3>Japanituremod</h3>
-                <p>日本の家具や家電を追加し、現代建築を彩るMod。幅広い建築が可能になることを目指しています。</p>
-                <div class="button-group">
-                    <a href="https://modrinth.com/mod/japaniture/versions" class="link-btn btn-primary" target="_blank"><i class="fas fa-download"></i> Download</a>
+        <!-- ユニット2: Japanituremod -->
+        <article class="card">
+            <div>
+                <div class="card-header">
+                    <h2><i class="fas fa-cubes"></i> Mod Development</h2>
+                </div>
+                <div class="card-body">
+                    <span class="card-tag">Minecraft Mod</span>
+                    <h3>Japanituremod</h3>
+                    <p>日本の家具や家電を追加し、現代建築を彩るMod。幅広い建築が可能になることを目指して開発を行っています。</p>
                 </div>
             </div>
-            <hr>
-            <div class="work-item">
-                <span class="badge badge-tool">Web Tool</span>
-                <h3>soundjson Generator</h3>
-                <p>リソースパックのjson作成を自動化。クリエイターの工数削減を目的としたWebシステムです。</p>
-                <div class="button-group">
-                    <a href="https://sakurapack.f5.si/" class="link-btn" target="_blank"><i class="fas fa-bolt"></i> Use Tool</a>
-                </div>
+            <div class="button-group">
+                <a href="https://modrinth.com/mod/japaniture/versions" class="btn btn-primary" target="_blank"><i class="fas fa-download"></i> Download</a>
             </div>
-        </section>
+        </article>
+
     </div>
+</div>
 
-
+<!-- フッター -->
 <footer>
     <p class="sqex-copyright">
         アカウントアイコン、ロドストツールチップ、ファンキット等の素材の著作権はスクウェア・エニックスに帰属します。<br>
-        &copy; ©SQUARE ENIX
+        &copy; SQUARE ENIX
     </p>
     <p>&copy; <span id="current-year"></span> C'zaha Chell tia. All Rights Reserved.</p>
     <div style="margin-top: 10px; font-size: 0.75rem;">
@@ -419,7 +359,10 @@
 </button>
 
 <script>
+    // 年数の自動更新
     document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // トップに戻るボタンの制御
     const backToTopBtn = document.getElementById('back-to-top');
 
     window.addEventListener('scroll', () => {
