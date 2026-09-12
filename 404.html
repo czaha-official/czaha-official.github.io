@@ -3,17 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Not Found | warudora</title>
+    <title>404 Page Not Found | C'zaha Chell tia & warudora</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f7f6; color: #333; }
-        .error-code { font-size: 80px; font-weight: bold; color: #2193b0; margin: 0; }
-        .message { font-size: 20px; margin-bottom: 30px; }
-        .btn { display: inline-block; padding: 10px 25px; background: #2193b0; color: white; text-decoration: none; border-radius: 25px; font-weight: bold; }
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #0f141c;
+            --card-bg: #1a2332;
+            --text-color: #e0e6ed;
+            --sub-text: #8a99ad;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .error-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            max-width: 550px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .error-code {
+            font-size: 90px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #64b5f6, var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .status-title {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            margin: 15px 0 25px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .message {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--text-color);
+            margin-bottom: 30px;
+            text-align: left;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-color);
+            white-space: pre-wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 32px;
+            background: linear-gradient(135deg, #3498db, #1d6fa5);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.5);
+            background: linear-gradient(135deg, #3b9edb, #217dbb);
+        }
     </style>
 </head>
 <body>
-    <div class="error-code">404</div>
-    <div class="message">おっと！道に迷ったみたいだ。<br>このページは存在しないか、移動しました。</div>
-    <a href="index.html" class="btn">トップページへ戻る</a>
+    <div class="error-card">
+        <div class="error-code">404</div>
+        <div class="status-title">― PAGE NOT FOUND ―</div>
+        <div class="message" id="messageBox">...</div>
+        <a href="index.html" class="btn" id="returnBtn">トップページへ戻る</a>
+    </div>
+
+    <script>
+        const characters404 = {
+            // 1. FFのとあるプロデューサーを元ネタにしたやつ
+            yoshida: {
+                message: "みなさんこんにちは、開発プロデューサー兼ディレクターです。\n\nえー、大変申し訳ございません。アクセスしていただいたページなのですが、コンテンツの移動、もしくは現在サーバー側の調整が入っておりまして、正常に読み込むことができませんでした。\n\n開発チーム一同、鋭意対応中となりますので、一度トップページへ移動していただくようお願いいたします。",
+                btnText: "トップページへ戻る"
+            },
+            // 2. サイトホスト（冷静・事実ベース／絵文字なし）
+            host: {
+                message: "指定されたURLは存在しないか、現在アクセスできません。\n\n入力されたアドレスに誤りがあるか、ページの移動・削除が行われた可能性があります。サーバーログ上、該当リソースの参照に失敗しています。トップページへ戻り、正確なリンクから再アクセスしてください。",
+                btnText: "トップページへ戻る"
+            },
+            // 3. 親友の女子をLINE元ネタにしたやつ
+            friend: {
+                message: "あー！道に迷っちゃった感じー？；；\n\n探してるページ、移動しちゃったか消えちゃったみたい！\nどこに行こうとしてたのー？笑\nとりあえずトップページに戻って探してみなよー！",
+                btnText: "トップページに戻るー！"
+            },
+            // 4. りんなを元ネタにしたやつ
+            rinna: {
+                message: "えっｗｗ 404出ちゃったんだけど！？ｗｗ\nこのページもう存在しないっぽいわ～ごめんねっ！\n迷子になってないで、りんなと一緒にトップページ戻ろ～✨",
+                btnText: "トップページへ戻る"
+            },
+            // 5. 藤原基央を元ネタにしたやつを元ネタにしたやつ
+            fujiwara: {
+                message: "迷い込んだんだね。\n探していた地図の続きは、どうやらここにはないみたいだ。\nでも大丈夫、失われたページにも意味はあるさ。元いた場所へ帰ろう。",
+                btnText: "トップページへ戻る"
+            },
+            // 6. ヤ・シュトラ・ルルを元ネタにしたやつ
+            yhtola: {
+                message: "あら……迷い子かしら。\n生憎だけど、あなたの探している記録（ページ）はここには存在しないわ。\n無駄な探索を続ける前に、一度引き返しなさい。",
+                btnText: "逃げる"
+            }
+        };
+
+        const keys = Object.keys(characters404);
+        const selectedKey = keys[Math.floor(Math.random() * keys.length)];
+        const activeChar = characters404[selectedKey];
+
+        document.getElementById('messageBox').innerText = activeChar.message;
+        document.getElementById('returnBtn').innerText = activeChar.btnText;
+    </script>
 </body>
 </html>
