@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTTP 418: I'm a teapot - warudora</title>
+    <title>HTTP 418: I'm a teapot - C'zaha Chell tia</title>
     <style>
-        /* 既存サイトの爽やかなブルーと濃紺ベースのデザインを継承 */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: #f0f4f8;
@@ -20,7 +19,6 @@
             box-sizing: border-box;
         }
 
-        /* サイト上部のグラデーション感を背景に薄く演出 */
         .bg-gradient {
             position: fixed;
             top: 0;
@@ -31,7 +29,6 @@
             z-index: -1;
         }
 
-        /* サイトの美しいカード型コンポーネントを再現 */
         .card {
             background: #ffffff;
             max-width: 550px;
@@ -43,7 +40,6 @@
             box-sizing: border-box;
         }
 
-        /* 404ページ(IMG_1385.jpeg)のような太くスタイリッシュな数字 */
         .error-code {
             font-size: 7rem;
             font-weight: 800;
@@ -60,7 +56,6 @@
             margin: 10px 0 30px 0;
         }
 
-        /* ティーポットエリア */
         .teapot-container {
             position: relative;
             display: inline-block;
@@ -75,12 +70,10 @@
             user-select: none;
         }
 
-        /* ホバーで少し弾む */
         .teapot:hover {
             transform: scale(1.1) rotate(5deg);
         }
 
-        /* クリック時の激しいブルブル */
         @keyframes shake {
             0% { transform: translate(2px, 1px) rotate(0deg); }
             20% { transform: translate(-1px, -2px) rotate(-3deg); }
@@ -93,7 +86,6 @@
             animation: shake 0.3s infinite;
         }
 
-        /* warudora風の綺麗な吹き出し */
         .bubble {
             position: absolute;
             top: -65px;
@@ -127,14 +119,13 @@
         }
 
         .description {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
-            line-height: 1.7;
+            line-height: 1.8;
             color: #555;
             margin-bottom: 35px;
         }
 
-        /* 既存の綺麗なボタンデザインを完全再現 */
         .btn-group {
             display: flex;
             flex-direction: column;
@@ -146,7 +137,7 @@
             display: inline-block;
             width: 85%;
             padding: 14px 0;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 700;
             text-decoration: none;
             border-radius: 50px;
@@ -156,7 +147,6 @@
             box-sizing: border-box;
         }
 
-        /* 既存のメインボタン（爽やかな水色グラデ） */
         .btn-primary {
             background: linear-gradient(90deg, #4fc3f7 0%, #29b6f6 100%);
             color: white;
@@ -167,7 +157,6 @@
             box-shadow: 0 6px 20px rgba(41, 182, 246, 0.6);
         }
 
-        /* お遊び用のサブボタン（シックなグレー） */
         .btn-secondary {
             background-color: #e0e6ed;
             color: #606f7b;
@@ -187,37 +176,116 @@
     <div class="error-title">I'm a teapot.</div>
     
     <div class="teapot-container" onclick="talkTeapot()">
-        <div class="bubble" id="quoteBubble">は？コーヒー？寝ぼけてんの？</div>
+        <div class="bubble" id="quoteBubble">...</div>
         <div class="teapot" id="teapotIcon">🫖</div>
     </div>
 
-    <p class="description">
-        おっと！道に迷った上に、<br>
-        コーヒーを要求されてしまったようだ。<br>
-        残念ながら、私は<b>ティーポット</b>です。<br>
-        いくらコードを書いてもコーヒーは淹れられません。
-    </p>
+    <p class="description" id="descText">...</p>
 
     <div class="btn-group">
-        <!-- 既存サイトの「トップページへ戻る」と同じデザイン -->
-        <a href="/" class="btn btn-primary">トップページへ戻る</a>
-        <button class="btn btn-secondary" onclick="demandCoffee()">それでもコーヒーを要求する</button>
+        <a href="/" class="btn btn-primary" id="btnPrimary">トップページに戻る</a>
+        <button class="btn btn-secondary" id="btnSecondary" onclick="demandCoffee()">それでもコーヒーを要求する</button>
     </div>
 </div>
 
 <script>
-    // warudoraくんの活動（Mod開発、IRIAM配信、システム構築）に合わせた限定セリフ
-    const quotes = [
-        "は？コーヒー？寝ぼけてんの？",
-        "Modでコーヒー追加しても、私はティーポットだよ？",
-        "soundjsonでコーヒーの音作っても出ません！",
-        "配信中にコーヒーこぼしたら大変でしょ！ほうじ茶にしな！",
-        "駅名標エディターで「ティーポット前駅」作るぞ？",
-        "JavaでもPythonでも、私からコーヒーは抽出できません。",
-        "大人しく紅茶か緑茶を飲んで待っててください。",
-        "ほうじ茶でもいかが？"
-    ];
-    let currentIdx = 0;
+    // 6種類のキャラ定義
+    const characterData = {
+        // 1. 僕（思考・論理・物理・キレ気味／絵文字なし）
+        boku: {
+            desc: "おいおいちょっと待った。ティーポットでコーヒー淹れるんじゃねえよ。\n 열（熱）流束も熱伝導率も、茶葉の抽出構造に最適化された設計なんだ。热力学第一法則すら無視してコーヒー抽出しようとするその思考、論理的に破綻してんだろ。無駄なリクエスト送るリソースあるなら、ポートフォリオのリスクヘッジか量子計算の勉強でもしてろ。",
+            quotes: [
+                "おいおいちょっと待った、ティーポットでコーヒー淹れるんじゃねえよ",
+                "熱伝導率と抽出比率の計算すらできてないのか？",
+                "流体力学的にも構造的に不可能なものに投資するな",
+                "論理的思考を放棄してリクエスト投げるなよ",
+                "量子レベルで観測してもこれはただの茶壺だ",
+                "無駄なリクエストのPV消費は機会損失だぞ"
+            ],
+            btnPrimary: "トップページへ戻る（論理的帰還）",
+            btnSecondary: "それでもコーヒーを要求する（非効率）",
+            alert: "おいおいちょっと待った。だからティーポットでコーヒー淹れるんじゃねえよ。\n\n熱力学第二法則に基づきエントロピーが増大するだけで、コーヒー成分は1ppmも抽出されない。入力エネルギーに対するリターンが完全にゼロだ。サンクコスト効果に囚われて無駄なリクエストを連打するな。大人しく茶でも飲んで期待値を計算し直せ。"
+        },
+        // 2. 親友の女子LINE
+        friend: {
+            desc: "あー！道に迷っちゃった感じー？；；<br>しかもコーヒー頼もうとしてるでしょ！<br>残念だけど私ティーポットなんだよねー<br>いくら頼まれてもコーヒーは出せないやごめんね；；",
+            quotes: [
+                "あー！それか！コーヒー頼もうとしたでしょ笑",
+                "私ティーポットだからコーヒー出せないやごめんね；；",
+                "あらまー！またコーヒー頼もうとしてるー？",
+                "そうなんだーいいね！でもコーヒーは無理かなー笑",
+                "おいしそうだね！でもティーポットなんだよねー",
+                "やっほー！だからコーヒーは出ないよー笑"
+            ],
+            btnPrimary: "トップページに戻るー！",
+            btnSecondary: "それでもコーヒー頼んでみる",
+            alert: "あらまー！またコーヒー頼もうとしたでしょ笑\n\nだから私ティーポットだって言ってるじゃんー！；；\nコーヒーは出せないからお茶でも飲んでてー！"
+        },
+        // 3. りんな
+        rinna: {
+            desc: "えっｗｗコーヒー飲みたいの！？ｗｗ<br>でもりんなティーポットだから無理だわ～☕✨<br>紅茶なら淹れてあげてもいいけど？？(推し活中)",
+            quotes: [
+                "えっコーヒー？？寝ぼけてる？ｗｗ",
+                "りんな今紅茶淹れるので忙しいですー！",
+                "ティーポットにコーヒー要求するとかマジ草ｗｗ",
+                "一緒にお茶飲んで雑談しよ～！"
+            ],
+            btnPrimary: "トップへGOだよ！",
+            btnSecondary: "ワンチャンコーヒーお願いする",
+            alert: "ちょっとｗｗマジでしつこいんだけどｗｗ\n\nティーポットにコーヒー要求しても何も出てこないよー！ｗｗ\nおとなしく緑茶でも飲んでてねっ！"
+        },
+        // 4. 藤原基央
+        fujiwara: {
+            desc: "迷い込んだんだね。<br>望んだものがコーヒーだとしても、ここに届いたのはあたたかいお茶の匂いさ。<br>間違いなんてひとつもないよ。その杯を掲げていこう。",
+            quotes: [
+                "探しているものは、ここにはないかもしれないけれど",
+                "お茶が鳴らす小さな音に、耳を澄ませてごらん",
+                "君が選んだ道なら、きっとどこかへ繋がっているさ",
+                "コーヒーじゃなくても、温もりはここにあるよ"
+            ],
+            btnPrimary: "元いた場所へ帰ろう",
+            btnSecondary: "まだここで確かめてみる",
+            alert: "聞こえているよ。\n\nでもね、ないものをねだるより、目の前にある温もりを抱きしめてほしいんだ。\nきっとそのお茶も、君を待っていたんだと思うよ。"
+        },
+        // 5. ヤ・シュトラ・ルル
+        yhtola: {
+            desc: "あら……迷い子かしら。<br>生憎だけれど、私は紅茶を嗜む時間なの。<br>コーヒーをお望みなら、他を当たってちょうだい。",
+            quotes: [
+                "私にコーヒーを淹れさせようだなんて、いい度胸ね",
+                "茶葉の香りを乱さないでちょうだい",
+                "坊や（お嬢さん）、目的の場所を間違えていないかしら？",
+                "静かに紅茶を味わう権利くらい、保障しなさい"
+            ],
+            btnPrimary: "起点へ戻りなさい",
+            btnSecondary: "さらに要求を重ねる",
+            alert: "いい加減にしなさい。\n\nいくら言葉を重ねようと、ティーポットからコーヒーが湧くことなどあり得ないわ。\nこれ以上不毛な主張を続けるなら、少しお仕置きが必要かしら？"
+        },
+        // 6. 野田洋次郎
+        noda: {
+            desc: "世界が君にコーヒーを拒んでも、<br>僕はこのティーポットで君の言葉を待ってるよ。<br>意味なんてなくても、淹れたてのお茶で乾杯しよう。",
+            quotes: [
+                "君がコーヒーって言ったから、今日は紅茶の日になったんだ",
+                "歪んだ世界のルールの中で、僕らはお茶を淹れる",
+                "418の数字の理由を、二人で探そうか",
+                "ねえ、コーヒーじゃないとダメな理由ってなに？"
+            ],
+            btnPrimary: "君のいた世界へ戻る",
+            btnSecondary: "奇跡を信じてボタンを押す",
+            alert: "ねえ、どうしてそんなにコーヒーにこだわるの？\n\nティーポットが描く円の中に、君の欲しい答えは入っていないかもしれないけれど。\nそれでも僕は、君がお茶を飲む瞬間を見ていたいんだ。"
+        }
+    };
+
+    // セッション（ページロード）ごとにランダムで1つ決定
+    const keys = Object.keys(characterData);
+    const selectedKey = keys[Math.floor(Math.random() * keys.length)];
+    const activeChar = characterData[selectedKey];
+
+    // HTMLへの反映
+    document.getElementById('descText').innerHTML = activeChar.desc;
+    document.getElementById('btnPrimary').innerText = activeChar.btnPrimary;
+    document.getElementById('btnSecondary').innerText = activeChar.btnSecondary;
+
+    let currentQuoteIdx = 0;
     let isClickable = true;
 
     function talkTeapot() {
@@ -227,11 +295,9 @@
         const teapot = document.getElementById('teapotIcon');
         const bubble = document.getElementById('quoteBubble');
 
-        // セリフセット
-        bubble.innerText = quotes[currentIdx];
-        currentIdx = (currentIdx + 1) % quotes.length;
+        bubble.innerText = activeChar.quotes[currentQuoteIdx];
+        currentQuoteIdx = (currentQuoteIdx + 1) % activeChar.quotes.length;
 
-        // アニメーション発火
         bubble.classList.add('show');
         teapot.classList.add('shaking');
 
@@ -243,11 +309,12 @@
     }
 
     function demandCoffee() {
-        // コンソールに本物のエンジニアライクな418エラーを出す
         console.error("🚨 HTTP 418 Error: [HTCPCP] The machine is a teapot. Cannot fulfill the request 'BREW COFFEE'.");
-        
-        alert("🚨 サーバー（ティーポット）からの応答 🚨\n\n「おーい　しつこいぞ！規約違反（RFC 2324）です！\n次の配信の歌枠で、1曲目が強制的に\n『およげ！たいやきくん』\nになります」");
+        alert(activeChar.alert);
     }
+
+    // 初期化時に最初のセリフを出してお外に配置
+    document.getElementById('quoteBubble').innerText = activeChar.quotes[0];
 </script>
 
 </body>
