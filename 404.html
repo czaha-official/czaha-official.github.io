@@ -5,98 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 Page Not Found | C'zaha Chell tia</title>
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --accent-color: #3498db;
-            --bg-color: #0f141c;
-            --card-bg: #1a2332;
-            --text-color: #e0e6ed;
-            --sub-text: #8a99ad;
-        }
-
-        body {
-            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .error-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 3rem 2rem;
-            max-width: 550px;
-            width: 100%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .error-code {
-            font-size: 90px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, #64b5f6, var(--accent-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0;
-            line-height: 1;
-        }
-
-        .status-title {
-            font-size: 1.2rem;
-            color: var(--accent-color);
-            margin: 15px 0 25px;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        .message {
-            font-size: 0.95rem;
-            line-height: 1.8;
-            color: var(--text-color);
-            margin-bottom: 30px;
-            text-align: left;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            border-radius: 12px;
-            border-left: 4px solid var(--accent-color);
-            white-space: pre-wrap;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 32px;
-            background: linear-gradient(135deg, #3498db, #1d6fa5);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.5);
-            background: linear-gradient(135deg, #3b9edb, #217dbb);
-        }
+        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f7f6; color: #333; }
+        .error-code { font-size: 80px; font-weight: bold; color: #2193b0; margin: 0; }
+        .message { font-size: 20px; margin-bottom: 30px; white-space: pre-wrap; }
+        .btn { display: inline-block; padding: 10px 25px; background: #2193b0; color: white; text-decoration: none; border-radius: 25px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="error-card">
-        <div class="error-code">404</div>
-        <div class="status-title">― PAGE NOT FOUND ―</div>
-        <div class="message" id="messageBox">...</div>
-        <a href="index.html" class="btn" id="returnBtn">トップページへ戻る</a>
-    </div>
+    <div class="error-code">404</div>
+    <div class="message" id="messageBox">...</div>
+    <a href="index.html" class="btn" id="returnBtn">トップページへ戻る</a>
 
     <script>
         const characters404 = {
