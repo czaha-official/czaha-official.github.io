@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第18回定期演奏会 特設情報 - C'zaha Chell Tia</title>
+
+    <meta name="description" content="綾瀬市立綾瀬中学校吹奏楽部 第18回定期演奏会の特設情報ページです。">
+    <link rel="canonical" href="https://czaha-official.github.io/concert.html">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* ----------------------------------
+           1. 変数定義・基本設定
+        ---------------------------------- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f0f2f5;
+            --text-color: #2c3e50;
+            --white: #ffffff;
+            --event-color: #d35400;
+            --vote-color: #27ae60;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            color: var(--text-color);
+            background: linear-gradient(135deg, #f0f2f5 0%, #e0e6ed 100%);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* ----------------------------------
+           2. ヘッダー & ナビゲーション
+        ---------------------------------- */
+        nav.top-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            padding: 10px 5%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-area img { 
+            height: 30px; 
+            width: auto; 
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a252f 100%);
+            color: var(--white);
+            padding: 4rem 1rem 6rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+        }
+
+        header h1 { 
+            font-size: 2.2rem; 
+            margin: 0; 
+            letter-spacing: 1px; 
+        }
+
+        header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+
+        /* ----------------------------------
+           3. コンテナ & カード
+        ---------------------------------- */
+        .container {
+            max-width: 1000px;
+            width: 90%;
+            margin: -30px auto 0;
+            padding: 0 0 3rem 0;
+            flex-grow: 1;
+        }
+
+        .special-event-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            border-left: 6px solid var(--event-color);
+        }
+
+        .event-layout {
+            display: flex;
+            gap: 35px;
+            align-items: flex-start;
+        }
+
+        .poster-wrapper {
+            width: 320px;
+            flex-shrink: 0;
+        }
+
+        .event-poster {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            object-fit: cover;
+            display: block;
+        }
+
+        /* AI使用に関する警告・注意書き */
+        .ai-notice {
+            margin-top: 12px;
+            padding: 10px 12px;
+            background-color: #fff4f4;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: #721c24;
+            line-height: 1.4;
+        }
+
+        .ai-notice i {
+            margin-right: 4px;
+        }
+
+        .event-info {
+            flex-grow: 1;
+        }
+
+        .event-header-tag {
+            background: #fbeee6;
+            color: var(--event-color);
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 4px 14px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .event-title {
+            font-size: 1.6rem;
+            margin: 0 0 20px 0;
+            color: var(--primary-color);
+            line-height: 1.35;
+        }
+
+        .event-details {
+            background: #fafafa;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            border: 1px solid #eee;
+        }
+
+        .event-details dl {
+            display: grid;
+            grid-template-columns: 85px 1fr;
+            gap: 10px;
+            margin: 0;
+        }
+
+        .event-details dt {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .event-details dd {
+            margin: 0;
+        }
+
+        .program-list {
+            font-size: 0.95rem;
+            color: #444;
+            margin-bottom: 20px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px dashed #ccc;
+        }
+
+        .program-list ul {
+            padding-left: 20px;
+            margin: 8px 0 0 0;
+        }
+
+        .program-list li {
+            margin-bottom: 4px;
+        }
+
+        .vote-notice {
+            font-size: 0.9rem;
+            background: #e8f8f5;
+            border: 1px solid #a3e4d7;
+            padding: 16px;
+            border-radius: 12px;
+            color: #117864;
+            line-height: 1.5;
+        }
+
+        .vote-btn-wrapper {
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .btn-vote {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 50px;
+            background-color: var(--vote-color);
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+            transition: all 0.3s ease;
+            width: 80%;
+        }
+
+        .btn-vote:hover {
+            background-color: #219150;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-nav-back {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            padding: 10px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
+        }
+
+        /* ----------------------------------
+           4. フッター & 各自の肩書きスタイル
+        ---------------------------------- */
+        footer {
+            background: var(--primary-color);
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-top: 3rem;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        footer p { margin: 0.5rem 0; }
+
+        .sqex-copyright {
+            color: #bdc3c7;
+            font-size: 0.8rem;
+        }
+
+        .footer-meta-container {
+            margin-top: 15px;
+            font-size: 0.75rem;
+            color: #a0a0a0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .meta-item {
+            line-height: 1.4;
+        }
+
+        .common-meta .meta-name {
+            color: var(--accent-color);
+        }
+
+        .meta-name {
+            font-weight: bold;
+            color: #d0d0d0;
+            margin-right: 4px;
+        }
+
+        .meta-role {
+            color: #888888;
+        }
+
+        .meta-note {
+            margin-top: 6px;
+            font-size: 0.7rem;
+            color: #888888;
+            max-width: 650px;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 45px;
+            height: 45px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+        }
+
+        #back-to-top.show { opacity: 1; visibility: visible; }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            header { padding: 3rem 1rem 5rem; }
+            header h1 { font-size: 1.6rem; }
+            .container { width: 94%; margin-top: -15px; }
+            .special-event-card { padding: 1.5rem; }
+            .event-layout { flex-direction: column; align-items: center; gap: 20px; }
+            .poster-wrapper { width: 100%; max-width: 300px; }
+            .btn-vote { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="top-nav">
+    <div class="logo-area">
+        <img src="logo.png" alt="warudora logo" onerror="this.src='https://via.placeholder.com/200x50?text=WARUDORA+LOGO'">
+    </div>
+</nav>
+
+<header>
+    <h1>第18回定期演奏会 特設案内</h1>
+    <p>綾瀬市立綾瀬中学校吹奏楽部</p>
+</header>
+
+<div class="container">
+    <div class="special-event-card">
+        <div class="event-layout">
+            <!-- ポスター画像＋注意書きエリア -->
+            <div class="poster-wrapper">
+                <img src="poster.jpg" alt="綾瀬市立綾瀬中学校吹奏楽部 第18回定期演奏会 ポスター" class="event-poster" onerror="this.src='https://via.placeholder.com/320x450?text=Concert+Poster'">
+                
+                <!-- AI生成画像に関する警告・注記 -->
+                <div class="ai-notice">
+                    <i class="fas fa-exclamation-triangle"></i> <strong>【画像に関するご注意】</strong><br>
+                    本ポスターの背景画像素材には生成AIが使用されています。あらかじめご了承ください。
+                </div>
+            </div>
+            
+            <div class="event-info">
+                <span class="event-header-tag"><i class="fas fa-music"></i> Concert Info</span>
+                <h2 class="event-title">綾瀬市立綾瀬中学校吹奏楽部<br>第18回定期演奏会</h2>
+                
+                <div class="event-details">
+                    <dl>
+                        <dt>日時</dt>
+                        <dd><strong>2026年12月20日（日）</strong><br>13:00 開場 / 13:30 開演</dd>
+                        <dt>会場</dt>
+                        <dd>綾瀬市オーエンス文化会館 大ホール</dd>
+                        <dt>演奏</dt>
+                        <dd>綾瀬中学校吹奏楽部</dd>
+                        <dt>指揮</dt>
+                        <dd>鎌田拓也（吹奏楽部顧問） ほか</dd>
+                        <dt>問合せ</dt>
+                        <dd>TEL 0467-78-0024（吹奏楽部顧問 鎌田）</dd>
+                    </dl>
+                </div>
+
+                <div class="program-list">
+                    <strong>【主な演奏曲目】</strong>
+                    <ul>
+                        <li>オーバード・ストリーム（J.グラステイル作曲）</li>
+                        <li>ミュージカル「レ・ミゼラブル」シンフォニックセレクション（C.M.シェーンベルク作曲、鎌田拓也編曲）</li>
+                        <li>リクエスト・ステージ ほか</li>
+                    </ul>
+                </div>
+
+                <!-- 曲目リクエスト投票セクション（Google Forms連携） -->
+                <div class="vote-notice">
+                    <i class="fas fa-poll"></i> <strong>第2部 リクエスト曲 投票受付中！（10月末まで）</strong><br>
+                    第2部で演奏する楽曲はみなさんからの投票で決まります。ポスターのQRコード、または以下のボタンからご投票ください。
+                    
+                    <div class="vote-btn-wrapper">
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSd8cmyEm91YsPL28T5CRjf45rYcZL4_5ysDaDBbRlxy7QssNg/viewform" target="_blank" rel="noopener noreferrer" class="btn-vote">
+                            <i class="fas fa-paper-plane"></i> リクエスト曲の投票はこちら（Googleフォーム）
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-nav-back">
+        <a href="index.html" class="btn"><i class="fas fa-arrow-left"></i> トップページに戻る</a>
+    </div>
+</div>
+
+<!-- フッター -->
+<footer>
+    <!-- スクウェア・エニックス権利表記 -->
+    <p class="sqex-copyright">
+        アカウントアイコン、ロードストーンツールチップ、ファンキット等の素材の著作権はスクウェア・エニックスに帰属します。<br>
+        &copy; SQUARE ENIX
+    </p>
+
+    <!-- サイト権利表記 -->
+    <p class="site-copyright">
+        &copy; <span id="current-year"></span> warudora / C'zaha Chell tia. All Rights Reserved.
+    </p>
+
+    <!-- 各自の肩書き表記エリア -->
+    <div class="footer-meta-container">
+        <!-- 共通の肩書き -->
+        <div class="meta-item common-meta">
+            <span class="meta-name"></span>
+            <span class="meta-role">Japanituremod Developers</span>
+        </div>
+
+        <!-- warudoraの肩書き -->
+        <div class="meta-item">
+            <span class="meta-name">warudora:</span>
+            <span class="meta-role">5H1H0 Engineer & Sales Rep / Admin of MJaS / Founder of MTRJapanUsers</span>
+        </div>
+
+        <!-- C'zaha Chell tiaの肩書き -->
+        <div class="meta-item">
+            <span class="meta-name">C'zaha Chell tia:</span>
+            <span class="meta-role">Independent Developer / Trumpet Player / YTE Translator</span>
+        </div>
+
+        <!-- 演奏依頼に関する注記 -->
+        <div class="meta-note">
+            ※演奏依頼は原則お断りしております（所属団体およびその姉妹団体からのご依頼を除く）。なお、引退後であっても所属・出身団体からの要請であればOBとして喜んでお引き受けいたします。
+        </div>
+    </div>
+</footer>
+
+<button id="back-to-top" title="Go to top">
+    <i class="fas fa-chevron-up"></i>
+</button>
+
+<script>
+    // 年数の自動更新
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // トップに戻るボタンの制御
+    const backToTopBtn = document.getElementById('back-to-top');
+
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+            backToTopBtn.classList.add('show');
+        } else {
+            backToTopBtn.classList.remove('show');
+        }
+    });
+
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+</script>
+
+</body>
+</html>
