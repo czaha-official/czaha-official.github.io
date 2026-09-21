@@ -3,148 +3,367 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News & Updates - C'zaha Chell Tia / warudora</title>
+    <title>News & Updates | C'zaha Chell Tia's Official Site</title>
+
+    <meta name="description" content="C'zaha Chell Tia(ザハ)の公式サイト お知らせ・更新情報一覧です。">
+    <link rel="canonical" href="https://czaha-official.github.io/news.html">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+        /* ----------------------------------
+           1. 変数定義・基本設定 (index.htmlと共通)
+        ---------------------------------- */
         :root {
             --primary-color: #2c3e50;
             --accent-color: #3498db;
+            --bg-color: #f0f2f5;
+            --text-color: #2c3e50;
             --white: #ffffff;
-            --event-color: #d35400;
-            --update-color: #27ae60;
-            --info-color: #2980b9;
+            --x-color: #000000;
+            --insta-color: #E1306C;
+            --yt-color: #FF0000;
+            --discord-color: #5865F2;
         }
 
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            line-height: 1.6;
             margin: 0;
-            background: #f0f2f5;
+            color: var(--text-color);
+            background: linear-gradient(135deg, #f0f2f5 0%, #e0e6ed 100%);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* ----------------------------------
+           2. ヘッダー & ナビゲーション
+        ---------------------------------- */
+        nav.top-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            padding: 10px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-back-link {
+            text-decoration: none;
             color: var(--primary-color);
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+
+        .nav-back-link:hover {
+            color: var(--accent-color);
+        }
+
+        .logo-area img { 
+            height: 30px; 
+            width: auto; 
         }
 
         header {
-            background: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a252f 100%);
             color: var(--white);
-            padding: 3rem 1rem;
+            padding: 4rem 1rem 6rem;
             text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
         }
 
+        header h1 { 
+            font-size: 2rem; 
+            margin: 0; 
+            letter-spacing: 1px; 
+        }
+
+        header p {
+            margin: 0.5rem 0 0;
+            color: #bdc3c7;
+            font-size: 0.95rem;
+        }
+
+        /* ----------------------------------
+           3. コンテナ & ニュースカード
+        ---------------------------------- */
         .container {
-            max-width: 800px;
-            margin: -20px auto 3rem;
+            max-width: 900px;
             width: 90%;
+            margin: -20px auto 0;
+            padding: 0 0 3rem 0;
+            flex-grow: 1;
         }
 
-        /* ニュースカード */
-        .news-card-list { display: flex; flex-direction: column; gap: 15px; }
-        
-        .news-item {
+        .news-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .news-card {
             background: var(--white);
-            border-radius: 12px;
-            padding: 20px 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border-left: 5px solid #ccc;
+            border-radius: 16px;
+            padding: 1.8rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+            border-left: 5px solid var(--accent-color);
         }
 
-        .news-item[data-category="update"] { border-left-color: var(--update-color); }
-        .news-item[data-category="event"] { border-left-color: var(--event-color); }
-        .news-item[data-category="info"] { border-left-color: var(--info-color); }
+        .news-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
 
-        .news-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-        .news-date { font-size: 0.85rem; color: #888; font-weight: bold; }
-        .news-badge { font-size: 0.75rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; }
-        
-        .badge-update { background: #e8f8f5; color: var(--update-color); }
-        .badge-event { background: #fbeee6; color: var(--event-color); }
-        .badge-info { background: #ebf5fb; color: var(--info-color); }
+        .news-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 0.8rem;
+        }
 
-        .news-title { font-size: 1.1rem; margin: 0 0 8px 0; }
-        .news-body { font-size: 0.95rem; color: #444; line-height: 1.6; white-space: pre-wrap; }
-        
+        .news-date {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            background: #edf2f7;
+            color: var(--primary-color);
+        }
+
+        .badge-info { background: #e3f2fd; color: #1976d2; }
+        .badge-update { background: #e8f5e9; color: #2e7d32; }
+        .badge-event { background: #fff3e0; color: #e65100; }
+
+        .news-title {
+            margin: 0 0 0.8rem 0;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+        }
+
+        .news-body {
+            font-size: 0.92rem;
+            color: #555;
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
         .news-link {
-            display: inline-flex; align-items: center; gap: 5px;
-            margin-top: 10px; font-size: 0.88rem; color: var(--accent-color);
-            text-decoration: none; font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: bold;
         }
 
-        .loading-msg { text-align: center; padding: 40px; color: #666; }
+        .news-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ----------------------------------
+           4. フッター & トップへ戻るボタン
+        ---------------------------------- */
+        footer {
+            background: var(--primary-color);
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-top: 3rem;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        footer p { margin: 0.5rem 0; }
+
+        .sqex-copyright {
+            color: #bdc3c7;
+            font-size: 0.8rem;
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 45px;
+            height: 45px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+        }
+
+        #back-to-top.show { opacity: 1; visibility: visible; }
+
+        @media (max-width: 768px) {
+            header { padding: 3rem 1rem 5rem; }
+            header h1 { font-size: 1.6rem; }
+            .container { width: 94%; margin-top: -10px; }
+        }
     </style>
 </head>
 <body>
 
+<script src="https://lds-img.finalfantasyxiv.com/pc/global/js/eorzeadb/loader.js?v3"></script>
+
+<nav class="top-nav">
+    <a href="index.html" class="nav-back-link">
+        <i class="fas fa-arrow-left"></i> ホームに戻る
+    </a>
+    <div class="logo-area">
+        <img src="logo.png" alt="warudora logo" onerror="this.src='https://via.placeholder.com/200x50?text=WARUDORA+LOGO'">
+    </div>
+</nav>
+
 <header>
     <h1>News & Updates</h1>
-    <p>お知らせ・更新情報</p>
+    <p>お知らせ・更新情報一覧</p>
 </header>
 
 <div class="container">
-    <div id="news-container" class="news-card-list">
-        <div class="loading-msg"><i class="fas fa-spinner fa-spin"></i> お知らせを読み込み中...</div>
+    <div id="all-news-list" class="news-list">
+        <p style="text-align: center; padding: 2rem; color: #666;">お知らせを読み込んでいます...</p>
     </div>
 </div>
 
+<!-- フッター -->
+<footer>
+    <p class="sqex-copyright">
+        アカウントアイコン、ロードストーンツールチップ、ファンキット等の素材の著作権はスクウェア・エニックスに帰属します。<br>
+        &copy; SQUARE ENIX
+    </p>
+
+    <p class="site-copyright">
+        &copy; <span id="current-year"></span> warudora / C'zaha Chell tia. All Rights Reserved.
+    </p>
+
+    <div class="footer-meta-container">
+        <div class="meta-item common-meta">
+            <span class="meta-name"></span>
+            <span class="meta-role">Japanituremod Developers</span>
+        </div>
+
+        <div class="meta-item">
+            <span class="meta-name">warudora:</span>
+            <span class="meta-role">5H1H0 Engineer & Sales Rep / Admin of MJaS / Founder of MTRJapanUsers</span>
+        </div>
+
+        <div class="meta-item">
+            <span class="meta-name">C'zaha Chell tia:</span>
+            <span class="meta-role">Independent Developer / Trumpet Player / YTE Translator</span>
+        </div>
+
+        <div class="meta-note">
+            ※演奏依頼は原則お断りしております（所属団体およびその姉妹団体からのご依頼を除く）。なお、引退後であっても所属・出身団体からの要請であればOBとして喜んでお引き受けいたします。
+        </div>
+    </div>
+</footer>
+
+<button id="back-to-top" title="Go to top">
+    <i class="fas fa-chevron-up"></i>
+</button>
+
 <script>
-    async function loadNews() {
-        const container = document.getElementById('news-container');
-        
-        try {
-            // テキストファイルの読み込み
-            const response = await fetch('news-data.txt');
-            if (!response.ok) throw new Error('ネットワークエラー');
-            const text = await response.text();
+    // 年数の自動更新
+    document.getElementById('current-year').textContent = new Date().getFullYear();
 
-            // 記事ごとの分割（--- で区切る）
-            const rawArticles = text.split(/^---$/m).map(item => item.trim()).filter(Boolean);
-            
-            container.innerHTML = ''; // ローディング消去
+    // トップに戻るボタンの制御
+    const backToTopBtn = document.getElementById('back-to-top');
 
-            rawArticles.forEach(raw => {
-                const dateMatch = raw.match(/\[DATE\]\s*(.*)/);
-                const catMatch = raw.match(/\[CATEGORY\]\s*(.*)/);
-                const titleMatch = raw.match(/\[TITLE\]\s*(.*)/);
-                const linkMatch = raw.match(/\[LINK\]\s*(.*)/);
-                
-                // 本文の取得（[BODY]以降）
-                const bodyMatch = raw.split(/\[BODY\]/)[1];
-                let bodyText = bodyMatch ? bodyMatch.split(/\[LINK\]/)[0].trim() : '';
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+            backToTopBtn.classList.add('show');
+        } else {
+            backToTopBtn.classList.remove('show');
+        }
+    });
 
-                const date = dateMatch ? dateMatch[1].trim() : '';
-                const category = catMatch ? catMatch[1].trim().toLowerCase() : 'info';
-                const title = titleMatch ? titleMatch[1].trim() : '';
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
-                // 要素構築
-                const article = document.createElement('article');
-                article.className = 'news-item';
-                article.setAttribute('data-category', category);
+    // news-data.txt からニュースデータを取得・表示
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('news-data.txt')
+            .then(res => {
+                if (!res.ok) throw new Error('読み込み失敗');
+                return res.text();
+            })
+            .then(text => {
+                const container = document.getElementById('all-news-list');
+                container.innerHTML = '';
 
-                let linkHTML = '';
-                if (linkMatch) {
-                    const [url, label] = linkMatch[1].split('|');
-                    linkHTML = `<a href="${url.trim()}" class="news-link">${label ? label.trim() : '詳細を見る'} <i class="fas fa-arrow-right"></i></a>`;
+                const items = text.split('---').map(b => b.trim()).filter(b => b.length > 0);
+
+                if (items.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #666;">現在お知らせはありません。</p>';
+                    return;
                 }
 
-                article.innerHTML = `
-                    <div class="news-header">
-                        <span class="news-date">${date}</span>
-                        <span class="news-badge badge-${category}">${category}</span>
-                    </div>
-                    <h2 class="news-title">${title}</h2>
-                    <div class="news-body">${bodyText}</div>
-                    ${linkHTML}
-                `;
+                items.forEach(itemStr => {
+                    const lines = itemStr.split('\n');
+                    let date = '', category = '', title = '', body = '', link = '';
 
-                container.appendChild(article);
+                    lines.forEach(line => {
+                        if (line.startsWith('[DATE]')) date = line.replace('[DATE]', '').trim();
+                        else if (line.startsWith('[CATEGORY]')) category = line.replace('[CATEGORY]', '').trim();
+                        else if (line.startsWith('[TITLE]')) title = line.replace('[TITLE]', '').trim();
+                        else if (line.startsWith('[BODY]')) body = line.replace('[BODY]', '').trim();
+                        else if (line.startsWith('[LINK]')) link = line.replace('[LINK]', '').trim();
+                    });
+
+                    const catLower = category.toLowerCase();
+                    const badgeClass = `badge-${catLower}`;
+
+                    const card = document.createElement('article');
+                    card.className = 'news-card';
+                    card.innerHTML = `
+                        <div class="news-meta">
+                            <span class="news-date">${date}</span>
+                            <span class="badge ${badgeClass}">${category.toUpperCase()}</span>
+                        </div>
+                        <h2 class="news-title">${title}</h2>
+                        <p class="news-body">${body}</p>
+                        ${link ? `<a href="${link}" class="news-link">詳細・特設ページを見る <i class="fas fa-arrow-right"></i></a>` : ''}
+                    `;
+
+                    container.appendChild(card);
+                });
+            })
+            .catch(() => {
+                document.getElementById('all-news-list').innerHTML = '<p style="text-align: center; color: #e74c3c;">お知らせの読み込みに失敗しました。</p>';
             });
-
-        } catch (error) {
-            container.innerHTML = '<div class="loading-msg">お知らせの読み込みに失敗しました。</div>';
-            console.error(error);
-        }
-    }
-
-    // 実行
-    loadNews();
+    });
 </script>
 
 </body>
