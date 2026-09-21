@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News & Updates - C'zaha Chell Tia / warudora</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --white: #ffffff;
+            --event-color: #d35400;
+            --update-color: #27ae60;
+            --info-color: #2980b9;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            background: #f0f2f5;
+            color: var(--primary-color);
+        }
+
+        header {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: -20px auto 3rem;
+            width: 90%;
+        }
+
+        /* ニュースカード */
+        .news-card-list { display: flex; flex-direction: column; gap: 15px; }
+        
+        .news-item {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 5px solid #ccc;
+        }
+
+        .news-item[data-category="update"] { border-left-color: var(--update-color); }
+        .news-item[data-category="event"] { border-left-color: var(--event-color); }
+        .news-item[data-category="info"] { border-left-color: var(--info-color); }
+
+        .news-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .news-date { font-size: 0.85rem; color: #888; font-weight: bold; }
+        .news-badge { font-size: 0.75rem; font-weight: bold; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; }
+        
+        .badge-update { background: #e8f8f5; color: var(--update-color); }
+        .badge-event { background: #fbeee6; color: var(--event-color); }
+        .badge-info { background: #ebf5fb; color: var(--info-color); }
+
+        .news-title { font-size: 1.1rem; margin: 0 0 8px 0; }
+        .news-body { font-size: 0.95rem; color: #444; line-height: 1.6; white-space: pre-wrap; }
+        
+        .news-link {
+            display: inline-flex; align-items: center; gap: 5px;
+            margin-top: 10px; font-size: 0.88rem; color: var(--accent-color);
+            text-decoration: none; font-weight: bold;
+        }
+
+        .loading-msg { text-align: center; padding: 40px; color: #666; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>News & Updates</h1>
+    <p>お知らせ・更新情報</p>
+</header>
+
+<div class="container">
+    <div id="news-container" class="news-card-list">
+        <div class="loading-msg"><i class="fas fa-spinner fa-spin"></i> お知らせを読み込み中...</div>
+    </div>
+</div>
+
+<script>
+    async function loadNews() {
+        const container = document.getElementById('news-container');
+        
+        try {
+            // テキストファイルの読み込み
+            const response = await fetch('news-data.txt');
+            if (!response.ok) throw new Error('ネットワークエラー');
+            const text = await response.text();
+
+            // 記事ごとの分割（--- で区切る）
+            const rawArticles = text.split(/^---$/m).map(item => item.trim()).filter(Boolean);
+            
+            container.innerHTML = ''; // ローディング消去
+
+            rawArticles.forEach(raw => {
+                const dateMatch = raw.match(/\[DATE\]\s*(.*)/);
+                const catMatch = raw.match(/\[CATEGORY\]\s*(.*)/);
+                const titleMatch = raw.match(/\[TITLE\]\s*(.*)/);
+                const linkMatch = raw.match(/\[LINK\]\s*(.*)/);
+                
+                // 本文の取得（[BODY]以降）
+                const bodyMatch = raw.split(/\[BODY\]/)[1];
+                let bodyText = bodyMatch ? bodyMatch.split(/\[LINK\]/)[0].trim() : '';
+
+                const date = dateMatch ? dateMatch[1].trim() : '';
+                const category = catMatch ? catMatch[1].trim().toLowerCase() : 'info';
+                const title = titleMatch ? titleMatch[1].trim() : '';
+
+                // 要素構築
+                const article = document.createElement('article');
+                article.className = 'news-item';
+                article.setAttribute('data-category', category);
+
+                let linkHTML = '';
+                if (linkMatch) {
+                    const [url, label] = linkMatch[1].split('|');
+                    linkHTML = `<a href="${url.trim()}" class="news-link">${label ? label.trim() : '詳細を見る'} <i class="fas fa-arrow-right"></i></a>`;
+                }
+
+                article.innerHTML = `
+                    <div class="news-header">
+                        <span class="news-date">${date}</span>
+                        <span class="news-badge badge-${category}">${category}</span>
+                    </div>
+                    <h2 class="news-title">${title}</h2>
+                    <div class="news-body">${bodyText}</div>
+                    ${linkHTML}
+                `;
+
+                container.appendChild(article);
+            });
+
+        } catch (error) {
+            container.innerHTML = '<div class="loading-msg">お知らせの読み込みに失敗しました。</div>';
+            console.error(error);
+        }
+    }
+
+    // 実行
+    loadNews();
+</script>
+
+</body>
+</html>
