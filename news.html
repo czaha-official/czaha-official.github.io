@@ -11,19 +11,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* ----------------------------------
-           1. 変数定義・基本設定 (index.htmlと共通)
-        ---------------------------------- */
         :root {
             --primary-color: #2c3e50;
             --accent-color: #3498db;
             --bg-color: #f0f2f5;
             --text-color: #2c3e50;
             --white: #ffffff;
-            --x-color: #000000;
-            --insta-color: #E1306C;
-            --yt-color: #FF0000;
-            --discord-color: #5865F2;
         }
 
         body {
@@ -35,13 +28,8 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            scroll-behavior: smooth;
-            -webkit-text-size-adjust: 100%;
         }
 
-        /* ----------------------------------
-           2. ヘッダー & ナビゲーション
-        ---------------------------------- */
         nav.top-nav {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(5px);
@@ -63,17 +51,9 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: color 0.2s;
         }
 
-        .nav-back-link:hover {
-            color: var(--accent-color);
-        }
-
-        .logo-area img { 
-            height: 30px; 
-            width: auto; 
-        }
+        .logo-area img { height: 30px; width: auto; }
 
         header {
             background: linear-gradient(135deg, var(--primary-color) 0%, #1a252f 100%);
@@ -83,21 +63,9 @@
             clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
         }
 
-        header h1 { 
-            font-size: 2rem; 
-            margin: 0; 
-            letter-spacing: 1px; 
-        }
+        header h1 { font-size: 2rem; margin: 0; }
+        header p { margin: 0.5rem 0 0; color: #bdc3c7; font-size: 0.95rem; }
 
-        header p {
-            margin: 0.5rem 0 0;
-            color: #bdc3c7;
-            font-size: 0.95rem;
-        }
-
-        /* ----------------------------------
-           3. コンテナ & ニュースカード
-        ---------------------------------- */
         .container {
             max-width: 900px;
             width: 90%;
@@ -106,11 +74,7 @@
             flex-grow: 1;
         }
 
-        .news-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
+        .news-list { display: flex; flex-direction: column; gap: 1.5rem; }
 
         .news-card {
             background: var(--white);
@@ -119,30 +83,14 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.04);
             transition: all 0.3s ease;
             border-left: 5px solid var(--accent-color);
-            position: relative;
         }
 
-        .news-card.has-link {
-            cursor: pointer;
-        }
+        .news-card.has-link { cursor: pointer; }
+        .news-card.border-urgent { border-left-color: #e74c3c; }
+        .news-card.border-important { border-left-color: #e67e22; }
 
-        .news-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-        }
-
-        .news-meta {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 0.8rem;
-        }
-
-        .news-date {
-            font-size: 0.85rem;
-            color: #7f8c8d;
-            font-weight: 600;
-        }
+        .news-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 0.8rem; }
+        .news-date { font-size: 0.85rem; color: #7f8c8d; font-weight: 600; }
 
         .badge {
             font-size: 0.7rem;
@@ -154,23 +102,15 @@
             color: var(--primary-color);
         }
 
+        /* カテゴリ毎の色設定 */
         .badge-info { background: #e3f2fd; color: #1976d2; }
         .badge-update { background: #e8f5e9; color: #2e7d32; }
         .badge-event { background: #fff3e0; color: #e65100; }
+        .badge-urgent { background: #fadbd8; color: #78281f; } /* 赤：緊急 */
+        .badge-important { background: #fdebd0; color: #7e5109; } /* 橙：重要 */
 
-        .news-title {
-            margin: 0 0 0.8rem 0;
-            font-size: 1.25rem;
-            color: var(--primary-color);
-        }
-
-        .news-body {
-            font-size: 0.92rem;
-            color: #555;
-            margin: 0;
-            white-space: pre-wrap;
-            word-break: break-word;
-        }
+        .news-title { margin: 0 0 0.8rem 0; font-size: 1.25rem; color: var(--primary-color); }
+        .news-body { font-size: 0.92rem; color: #555; margin: 0; white-space: pre-wrap; word-break: break-word; }
 
         .news-link-btn {
             display: inline-flex;
@@ -184,17 +124,8 @@
             font-size: 0.85rem;
             text-decoration: none;
             font-weight: bold;
-            transition: all 0.2s;
         }
 
-        .news-card:hover .news-link-btn {
-            background: var(--accent-color);
-            color: #ffffff;
-        }
-
-        /* ----------------------------------
-           4. フッター & トップへ戻るボタン
-        ---------------------------------- */
         footer {
             background: var(--primary-color);
             color: rgba(255,255,255,0.7);
@@ -202,58 +133,14 @@
             padding: 3rem 1rem;
             margin-top: 3rem;
             font-size: 0.85rem;
-            line-height: 1.6;
-        }
-
-        footer p { margin: 0.5rem 0; }
-
-        .sqex-copyright {
-            color: #bdc3c7;
-            font-size: 0.8rem;
-        }
-
-        #back-to-top {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 45px;
-            height: 45px;
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            opacity: 0;
-            visibility: hidden;
-            z-index: 1000;
-        }
-
-        #back-to-top.show { opacity: 1; visibility: visible; }
-
-        @media (max-width: 768px) {
-            header { padding: 3rem 1rem 5rem; }
-            header h1 { font-size: 1.6rem; }
-            .container { width: 94%; margin-top: -10px; }
         }
     </style>
 </head>
 <body>
 
-<script src="https://lds-img.finalfantasyxiv.com/pc/global/js/eorzeadb/loader.js?v3"></script>
-
 <nav class="top-nav">
-    <a href="index.html" class="nav-back-link">
-        <i class="fas fa-arrow-left"></i> ホームに戻る
-    </a>
-    <div class="logo-area">
-        <img src="logo.png" alt="warudora logo" onerror="this.src='https://via.placeholder.com/200x50?text=WARUDORA+LOGO'">
-    </div>
+    <a href="index.html" class="nav-back-link"><i class="fas fa-arrow-left"></i> ホームに戻る</a>
+    <div class="logo-area"><img src="logo.png" alt="warudora logo" onerror="this.src='https://via.placeholder.com/200x50?text=WARUDORA+LOGO'"></div>
 </nav>
 
 <header>
@@ -267,64 +154,17 @@
     </div>
 </div>
 
-<!-- フッター -->
 <footer>
-    <p class="sqex-copyright">
-        アカウントアイコン、ロードストーンツールチップ、ファンキット等の素材の著作権はスクウェア・エニックスに帰属します。<br>
-        &copy; SQUARE ENIX
-    </p>
-
-    <p class="site-copyright">
-        &copy; <span id="current-year"></span> warudora / C'zaha Chell tia. All Rights Reserved.
-    </p>
-
-    <div class="footer-meta-container">
-        <div class="meta-item common-meta">
-            <span class="meta-name"></span>
-            <span class="meta-role">Japanituremod Developers</span>
-        </div>
-
-        <div class="meta-item">
-            <span class="meta-name">warudora:</span>
-            <span class="meta-role">5H1H0 Engineer & Sales Rep / Admin of MJaS / Founder of MTRJapanUsers</span>
-        </div>
-
-        <div class="meta-item">
-            <span class="meta-name">C'zaha Chell tia:</span>
-            <span class="meta-role">Independent Developer / Trumpet Player / YTE Translator</span>
-        </div>
-
-        <div class="meta-note">
-            ※演奏依頼は原則お断りしております（所属団体およびその姉妹団体からのご依頼を除く）。なお、引退後であっても所属・出身団体からの要請であればOBとして喜んでお引き受けいたします。
-        </div>
-    </div>
+    <p>&copy; warudora / C'zaha Chell tia. All Rights Reserved.</p>
 </footer>
 
-<button id="back-to-top" title="Go to top">
-    <i class="fas fa-chevron-up"></i>
-</button>
-
 <script>
-    document.getElementById('current-year').textContent = new Date().getFullYear();
-
-    const backToTopBtn = document.getElementById('back-to-top');
-    window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 300) backToTopBtn.classList.add('show');
-        else backToTopBtn.classList.remove('show');
-    });
-    backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-    // news-data.txt からニュースデータを取得・堅牢にパースして表示
     document.addEventListener('DOMContentLoaded', () => {
         fetch('news-data.txt')
-            .then(res => {
-                if (!res.ok) throw new Error('読み込み失敗');
-                return res.text();
-            })
+            .then(res => res.text())
             .then(text => {
                 const container = document.getElementById('all-news-list');
                 container.innerHTML = '';
-
                 const items = text.split('---').map(b => b.trim()).filter(b => b.length > 0);
 
                 if (items.length === 0) {
@@ -333,74 +173,58 @@
                 }
 
                 items.forEach(itemStr => {
-                    let date = '', category = 'INFO', title = '', link = '', btnText = '詳細・特設ページを見る';
+                    let date = '', category = 'INFO', title = '', link = '', btnText = '詳細を見る';
                     let bodyLines = [];
                     let currentTag = '';
 
-                    // 1行ずつ解析
                     itemStr.split('\n').forEach(line => {
                         const trimmed = line.trim();
-                        if (trimmed.startsWith('[DATE]')) {
-                            date = trimmed.replace('[DATE]', '').trim();
-                            currentTag = 'DATE';
-                        } else if (trimmed.startsWith('[CATEGORY]')) {
-                            category = trimmed.replace('[CATEGORY]', '').trim();
-                            currentTag = 'CATEGORY';
-                        } else if (trimmed.startsWith('[TITLE]')) {
-                            title = trimmed.replace('[TITLE]', '').trim();
-                            currentTag = 'TITLE';
-                        } else if (trimmed.startsWith('[LINK]')) {
+                        if (trimmed.startsWith('[DATE]')) { date = trimmed.replace('[DATE]', '').trim(); currentTag = 'DATE'; }
+                        else if (trimmed.startsWith('[CATEGORY]')) { category = trimmed.replace('[CATEGORY]', '').trim(); currentTag = 'CATEGORY'; }
+                        else if (trimmed.startsWith('[TITLE]')) { title = trimmed.replace('[TITLE]', '').trim(); currentTag = 'TITLE'; }
+                        else if (trimmed.startsWith('[LINK]')) {
                             const linkRaw = trimmed.replace('[LINK]', '').trim();
                             if (linkRaw.includes('|')) {
                                 const parts = linkRaw.split('|');
                                 link = parts[0].trim();
                                 btnText = parts[1].trim();
-                            } else {
-                                link = linkRaw;
-                            }
+                            } else { link = linkRaw; }
                             currentTag = 'LINK';
-                        } else if (trimmed.startsWith('[BODY]')) {
-                            bodyLines.push(trimmed.replace('[BODY]', '').trim());
-                            currentTag = 'BODY';
-                        } else if (currentTag === 'BODY' && trimmed !== '') {
-                            bodyLines.push(trimmed);
                         }
+                        else if (trimmed.startsWith('[BODY]')) { bodyLines.push(trimmed.replace('[BODY]', '').trim()); currentTag = 'BODY'; }
+                        else if (currentTag === 'BODY' && trimmed !== '') { bodyLines.push(trimmed); }
                     });
 
                     const body = bodyLines.join('\n');
                     const catLower = category.toLowerCase();
-                    const badgeClass = `badge-${catLower}`;
+                    
+                    let catLabel = category.toUpperCase();
+                    let extraCardClass = '';
+                    if (catLower === 'urgent') { catLabel = '【緊急】'; extraCardClass = 'border-urgent'; }
+                    else if (catLower === 'important') { catLabel = '【重要】'; extraCardClass = 'border-important'; }
 
                     const card = document.createElement('article');
-                    card.className = `news-card ${link ? 'has-link' : ''}`;
+                    card.className = `news-card ${extraCardClass} ${link ? 'has-link' : ''}`;
 
-                    // リンクがある場合はカード全体をクリック可能に設定
                     if (link) {
                         card.addEventListener('click', (e) => {
-                            if (e.target.tagName !== 'A') {
-                                window.location.href = link;
-                            }
+                            if (e.target.tagName !== 'A') window.location.href = link;
                         });
                     }
 
                     card.innerHTML = `
                         <div class="news-meta">
                             <span class="news-date">${date}</span>
-                            <span class="badge ${badgeClass}">${category.toUpperCase()}</span>
+                            <span class="badge badge-${catLower}">${catLabel}</span>
                         </div>
                         <h2 class="news-title">${title}</h2>
                         <p class="news-body">${body}</p>
                         ${link ? `<div style="text-align: left;"><a href="${link}" class="news-link-btn">${btnText} <i class="fas fa-arrow-right"></i></a></div>` : ''}
                     `;
-
                     container.appendChild(card);
                 });
-            })
-            .catch(() => {
-                document.getElementById('all-news-list').innerHTML = '<p style="text-align: center; color: #e74c3c;">お知らせの読み込みに失敗しました。</p>';
             });
     });
 </script>
-
 </body>
 </html>
