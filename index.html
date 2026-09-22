@@ -129,7 +129,71 @@
         }
 
         /* ----------------------------------
-           5. ユニット（共通カード）化スタイル
+           5. ニュース簡易表示エリア
+        ---------------------------------- */
+        .top-news-section {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 20px 25px;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .top-news-section h2 {
+            font-size: 1.2rem;
+            margin: 0 0 15px 0;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-item-summary {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .news-item-summary:last-child {
+            border-bottom: none;
+        }
+
+        .news-meta-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .news-date {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+
+        .news-title-text {
+            font-size: 0.98rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .news-more-link {
+            text-align: right;
+            margin-top: 15px;
+        }
+
+        .news-more-link a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: bold;
+        }
+
+        .news-more-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ----------------------------------
+           6. ユニット（共通カード）化スタイル
         ---------------------------------- */
         .card {
             background: var(--white);
@@ -173,7 +237,6 @@
             margin-bottom: 1rem;
         }
 
-        /* 共通タグ */
         .card-tag {
             display: inline-block;
             font-size: 0.65rem;
@@ -185,7 +248,7 @@
         }
 
         /* ----------------------------------
-           6. 共通ボタンユニット
+           7. 共通ボタンユニット
         ---------------------------------- */
         .button-group {
             display: flex;
@@ -209,14 +272,11 @@
         }
 
         .btn:hover { background: #f8f9fa; transform: translateY(-2px); }
-        .btn-x:hover { background: var(--x-color); color: white; border-color: var(--x-color); }
-        .btn-insta { color: var(--insta-color); border-color: var(--insta-color); }
-        .btn-yt { color: var(--yt-color); border-color: var(--yt-color); }
         .btn-discord:hover { background: var(--discord-color); color: white; border-color: var(--discord-color); }
         .btn-primary { background: var(--accent-color); color: white; border-color: var(--accent-color); }
 
         /* ----------------------------------
-           7. フッター & トップへ戻るボタン
+           8. フッター & トップへ戻るボタン
         ---------------------------------- */
         footer {
             background: var(--primary-color);
@@ -259,7 +319,6 @@
 
         #back-to-top.show { opacity: 1; visibility: visible; }
 
-        /* レスポンシブ対応 */
         @media (max-width: 768px) {
             header { padding: 4rem 1rem 6rem; }
             header h1 { font-size: 1.8rem; }
@@ -271,7 +330,8 @@
     </style>
 </head>
 <body>
-  <script src="https://lds-img.finalfantasyxiv.com/pc/global/js/eorzeadb/loader.js?v3"></script>
+<script src="https://lds-img.finalfantasyxiv.com/pc/global/js/eorzeadb/loader.js?v3"></script>
+
 <nav class="top-nav">
     <div class="logo-area">
         <img src="logo.png" alt="warudora logo" onerror="this.src='https://via.placeholder.com/200x50?text=WARUDORA+LOGO'">
@@ -284,7 +344,7 @@
 </header>
 
 <div class="container">
-      <!-- プロフィールユニット -->
+    <!-- プロフィールユニット -->
     <div class="profile-card">
         <img src="profile_top.jpg" alt="warudora" class="profile-thumb" onerror="this.src='https://via.placeholder.com/150'">
         <div>
@@ -294,33 +354,26 @@
                 Japanituremodの制作陣、個人開発者として、クリエイティブな活動をしております。<br>
                 MinecraftのMod開発などを通じ、新しい体験を届けることを目標にしています。
             </p>
-           <div class="button-group">
-                <!-- <a href="https://x.com/warudora36" class="btn btn-x" target="_blank"><i class="fab fa-x-twitter"></i> X</a>
-                <a href="https://www.instagram.com/warudora36/?__pwa=1" class="btn btn-insta" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
-                <a href="https://www.youtube.com/@%E3%83%AF%E3%83%AB%E3%83%89%E3%83%A9" class="btn btn-yt" target="_blank"><i class="fab fa-youtube"></i> YouTube</a> -->
-              <a href="https://jp.finalfantasyxiv.com/lodestone/playguide/db/item/cf6f923c9ee/" class="eorzeadb_link">グランドチャンピオン・ファルシオン</a>
-
+            <div class="button-group">
+                <a href="https://jp.finalfantasyxiv.com/lodestone/playguide/db/item/cf6f923c9ee/" class="eorzeadb_link">グランドチャンピオン・ファルシオン</a>
             </div> 
         </div>
     </div>
-<div section class="top-news-section">
-  <div class="container">
-    <h2>News & Updates</h2>
-    <!-- 最新ニュースがここに読み込まれます -->
-    <div id="top-news-list" class="news-list">
-      <p class="loading">お知らせを読み込んでいます...</p>
-    </div>
-    
-    <!-- NEWS一覧ページ（news.html）へのリンク -->
-    <div class="news-more-link">
-      <a href="news.html">お知らせ一覧を見る &rarr;</a>
-    </div>
-  </div>
-</section>
-    <!-- グリッド領域（各開発物・コンテンツをユニット化して配置） -->
-    <div class="grid">
 
-        <!-- ユニット1: Yunzhu Transit Extension (YTE) -->
+    <!-- お知らせ簡易一覧（概要のみ表示） -->
+    <div class="top-news-section">
+        <h2><i class="fas fa-bullhorn"></i> News & Updates</h2>
+        <div id="top-news-list">
+            <p style="color: #888; font-size: 0.9rem;">お知らせを読み込んでいます...</p>
+        </div>
+        <div class="news-more-link">
+            <a href="news.html">お知らせ一覧・詳細を見る &rarr;</a>
+        </div>
+    </div>
+
+    <!-- グリッド領域 -->
+    <div class="grid">
+        <!-- ユニット1: Yunzhu Transit Extension -->
         <article class="card">
             <div>
                 <div class="card-header">
@@ -354,151 +407,129 @@
                 <a href="https://discord.gg/VBUyKskneM" class="btn btn-discord" target="_blank"><i class="fab fa-discord"></i> Discord</a>
             </div>
         </article>
-<div class="special-event-card" style="background: #ffffff; border-radius: 16px; padding: 25px; margin: 30px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-left: 6px solid #d35400;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-        <span style="background: #fbeee6; color: #d35400; font-size: 0.8rem; font-weight: bold; padding: 4px 12px; border-radius: 50px;">
-            <i class="fas fa-music"></i> Concert Info
-        </span>
-        <span style="font-size: 0.85rem; color: #888;">2026年12月20日（日）開催</span>
-    </div>
 
-    <h3 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 1.3rem;">
-        綾瀬市立綾瀬中学校吹奏楽部 第18回定期演奏会
-    </h3>
-
-    <p style="margin: 0 0 20px 0; font-size: 0.95rem; color: #555; line-height: 1.6;">
-        第18回定期演奏会の特設ページを開設しました。会場アクセスやプログラム詳細のほか、第2部リクエスト曲の投票フォーム（Google Forms）を設置しています。
-    </p>
-
-    <div style="text-align: right;">
-        <a href="concert.html" style="display: inline-flex; align-items: center; gap: 8px; font-weight: bold; text-decoration: none; padding: 10px 20px; background: #d35400; color: white; border-radius: 50px; font-size: 0.9rem; transition: background 0.3s;" onmouseover="this.style.background='#b34300'" onmouseout="this.style.background='#d35400'">
-            特設ページを見る <i class="fas fa-arrow-right"></i>
-        </a>
+        <!-- 特設イベントエリア（event-data.txt から動的読み込み） -->
+        <div id="special-event-container" style="grid-column: 1 / -1;"></div>
     </div>
 </div>
-    </div>
-</div>
-<!-- フッター -->
+
 <footer>
-    <!-- スクウェア・エニックス権利表記 -->
     <p class="sqex-copyright">
         アカウントアイコン、ロードストーンツールチップ、ファンキット等の素材の著作権はスクウェア・エニックスに帰属します。<br>
         &copy; SQUARE ENIX
     </p>
 
-    <!-- サイト権利表記 -->
     <p class="site-copyright">
         &copy; <span id="current-year"></span> warudora / C'zaha Chell tia. All Rights Reserved.
     </p>
 
-    <!-- 各自の肩書き表記エリア -->
-    <div class="footer-meta-container">
-        <!-- 共通の肩書き -->
-        <div class="meta-item common-meta">
-            <span class="meta-name"></span>
-            <span class="meta-role">Japanituremod Developers</span>
-        </div>
-
-        <!-- warudoraの肩書き -->
-        <div class="meta-item">
-            <span class="meta-name">warudora:</span>
-            <span class="meta-role">5H1H0 Engineer & Sales Rep / Admin of MJaS / Founder of MTRJapanUsers</span>
-        </div>
-
-        <!-- C'zaha Chell tiaの肩書き -->
-        <div class="meta-item">
-            <span class="meta-name">C'zaha Chell tia:</span>
-            <span class="meta-role">Independent Developer / Trumpet Player / YTE Translator</span>
-        </div>
-
-        <!-- 演奏依頼に関する注記 -->
-        <div class="meta-note">
+    <div class="footer-meta-container" style="margin-top: 15px; font-size: 0.75rem; color: #a0a0a0; display: flex; flex-direction: column; gap: 6px; align-items: center;">
+        <div class="meta-item"><span class="meta-role" style="color: #3498db;">Japanituremod Developers</span></div>
+        <div class="meta-item"><span class="meta-name" style="font-weight: bold; color: #d0d0d0;">warudora:</span><span class="meta-role" style="color: #888888;">5H1H0 Engineer & Sales Rep / Admin of MJaS / Founder of MTRJapanUsers</span></div>
+        <div class="meta-item"><span class="meta-name" style="font-weight: bold; color: #d0d0d0;">C'zaha Chell tia:</span><span class="meta-role" style="color: #888888;">Independent Developer / Trumpet Player / YTE Translator</span></div>
+        <div class="meta-note" style="margin-top: 6px; font-size: 0.7rem; color: #888888; max-width: 650px; line-height: 1.4; text-align: center;">
             ※演奏依頼は原則お断りしております（所属団体およびその姉妹団体からのご依頼を除く）。なお、引退後であっても所属・出身団体からの要請であればOBとして喜んでお引き受けいたします。
         </div>
     </div>
 </footer>
 
-<button id="back-to-top" title="Go to top">
-    <i class="fas fa-chevron-up"></i>
-</button>
+<button id="back-to-top" title="Go to top"><i class="fas fa-chevron-up"></i></button>
 
 <script>
-    // 年数の自動更新
     document.getElementById('current-year').textContent = new Date().getFullYear();
 
-    // トップに戻るボタンの制御
     const backToTopBtn = document.getElementById('back-to-top');
-
     window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 300) {
-            backToTopBtn.classList.add('show');
-        } else {
-            backToTopBtn.classList.remove('show');
-        }
+        if (window.pageYOffset > 300) backToTopBtn.classList.add('show');
+        else backToTopBtn.classList.remove('show');
     });
+    backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-    backToTopBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // news-data.txt から最新3件を取得して表示する処理
+    // トップページ用：お知らせデータ（news-data.txt）読み込み
     document.addEventListener('DOMContentLoaded', () => {
         fetch('news-data.txt')
-            .then(res => {
-                if (!res.ok) throw new Error('読み込み失敗');
-                return res.text();
-            })
+            .then(res => res.text())
             .then(text => {
                 const container = document.getElementById('top-news-list');
-                if (!container) return;
                 container.innerHTML = '';
-
                 const items = text.split('---').map(b => b.trim()).filter(b => b.length > 0);
 
                 if (items.length === 0) {
-                    container.innerHTML = '<p style="text-align: center; color: #666;">現在お知らせはありません。</p>';
+                    container.innerHTML = '<p style="color:#666;">お知らせはありません。</p>';
                     return;
                 }
 
-                // 直近3件を取得
-                const recentItems = items.slice(0, 3);
-
-                recentItems.forEach(itemStr => {
+                items.slice(0, 3).forEach(itemStr => {
                     const lines = itemStr.split('\n');
-                    let date = '', category = '', title = '', body = '', link = '';
+                    let date = '', category = '', title = '';
 
                     lines.forEach(line => {
                         if (line.startsWith('[DATE]')) date = line.replace('[DATE]', '').trim();
                         else if (line.startsWith('[CATEGORY]')) category = line.replace('[CATEGORY]', '').trim();
                         else if (line.startsWith('[TITLE]')) title = line.replace('[TITLE]', '').trim();
-                        else if (line.startsWith('[BODY]')) body = line.replace('[BODY]', '').trim();
-                        else if (line.startsWith('[LINK]')) link = line.replace('[LINK]', '').trim();
                     });
 
-                    const isExternal = link.startsWith('http://') || link.startsWith('https://');
-                    const targetAttr = isExternal ? 'target="_blank" rel="noopener noreferrer"' : '';
-
-                    const card = document.createElement('article');
-                    card.className = 'news-card';
-                    card.style.marginBottom = '10px';
-                    card.innerHTML = `
-                        <div class="news-meta" style="font-size:0.85rem; color:#7f8c8d;">
+                    const div = document.createElement('div');
+                    div.className = 'news-item-summary';
+                    div.innerHTML = `
+                        <div class="news-meta-line">
                             <span class="news-date">${date}</span>
-                            <span class="badge" style="background:#edf2f7; padding:2px 8px; border-radius:10px; font-size:0.75rem; font-weight:bold;">${category.toUpperCase()}</span>
+                            <span style="background:#edf2f7; font-size:0.7rem; padding:1px 6px; border-radius:4px; font-weight:bold; color:#3498db;">${category.toUpperCase()}</span>
                         </div>
-                        <h3 class="news-title" style="margin:5px 0; font-size:1.05rem;">${title}</h3>
-                        <p class="news-body" style="font-size:0.9rem; color:#555; margin:0;">${body}</p>
-                        ${link ? `<a href="${link}" ${targetAttr} class="news-link" style="display:inline-block; margin-top:5px; font-size:0.85rem; color:var(--accent-color); font-weight:bold; text-decoration:none;">詳細を見る &rarr;</a>` : ''}
+                        <p class="news-title-text">${title}</p>
                     `;
-
-                    container.appendChild(card);
+                    container.appendChild(div);
                 });
             })
             .catch(() => {
-                const container = document.getElementById('top-news-list');
-                if (container) {
-                    container.innerHTML = '<p style="text-align: center; color: #e74c3c;">お知らせの読み込みに失敗しました。</p>';
+                document.getElementById('top-news-list').innerHTML = '<p style="color:#e74c3c;">読み込みに失敗しました。</p>';
+            });
+
+        // 特設イベント（event-data.txt）読み込み＆動的表示
+        fetch('event-data.txt')
+            .then(res => {
+                if (!res.ok) throw new Error('No event data');
+                return res.text();
+            })
+            .then(text => {
+                const container = document.getElementById('special-event-container');
+                if (!container || !text.trim()) return;
+
+                let tag = '', date = '', title = '', body = '', link = '', btnText = '特設ページを見る';
+
+                text.split('\n').forEach(line => {
+                    if (line.startsWith('[TAG]')) tag = line.replace('[TAG]', '').trim();
+                    else if (line.startsWith('[DATE]')) date = line.replace('[DATE]', '').trim();
+                    else if (line.startsWith('[TITLE]')) title = line.replace('[TITLE]', '').trim();
+                    else if (line.startsWith('[BODY]')) body = line.replace('[BODY]', '').trim();
+                    else if (line.startsWith('[LINK]')) link = line.replace('[LINK]', '').split('|')[0].trim();
+                    else if (line.startsWith('[BTN_TEXT]')) btnText = line.replace('[BTN_TEXT]', '').trim();
+                });
+
+                if (title) {
+                    container.innerHTML = `
+                        <div class="special-event-card" style="background: #ffffff; border-radius: 16px; padding: 25px; margin: 10px 0 20px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-left: 6px solid #d35400;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                                <span style="background: #fbeee6; color: #d35400; font-size: 0.8rem; font-weight: bold; padding: 4px 12px; border-radius: 50px;">
+                                    <i class="fas fa-music"></i> ${tag || 'Special Info'}
+                                </span>
+                                <span style="font-size: 0.85rem; color: #888;">${date}</span>
+                            </div>
+                            <h3 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 1.3rem;">${title}</h3>
+                            <p style="margin: 0 0 20px 0; font-size: 0.95rem; color: #555; line-height: 1.6;">${body}</p>
+                            ${link ? `
+                                <div style="text-align: right;">
+                                    <a href="${link}" style="display: inline-flex; align-items: center; gap: 8px; font-weight: bold; text-decoration: none; padding: 10px 20px; background: #d35400; color: white; border-radius: 50px; font-size: 0.9rem; transition: background 0.3s;" onmouseover="this.style.background='#b34300'" onmouseout="this.style.background='#d35400'">
+                                        ${btnText} <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
                 }
+            })
+            .catch(() => {
+                // ファイルがない・空の場合はカードを表示しない
             });
     });
 </script>
