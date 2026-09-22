@@ -129,8 +129,44 @@
         }
 
         /* ----------------------------------
-           5. ニュース簡易表示エリア
+           5. ニュース簡易表示エリア & 緊急お知らせ
         ---------------------------------- */
+        .urgent-card {
+            background: #fdf2f2;
+            border-left: 6px solid #e74c3c;
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.1);
+        }
+
+        .important-card {
+            background: #fef9e7;
+            border-left: 6px solid #e67e22;
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(230, 126, 34, 0.1);
+        }
+
+        .urgent-badge {
+            background: #e74c3c;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.75rem;
+        }
+
+        .important-badge {
+            background: #e67e22;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.75rem;
+        }
+
         .top-news-section {
             background: var(--white);
             border-radius: 16px;
@@ -359,8 +395,13 @@
             </div> 
         </div>
     </div>
-        <div id="special-event-container" style="grid-column: 1 / -1;"></div>
-<div id="urgent-news-container" style="display: none; margin-bottom: 2rem;"></div>
+
+    <!-- 特設イベントエリア -->
+    <div id="special-event-container" style="grid-column: 1 / -1;"></div>
+
+    <!-- 緊急・重要なお知らせ用コンテナ（データがある場合のみ自動展開） -->
+    <div id="urgent-news-container" style="display: none; margin-bottom: 2rem;"></div>
+
     <!-- お知らせ簡易一覧（概要のみ表示） -->
     <div class="top-news-section">
         <h2><i class="fas fa-bullhorn"></i> News & Updates</h2>
@@ -408,8 +449,6 @@
                 <a href="https://discord.gg/VBUyKskneM" class="btn btn-discord" target="_blank"><i class="fab fa-discord"></i> Discord</a>
             </div>
         </article>
-
-        <!-- 特設イベントエリア（event-data.txt から動的読み込み） -->
     </div>
 </div>
 
@@ -445,44 +484,96 @@
     });
     backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-    // トップページ用：お知らせデータ（news-data.txt）読み込み
+    // トップページ用：お知らせデータ（news-data.txt）読み込み＆緊急・重要抽出一括処理
     document.addEventListener('DOMContentLoaded', () => {
         fetch('news-data.txt')
-            .then(res => res.text())
+            .then(res => {
+                if (!res.ok) throw new Error('データなし');
+                return res.text();
+            })
             .then(text => {
-                const container = document.getElementById('top-news-list');
-                container.innerHTML = '';
+                const topNewsContainer = document.getElementById('top-news-list');
+                const urgentContainer = document.getElementById('urgent-news-container');
+                topNewsContainer.innerHTML = '';
+                
                 const items = text.split('---').map(b => b.trim()).filter(b => b.length > 0);
 
                 if (items.length === 0) {
-                    container.innerHTML = '<p style="color:#666;">お知らせはありません。</p>';
+                    topNewsContainer.innerHTML = '<p style="color:#666;">お知らせはありません。</p>';
+                    urgentContainer.style.display = 'none';
                     return;
                 }
 
-                items.slice(0, 3).forEach(itemStr => {
-                    const lines = itemStr.split('\n');
-                    let date = '', category = '', title = '';
+                const parsedItems = [];
+                const urgentItems = [];
 
-                    lines.forEach(line => {
-                        if (line.startsWith('[DATE]')) date = line.replace('[DATE]', '').trim();
-                        else if (line.startsWith('[CATEGORY]')) category = line.replace('[CATEGORY]', '').trim();
-                        else if (line.startsWith('[TITLE]')) title = line.replace('[TITLE]', '').trim();
+                items.forEach(itemStr => {
+                    let date = '', category = '', title = '', link = '', bodyLines = [], currentTag = '';
+
+                    itemStr.split('\n').forEach(line => {
+                        const trimmed = line.trim();
+                        if (trimmed.startsWith('[DATE]')) date = trimmed.replace('[DATE]', '').trim();
+                        else if (trimmed.startsWith('[CATEGORY]')) category = trimmed.replace('[CATEGORY]', '').trim();
+                        else if (trimmed.startsWith('[TITLE]')) title = trimmed.replace('[TITLE]', '').trim();
+                        else if (trimmed.startsWith('[LINK]')) link = trimmed.replace('[LINK]', '').trim().split('|')[0];
+                        else if (trimmed.startsWith('[BODY]')) { bodyLines.push(trimmed.replace('[BODY]', '').trim()); currentTag = 'BODY'; }
+                        else if (currentTag === 'BODY' && trimmed !== '') bodyLines.push(trimmed);
                     });
 
+                    const itemData = { date, category, title, link, body: bodyLines.join('\n') };
+                    parsedItems.push(itemData);
+
+                    // urgent または important を抽出
+                    const catLower = category.toLowerCase();
+                    if (catLower === 'urgent' || catLower === 'important') {
+                        urgentItems.push(itemData);
+                    }
+                });
+
+                // --- 1. 緊急・重要お知らせエリアの描画 ---
+                if (urgentItems.length > 0) {
+                    urgentContainer.style.display = 'block';
+                    urgentContainer.innerHTML = urgentItems.map(item => {
+                        const isUrgent = item.category.toLowerCase() === 'urgent';
+                        const cardClass = isUrgent ? 'urgent-card' : 'important-card';
+                        const badgeClass = isUrgent ? 'urgent-badge' : 'important-badge';
+                        const label = isUrgent ? '【緊急】' : '【重要】';
+                        const textColor = isUrgent ? '#78281f' : '#7e5109';
+                        const linkColor = isUrgent ? '#e74c3c' : '#e67e22';
+
+                        return `
+                            <div class="${cardClass}">
+                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                                    <span class="${badgeClass}">${label}</span>
+                                    <span style="font-size: 0.85rem; color: #666; font-weight: 600;">${item.date}</span>
+                                </div>
+                                <h3 style="margin: 0 0 0.5rem 0; color: ${textColor}; font-size: 1.1rem; font-weight: bold;">${item.title}</h3>
+                                ${item.body ? `<p style="margin: 0; font-size: 0.92rem; color: #444; white-space: pre-wrap; word-break: break-word;">${item.body}</p>` : ''}
+                                ${item.link ? `<div style="margin-top: 0.8rem;"><a href="${item.link}" style="color: ${linkColor}; font-weight: bold; text-decoration: underline; font-size: 0.85rem;">詳細を確認する &rarr;</a></div>` : ''}
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    urgentContainer.style.display = 'none';
+                }
+
+                // --- 2. 通常のお知らせ簡易表示（最新3件）の描画 ---
+                parsedItems.slice(0, 3).forEach(item => {
                     const div = document.createElement('div');
                     div.className = 'news-item-summary';
                     div.innerHTML = `
                         <div class="news-meta-line">
-                            <span class="news-date">${date}</span>
-                            <span style="background:#edf2f7; font-size:0.7rem; padding:1px 6px; border-radius:4px; font-weight:bold; color:#3498db;">${category.toUpperCase()}</span>
+                            <span class="news-date">${item.date}</span>
+                            <span style="background:#edf2f7; font-size:0.7rem; padding:1px 6px; border-radius:4px; font-weight:bold; color:#3498db;">${item.category.toUpperCase()}</span>
                         </div>
-                        <p class="news-title-text">${title}</p>
+                        <p class="news-title-text">${item.title}</p>
                     `;
-                    container.appendChild(div);
+                    topNewsContainer.appendChild(div);
                 });
             })
             .catch(() => {
                 document.getElementById('top-news-list').innerHTML = '<p style="color:#e74c3c;">読み込みに失敗しました。</p>';
+                document.getElementById('urgent-news-container').style.display = 'none';
             });
 
         // 特設イベント（event-data.txt）読み込み＆動的表示
