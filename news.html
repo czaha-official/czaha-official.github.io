@@ -154,8 +154,14 @@
     </div>
 </div>
 
-<footer>
-    <p>&copy; warudora / C'zaha Chell tia. All Rights Reserved.</p>
+ <div class="footer-meta-container" style="margin-top: 15px; font-size: 0.75rem; color: #a0a0a0; display: flex; flex-direction: column; gap: 6px; align-items: center;">
+        <div class="meta-item"><span class="meta-role" style="color: #3498db;">Japanituremod Developers</span></div>
+        <div class="meta-item"><span class="meta-name" style="font-weight: bold; color: #d0d0d0;">warudora:</span><span class="meta-role" style="color: #888888;">5H1H0 Engineer & Sales Rep / Admin of MJaS / Founder of MTRJapanUsers</span></div>
+        <div class="meta-item"><span class="meta-name" style="font-weight: bold; color: #d0d0d0;">C'zaha Chell tia:</span><span class="meta-role" style="color: #888888;">Independent Developer / Trumpet Player / YTE Translator</span></div>
+        <div class="meta-note" style="margin-top: 6px; font-size: 0.7rem; color: #888888; max-width: 650px; line-height: 1.4; text-align: center;">
+            ※演奏依頼は原則お断りしております（所属団体およびその姉妹団体からのご依頼を除く）。なお、引退後であっても所属・出身団体からの要請であればOBとして喜んでお引き受けいたします。
+        </div>
+    </div>
 </footer>
 
 <script>
@@ -200,8 +206,8 @@
                     
                     let catLabel = category.toUpperCase();
                     let extraCardClass = '';
-                    if (catLower === 'urgent') { catLabel = '【緊急】'; extraCardClass = 'border-urgent'; }
-                    else if (catLower === 'important') { catLabel = '【重要】'; extraCardClass = 'border-important'; }
+                    if (catLower === 'urgent') { catLabel = '緊急'; extraCardClass = 'border-urgent'; }
+                    else if (catLower === 'important') { catLabel = '重要'; extraCardClass = 'border-important'; }
 
                     const card = document.createElement('article');
                     card.className = `news-card ${extraCardClass} ${link ? 'has-link' : ''}`;
