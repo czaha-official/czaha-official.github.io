@@ -154,12 +154,19 @@
     </div>
 </div>
 
- <div class="footer-meta-container" style="margin-top: 15px; font-size: 0.75rem; color: #a0a0a0; display: flex; flex-direction: column; gap: 6px; align-items: center;">
+<footer>
+    <div class="footer-meta-container" style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
         <div class="meta-item"><span class="meta-role" style="color: #3498db;">Japanituremod Developers</span></div>
-        <div class="meta-item"><span class="meta-name" style="font-weight: bold; color: #d0d0d0;">warudora:</span><span class="meta-role" style="color: #888888;">5H1H0 Engineer & Sales Rep / Admin of MJaS / Founder of MTRJapanUsers</span></div>
-        <div class="meta-item"><span class="meta-name" style="font-weight: bold; color: #d0d0d0;">C'zaha Chell tia:</span><span class="meta-role" style="color: #888888;">Independent Developer / Trumpet Player / YTE Translator</span></div>
-        <div class="meta-note" style="margin-top: 6px; font-size: 0.7rem; color: #888888; max-width: 650px; line-height: 1.4; text-align: center;">
+        <div class="meta-item"><span class="meta-name" style="font-weight: bold; color: #d0d0d0;">warudora:</span><span class="meta-role" style="color: #aaaaaa;">5H1H0 Engineer & Sales Rep / Admin of MJaS / Founder of MTRJapanUsers</span></div>
+        <div class="meta-item"><span class="meta-name" style="font-weight: bold; color: #d0d0d0;">C'zaha Chell tia:</span><span class="meta-role" style="color: #aaaaaa;">Independent Developer / Trumpet Player / YTE Translator</span></div>
+        
+        <div class="meta-note" style="margin-top: 10px; font-size: 0.75rem; color: #aaaaaa; max-width: 650px; line-height: 1.4; text-align: center;">
             ※演奏依頼は原則お断りしております（所属団体およびその姉妹団体からのご依頼を除く）。なお、引退後であっても所属・出身団体からの要請であればOBとして喜んでお引き受けいたします。
+        </div>
+
+        <!-- スクウェア・エニックス等の権利表記エリア -->
+        <div class="sqex-copyright" style="margin-top: 15px; font-size: 0.7rem; color: #888888; max-width: 700px; line-height: 1.4; text-align: center;">
+            (C) SQUARE ENIX CO., LTD. All Rights Reserved.
         </div>
     </div>
 </footer>
@@ -229,6 +236,11 @@
                     `;
                     container.appendChild(card);
                 });
+            })
+            .catch(err => {
+                console.error(err);
+                const container = document.getElementById('all-news-list');
+                container.innerHTML = '<p style="text-align: center; color: #666;">お知らせの読み込みに失敗しました。</p>';
             });
     });
 </script>
