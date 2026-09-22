@@ -119,6 +119,11 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.04);
             transition: all 0.3s ease;
             border-left: 5px solid var(--accent-color);
+            position: relative;
+        }
+
+        .news-card.has-link {
+            cursor: pointer;
         }
 
         .news-card:hover {
@@ -164,21 +169,27 @@
             color: #555;
             margin: 0;
             white-space: pre-wrap;
+            word-break: break-word;
         }
 
-        .news-link {
+        .news-link-btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            margin-top: 1rem;
-            font-size: 0.85rem;
+            margin-top: 1.2rem;
+            padding: 8px 16px;
+            background: #edf2f7;
             color: var(--accent-color);
+            border-radius: 50px;
+            font-size: 0.85rem;
             text-decoration: none;
             font-weight: bold;
+            transition: all 0.2s;
         }
 
-        .news-link:hover {
-            text-decoration: underline;
+        .news-card:hover .news-link-btn {
+            background: var(--accent-color);
+            color: #ffffff;
         }
 
         /* ----------------------------------
@@ -294,25 +305,16 @@
 </button>
 
 <script>
-    // 年数の自動更新
     document.getElementById('current-year').textContent = new Date().getFullYear();
 
-    // トップに戻るボタンの制御
     const backToTopBtn = document.getElementById('back-to-top');
-
     window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 300) {
-            backToTopBtn.classList.add('show');
-        } else {
-            backToTopBtn.classList.remove('show');
-        }
+        if (window.pageYOffset > 300) backToTopBtn.classList.add('show');
+        else backToTopBtn.classList.remove('show');
     });
+    backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-    backToTopBtn.addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // news-data.txt からニュースデータを取得・表示
+    // news-data.txt からニュースデータを取得・堅牢にパースして表示
     document.addEventListener('DOMContentLoaded', () => {
         fetch('news-data.txt')
             .then(res => {
@@ -331,22 +333,56 @@
                 }
 
                 items.forEach(itemStr => {
-                    const lines = itemStr.split('\n');
-                    let date = '', category = '', title = '', body = '', link = '';
+                    let date = '', category = 'INFO', title = '', link = '', btnText = '詳細・特設ページを見る';
+                    let bodyLines = [];
+                    let currentTag = '';
 
-                    lines.forEach(line => {
-                        if (line.startsWith('[DATE]')) date = line.replace('[DATE]', '').trim();
-                        else if (line.startsWith('[CATEGORY]')) category = line.replace('[CATEGORY]', '').trim();
-                        else if (line.startsWith('[TITLE]')) title = line.replace('[TITLE]', '').trim();
-                        else if (line.startsWith('[BODY]')) body = line.replace('[BODY]', '').trim();
-                        else if (line.startsWith('[LINK]')) link = line.replace('[LINK]', '').trim();
+                    // 1行ずつ解析
+                    itemStr.split('\n').forEach(line => {
+                        const trimmed = line.trim();
+                        if (trimmed.startsWith('[DATE]')) {
+                            date = trimmed.replace('[DATE]', '').trim();
+                            currentTag = 'DATE';
+                        } else if (trimmed.startsWith('[CATEGORY]')) {
+                            category = trimmed.replace('[CATEGORY]', '').trim();
+                            currentTag = 'CATEGORY';
+                        } else if (trimmed.startsWith('[TITLE]')) {
+                            title = trimmed.replace('[TITLE]', '').trim();
+                            currentTag = 'TITLE';
+                        } else if (trimmed.startsWith('[LINK]')) {
+                            const linkRaw = trimmed.replace('[LINK]', '').trim();
+                            if (linkRaw.includes('|')) {
+                                const parts = linkRaw.split('|');
+                                link = parts[0].trim();
+                                btnText = parts[1].trim();
+                            } else {
+                                link = linkRaw;
+                            }
+                            currentTag = 'LINK';
+                        } else if (trimmed.startsWith('[BODY]')) {
+                            bodyLines.push(trimmed.replace('[BODY]', '').trim());
+                            currentTag = 'BODY';
+                        } else if (currentTag === 'BODY' && trimmed !== '') {
+                            bodyLines.push(trimmed);
+                        }
                     });
 
+                    const body = bodyLines.join('\n');
                     const catLower = category.toLowerCase();
                     const badgeClass = `badge-${catLower}`;
 
                     const card = document.createElement('article');
-                    card.className = 'news-card';
+                    card.className = `news-card ${link ? 'has-link' : ''}`;
+
+                    // リンクがある場合はカード全体をクリック可能に設定
+                    if (link) {
+                        card.addEventListener('click', (e) => {
+                            if (e.target.tagName !== 'A') {
+                                window.location.href = link;
+                            }
+                        });
+                    }
+
                     card.innerHTML = `
                         <div class="news-meta">
                             <span class="news-date">${date}</span>
@@ -354,7 +390,7 @@
                         </div>
                         <h2 class="news-title">${title}</h2>
                         <p class="news-body">${body}</p>
-                        ${link ? `<a href="${link}" class="news-link">詳細・特設ページを見る <i class="fas fa-arrow-right"></i></a>` : ''}
+                        ${link ? `<div style="text-align: left;"><a href="${link}" class="news-link-btn">${btnText} <i class="fas fa-arrow-right"></i></a></div>` : ''}
                     `;
 
                     container.appendChild(card);
