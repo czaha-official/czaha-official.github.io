@@ -399,10 +399,10 @@
     <!-- 特設イベントエリア -->
     <div id="special-event-container" style="grid-column: 1 / -1;"></div>
 
-    <!-- 緊急・重要なお知らせ用コンテナ（データがある場合のみ自動展開） -->
+    <!-- 緊急・重要お知らせ用コンテナ（最新の1件のみ自動描画） -->
     <div id="urgent-news-container" style="display: none; margin-bottom: 2rem;"></div>
 
-    <!-- お知らせ簡易一覧（概要のみ表示） -->
+    <!-- お知らせ簡易一覧（最新3件表示） -->
     <div class="top-news-section">
         <h2><i class="fas fa-bullhorn"></i> News & Updates</h2>
         <div id="top-news-list">
@@ -458,7 +458,7 @@
                 </div>
                 <div class="card-body">
                     <span class="card-tag">Minecraft Server</span>
-                    <h3>MJaS (MTR Japan ServerServer)</h3>
+                    <h3>MJaS (Minecraft Japan Server)</h3>
                     <p>MJaSサーバーの参加申請・ポータルページです。詳細な案内や参加手続きはこちらから確認できます。</p>
                 </div>
             </div>
@@ -482,7 +482,7 @@
     <div class="footer-meta-container" style="margin-top: 15px; font-size: 0.75rem; color: #a0a0a0; display: flex; flex-direction: column; gap: 6px; align-items: center;">
         <div class="meta-item"><span class="meta-role" style="color: #3498db;">Japanituremod Developers</span></div>
         <div class="meta-item"><span class="meta-name" style="font-weight: bold; color: #d0d0d0;">warudora:</span><span class="meta-role" style="color: #888888;">5H1H0 Engineer & Sales Rep / Admin of MJaS / Founder of MTRJapanUsers</span></div>
-        <div class="meta-item"><span class="meta-name" style="font-weight: bold; color: #d0d0d0;">C'zaha Chell tia:</span><span class="meta-role" style="color: #888888;">Independent Developer / Admin of MJaS / Trumpet Player / YTE Translator</span></div>
+        <div class="meta-item"><span class="meta-name" style="font-weight: bold; color: #d0d0d0;">C'zaha Chell tia:</span><span class="meta-role" style="color: #888888;">Independent Developer / Trumpet Player / YTE Translator</span></div>
         <div class="meta-note" style="margin-top: 6px; font-size: 0.7rem; color: #888888; max-width: 650px; line-height: 1.4; text-align: center;">
             ※演奏依頼は原則お断りしております（所属団体およびその姉妹団体からのご依頼を除く）。なお、引退後であっても所属・出身団体からの要請であればOBとして喜んでお引き受けいたします。
         </div>
@@ -501,7 +501,7 @@
     });
     backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-    // トップページ用：お知らせデータ（news-data.txt）読み込み＆緊急・重要抽出一括処理
+    // トップページ用：お知らせデータ（news-data.txt）読み込み＆期間・最新優先制御
     document.addEventListener('DOMContentLoaded', () => {
         fetch('news-data.txt')
             .then(res => {
@@ -523,9 +523,10 @@
 
                 const parsedItems = [];
                 const urgentItems = [];
+                const todayStr = new Date().toISOString().split('T')[0]; // 本日の日付 (YYYY-MM-DD)
 
                 items.forEach(itemStr => {
-                    let date = '', category = '', title = '', link = '', bodyLines = [], currentTag = '';
+                    let date = '', category = '', title = '', link = '', expiry = '', bodyLines = [], currentTag = '';
 
                     itemStr.split('\n').forEach(line => {
                         const trimmed = line.trim();
@@ -533,48 +534,52 @@
                         else if (trimmed.startsWith('[CATEGORY]')) category = trimmed.replace('[CATEGORY]', '').trim();
                         else if (trimmed.startsWith('[TITLE]')) title = trimmed.replace('[TITLE]', '').trim();
                         else if (trimmed.startsWith('[LINK]')) link = trimmed.replace('[LINK]', '').trim().split('|')[0];
+                        else if (trimmed.startsWith('[EXPIRY]')) expiry = trimmed.replace('[EXPIRY]', '').trim();
                         else if (trimmed.startsWith('[BODY]')) { bodyLines.push(trimmed.replace('[BODY]', '').trim()); currentTag = 'BODY'; }
                         else if (currentTag === 'BODY' && trimmed !== '') bodyLines.push(trimmed);
                     });
 
-                    const itemData = { date, category, title, link, body: bodyLines.join('\n') };
+                    const itemData = { date, category, title, link, expiry, body: bodyLines.join('\n') };
                     parsedItems.push(itemData);
 
-                    // urgent または important を抽出
+                    // 掲載期間の判定（EXPIRYが未設定、または本日以前まで有効か）
+                    const isValidExpiry = !expiry || expiry >= todayStr;
                     const catLower = category.toLowerCase();
-                    if (catLower === 'urgent' || catLower === 'important') {
+
+                    // 有効期間内であれば緊急・重要リスト候補に指定
+                    if ((catLower === 'urgent' || catLower === 'important') && isValidExpiry) {
                         urgentItems.push(itemData);
                     }
                 });
 
-                // --- 1. 緊急・重要お知らせエリアの描画 ---
+                // --- 1. 緊急・重要お知らせエリアの描画（最新の1件だけを表示） ---
                 if (urgentItems.length > 0) {
-                    urgentContainer.style.display = 'block';
-                    urgentContainer.innerHTML = urgentItems.map(item => {
-                        const isUrgent = item.category.toLowerCase() === 'urgent';
-                        const cardClass = isUrgent ? 'urgent-card' : 'important-card';
-                        const badgeClass = isUrgent ? 'urgent-badge' : 'important-badge';
-                        const label = isUrgent ? '【緊急】' : '【重要】';
-                        const textColor = isUrgent ? '#78281f' : '#7e5109';
-                        const linkColor = isUrgent ? '#e74c3c' : '#e67e22';
+                    const topUrgent = urgentItems[0]; // 一番上に配置されている（＝最新の）1件を取得
+                    const isUrgent = topUrgent.category.toLowerCase() === 'urgent';
+                    const cardClass = isUrgent ? 'urgent-card' : 'important-card';
+                    const badgeClass = isUrgent ? 'urgent-badge' : 'important-badge';
+                    const label = isUrgent ? '【緊急】' : '【重要】';
+                    const textColor = isUrgent ? '#78281f' : '#7e5109';
+                    const linkColor = isUrgent ? '#e74c3c' : '#e67e22';
 
-                        return `
-                            <div class="${cardClass}">
-                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
-                                    <span class="${badgeClass}">${label}</span>
-                                    <span style="font-size: 0.85rem; color: #666; font-weight: 600;">${item.date}</span>
-                                </div>
-                                <h3 style="margin: 0 0 0.5rem 0; color: ${textColor}; font-size: 1.1rem; font-weight: bold;">${item.title}</h3>
-                                ${item.body ? `<p style="margin: 0; font-size: 0.92rem; color: #444; white-space: pre-wrap; word-break: break-word;">${item.body}</p>` : ''}
-                                ${item.link ? `<div style="margin-top: 0.8rem;"><a href="${item.link}" style="color: ${linkColor}; font-weight: bold; text-decoration: underline; font-size: 0.85rem;">詳細を確認する &rarr;</a></div>` : ''}
+                    urgentContainer.style.display = 'block';
+                    urgentContainer.innerHTML = `
+                        <div class="${cardClass}">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                                <span class="${badgeClass}">${label}</span>
+                                <span style="font-size: 0.85rem; color: #666; font-weight: 600;">${topUrgent.date}</span>
                             </div>
-                        `;
-                    }).join('');
+                            <h3 style="margin: 0 0 0.5rem 0; color: ${textColor}; font-size: 1.1rem; font-weight: bold;">${topUrgent.title}</h3>
+                            ${topUrgent.body ? `<p style="margin: 0; font-size: 0.92rem; color: #444; white-space: pre-wrap; word-break: break-word;">${topUrgent.body}</p>` : ''}
+                            ${topUrgent.link ? `<div style="margin-top: 0.8rem;"><a href="${topUrgent.link}" style="color: ${linkColor}; font-weight: bold; text-decoration: underline; font-size: 0.85rem;">詳細を確認する &rarr;</a></div>` : ''}
+                        </div>
+                    `;
                 } else {
                     urgentContainer.style.display = 'none';
                 }
 
                 // --- 2. 通常のお知らせ簡易表示（最新3件）の描画 ---
+                // 全件（すべての過去記事を含む）から最新3件を表示
                 parsedItems.slice(0, 3).forEach(item => {
                     const div = document.createElement('div');
                     div.className = 'news-item-summary';
