@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>400 Bad Request - リクエストエラー</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --text-color: #333333;
+            --error-red: #d9534f;
+            --error-dark-red: #c9302c;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", MeiRyo, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* ----- 左上端のエラーシステムステータス表示 ----- */
+        .system-error-banner {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            border-left: 4px solid var(--error-red);
+            padding: 8px 14px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            font-size: 0.82rem;
+            color: #555;
+            z-index: 100;
+        }
+
+        .system-error-banner .badge {
+            background-color: var(--error-red);
+            color: #ffffff;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 3px;
+            letter-spacing: 0.5px;
+        }
+
+        .system-error-banner .error-msg {
+            font-weight: 600;
+            color: #222;
+        }
+
+        /* メインコンテナ */
+        .container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .error-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+            margin-top: 40px; /* バナーとの干渉防止 */
+        }
+
+        .error-header {
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .error-code {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--error-red);
+            margin: 0;
+            line-height: 1;
+        }
+
+        .error-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #555;
+            margin-top: 5px;
+        }
+
+        .error-body {
+            font-size: 0.95rem;
+            color: #444;
+            margin-bottom: 25px;
+        }
+
+        .log-box {
+            background-color: #282c34;
+            color: #abb2bf;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            font-size: 0.8rem;
+            padding: 12px 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 3px solid var(--error-red);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #4a6fa5;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #3b5984;
+        }
+
+        footer-note {
+            display: block;
+            margin-top: 30px;
+            font-size: 0.78rem;
+            color: #888;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 左上端：企業サイト風クラッシュ検出ステータス表示 -->
+    <div class="system-error-banner">
+        <span class="badge">SYSTEM CRASH</span>
+        <span class="error-msg"><i class="fa-solid fa-triangle-exclamation"></i> リクエストヘッダー構造の破損を検知しました</span>
+    </div>
+
+    <div class="container">
+        <div class="error-card">
+            <div class="error-header">
+                <h1 class="error-code">400 Bad Request</h1>
+                <div class="error-title">不正なリクエストです</div>
+            </div>
+
+            <div class="error-body">
+                <p>送信されたリクエストのパラメータまたはCookieに異常が生じたため、サーバー側で正しく処理できませんでした。</p>
+                
+                <div class="log-box">
+                    HTTP/1.1 400 Bad Request<br>
+                    Error: Request Header Or Cookie Too Large<br>
+                    Cause: Excessive Client Interaction / Buffer Overflow<br>
+                    Status: Protocol Stack Broken
+                </div>
+
+                <p>ブラウザのキャッシュまたはCookieをクリアしてもう一度お試しいただくか、トップページより改めてアクセスしてください。</p>
+            </div>
+
+            <div class="btn-group">
+                <a href="/" class="btn btn-primary"><i class="fa-solid fa-house"></i> トップページへ戻る</a>
+            </div>
+
+            <span class="footer-note">C'zaha Chell Tia Network System - Client Request Protocol Validator</span>
+        </div>
+    </div>
+
+</body>
+</html>
