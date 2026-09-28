@@ -306,6 +306,24 @@
             border: 1px solid #ddd;
             color: var(--text-color);
         }
+    .btn-disabled {
+    background-color: #bdc3c7 !important;
+    color: #7f8c8d !important;
+    border-color: #bdc3c7 !important;
+    cursor: not-allowed !important;
+    pointer-events: none; /* クリック無効化 */
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+/* 注記用テキスト */
+.card-note {
+    font-size: 0.75rem;
+    color: #e74c3c;
+    margin-top: 8px;
+    display: block;
+    font-weight: bold;
+}
 
         .btn:hover { background: #f8f9fa; transform: translateY(-2px); }
         .btn-discord:hover { background: var(--discord-color); color: white; border-color: var(--discord-color); }
@@ -450,22 +468,27 @@
             </div>
         </article>
 
-        <!-- ユニット3: MJaS Server -->
-        <article class="card">
-            <div>
-                <div class="card-header">
-                    <h2><i class="fas fa-server"></i> Community Server</h2>
-                </div>
-                <div class="card-body">
-                    <span class="card-tag">Minecraft Server</span>
-                    <h3>MJaS (Minecraft Japan Server)</h3>
-                    <p>MJaSサーバーの参加申請・ポータルページです。詳細な案内や参加手続きはこちらから確認できます。</p>
-                </div>
-            </div>
-            <div class="button-group">
-                <a href="http://pro1.ssnetwork.io:54103/homepage/join" class="btn btn-primary" target="_blank"><i class="fas fa-user-plus"></i> 参加申請ページ</a>
-            </div>
-        </article>
+      <!-- ユニット3: MJaS Server -->
+<article class="card">
+    <div>
+        <div class="card-header">
+            <h2><i class="fas fa-server"></i> Community Server</h2>
+        </div>
+        <div class="card-body">
+            <span class="card-tag">Minecraft Server</span>
+            <h3>MJaS (Minecraft Japan Server)</h3>
+            <p>MJaSは2026年9月28日をもってサービスを終了いたしました。約2年間のご愛顧、誠にありがとうございました。今後は「MTR Japan Nexus (MJX)」へ移行いたします。</p>
+        </div>
+    </div>
+    <div>
+        <div class="button-group">
+            <a href="#" class="btn btn-disabled" tabindex="-1" aria-disabled="true">
+                <i class="fas fa-ban"></i> サービス終了
+            </a>
+        </div>
+        <span class="card-note">MJX Coming Soon.....</span>
+    </div>
+</article>
     </div>
 </div>
 
