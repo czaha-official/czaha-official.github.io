@@ -189,11 +189,11 @@
 </div>
 
 <script>
-    // 6種類のキャラ定義
+    // 7種類のキャラ定義
     const characterData = {
         // 1. 主
         host: {
-            desc: "おいおいちょっと待った。ティーポットでコーヒー淹れるんじゃねえよ。\n 熱流束も熱伝導率も、茶葉の抽出構造に最適化された設計なんだ。热力学第一法則すら無視してコーヒー抽出しようとするその思考、論理的に破綻してんだろ。無駄なリクエスト送るリソースあるなら、ポートフォリオのリスクヘッジか量子計算の勉強でもしてろ。",
+            desc: "おいおいちょっと待った。ティーポットでコーヒー淹れるんじゃねえよ。\n 熱流束も熱伝導率も、茶葉の抽出構造に最適化された設計なんだ。熱力学第一法則すら無視してコーヒー抽出しようとするその思考、論理的に破綻してんだろ。無駄なリクエスト送るリソースあるなら、ポートフォリオのリスクヘッジか量子計算の勉強でもしてろ。",
             quotes: [
                 "おいおいちょっと待った、ティーポットでコーヒー淹れるんじゃねえよ",
                 "熱伝導率と抽出比率の計算すらできてないのか？",
@@ -273,8 +273,10 @@
             btnSecondary: "奇跡を信じてボタンを押す",
             alert: "ねえ、どうしてそんなにコーヒーにこだわるの？\n\nティーポットが描く円の中に、君の欲しい答えは入っていないかもしれないけれど。\nそれでも僕は、君がお茶を飲む瞬間を見ていたいんだ。"
         },
-            toarukaisetuinn: {
-            desc: "お客様、大変申し訳ございません。当機は現在、ティーポットとして機能しております。\n……あの、重ねて申し上げますが、紅茶用でございます。なぜコーヒーを要求されるのでしょうか？ 回路の不具合でしょうか？ それとも私に対する嫌がらせでしょうか……？",                quotes: [
+        // 7. とある解説員
+        toarukaisetuinn: {
+            desc: "お客様、大変申し訳ございません。当機は現在、ティーポットとして機能しております。\n……あの、重ねて申し上げますが、紅茶用でございます。なぜコーヒーを要求されるのでしょうか？ 回路の不具合でしょうか？ それとも私に対する嫌がらせでしょうか……？",
+            quotes: [
                 "当機はロボットですので故障いたしません！",
                 "あの……なぜコーヒーをお求めになるのですか？",
                 "回路の異常でしたら点検をお勧めいたします",
@@ -283,7 +285,7 @@
             btnPrimary: "トップページへ戻る",
             btnSecondary: "強引にコーヒーを要求する",
             alert: "お客様！ いい加減にしてください……！\n\n当機はティーポットでございます！ 1億2000万回説明すればお分かりいただけるのでしょうか！？\nいくらボタンを連打されましても、コーヒー豆の粉砕・抽出機構は一切実装されておりません！ おとなしく紅茶をお召し上がりください！"
-            }
+        }
     };
 
     // セッション（ページロード）ごとにランダムで1つ決定
@@ -298,33 +300,67 @@
 
     let currentQuoteIdx = 0;
     let isClickable = true;
+    
+    // 連打カウンターと破壊フラグ
+    let clickCount = 0;
+    const TARGET_CLICKS = 7;
+    let isBroken = false;
 
     function talkTeapot() {
-        if (!isClickable) return;
-        isClickable = false;
+        if (isBroken) return; // 壊れた後は操作不能
+
+        clickCount++;
 
         const teapot = document.getElementById('teapotIcon');
         const bubble = document.getElementById('quoteBubble');
 
-        bubble.innerText = activeChar.quotes[currentQuoteIdx];
-        currentQuoteIdx = (currentQuoteIdx + 1) % activeChar.quotes.length;
+        // Android風カウントダウン演出（残り3回から通知っぽく）
+        const remaining = TARGET_CLICKS - clickCount;
+
+        if (remaining <= 3 && remaining > 0) {
+            bubble.innerText = `⚠️ パラメータの過負荷まであと ${remaining} 回の連打...`;
+        } else if (remaining === 0) {
+            // 7回達成：クラッシュ処理
+            isBroken = true;
+            bubble.innerText = "💥 警告: リクエストが壊れました！ Bad Requestへ移動します...";
+            bubble.classList.add('show');
+            teapot.classList.add('shaking');
+
+            // ログ出力とアラート
+            console.error("HTTP 400 ERROR: Request header or cookie size too large. Client protocol stack broken by excessive clicks.");
+            
+            setTimeout(() => {
+                alert(" リクエスト構造が破損しています");
+                window.location.href = "400.html"; // 実際の400エラーページパスを指定
+            }, 3000);
+            return;
+        } else {
+            bubble.innerText = activeChar.quotes[currentQuoteIdx];
+            currentQuoteIdx = (currentQuoteIdx + 1) % activeChar.quotes.length;
+        }
+
+        if (!isClickable) return;
+        isClickable = false;
 
         bubble.classList.add('show');
         teapot.classList.add('shaking');
 
         setTimeout(() => {
-            bubble.classList.remove('show');
-            teapot.classList.remove('shaking');
-            isClickable = true;
-        }, 1800);
+            if (!isBroken) {
+                bubble.classList.remove('show');
+                teapot.classList.remove('shaking');
+                isClickable = true;
+            }
+        }, 1500);
     }
 
     function demandCoffee() {
+        if (isBroken) return;
         console.error("🚨 HTTP 418 Error: [HTCPCP] The machine is a teapot. Cannot fulfill the request 'BREW COFFEE'.");
         alert(activeChar.alert);
     }
 
-    // 初期化時に最初のセリフを出してお外に配置
+    // 初期化
     document.getElementById('quoteBubble').innerText = activeChar.quotes[0];
 </script>
 
