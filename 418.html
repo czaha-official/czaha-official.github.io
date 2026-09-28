@@ -294,15 +294,29 @@
     // --- 異常検知・クッキー破壊発動用の設定 ---
     let clickCount = 0;
     let lastClickTime = Date.now();
-
-    function triggerSecurityBlock() {
-        const dummyHeader = "CRASH_DATA_".padEnd(4000, "X");
-        for (let i = 0; i < 6; i++) {
-            document.cookie = `session_corrupt_block_${i}=${dummyHeader}; path=/; max-age=86400; SameSite=Lax`;
-        }
-        alert("🚨 異常な連打・リクエスト構造の破損を検知しました。\n接続を強制的にお断りします（400 Bad Request）。");
-        location.reload();
+// 1. 異常検知時にクッキーを壊し、明示的にサーバーへリクエストを飛ばして 400 を受信させる
+function triggerSecurityBlock() {
+    // クッキーを限界まで巨大化（ヘッダー上限オーバー）
+    const dummyHeader = "CRASH_DATA_".padEnd(4000, "X");
+    for (let i = 0; i < 6; i++) {
+        document.cookie = `session_corrupt_block_${i}=${dummyHeader}; path=/; max-age=86400; SameSite=Lax`;
     }
+
+    console.error("🚨 異常なリクエストを検知したため、セッションを破壊して 400 Bad Request を受領します。");
+
+    // キャッシュを無視してサーバーへ直接 Fetch リクエストを発行
+    // これによりブラウザの Network タブ・レスポンスに直接 400 Bad Request が記録されます
+    fetch(window.location.href, { cache: 'no-store' })
+        .then(response => {
+            console.log("HTTP Status:", response.status); // 400 または 431 が表示されます
+            // サーバーから 400 エラーが返ってきたら、画面を完全に 400 表示へ遷移
+            window.location.href = window.location.href;
+        })
+        .catch(err => {
+            // リクエストヘッダーが大きすぎて fetch 自体がブラウザに拒否された場合も強制リロード
+            window.location.reload(true);
+        });
+}
 
     function checkAbnormalActivity() {
         const now = Date.now();
