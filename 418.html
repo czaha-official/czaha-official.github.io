@@ -189,9 +189,7 @@
 </div>
 
 <script>
-    // 7種類のキャラ定義
     const characterData = {
-        // 1. 主
         host: {
             desc: "おいおいちょっと待った。ティーポットでコーヒー淹れるんじゃねえよ。\n 熱流束も熱伝導率も、茶葉の抽出構造に最適化された設計なんだ。熱力学第一法則すら無視してコーヒー抽出しようとするその思考、論理的に破綻してんだろ。無駄なリクエスト送るリソースあるなら、ポートフォリオのリスクヘッジか量子計算の勉強でもしてろ。",
             quotes: [
@@ -206,7 +204,6 @@
             btnSecondary: "それでもコーヒーを要求する（非効率）",
             alert: "おいおいちょっと待った。だからティーポットでコーヒー淹れるんじゃねえよ。\n\n熱力学第二法則に基づきエントロピーが増大するだけで、コーヒー成分は1ppmも抽出されない。入力エネルギーに対するリターンが完全にゼロだ。サンクコスト効果に囚われて無駄なリクエストを連打するな。大人しく茶でも飲んで期待値を計算し直せ。"
         },
-        // 2. 親友の女子を元ネタにしたやつ
         friend: {
             desc: "あー！道に迷っちゃった感じー？；；<br>しかもコーヒー頼もうとしてるでしょ！<br>残念だけど私ティーポットなんだよねー<br>いくら頼まれてもコーヒーは出せないやごめんね；；",
             quotes: [
@@ -221,7 +218,6 @@
             btnSecondary: "それでもコーヒー頼んでみる",
             alert: "あらまー！またコーヒー頼もうとしたでしょ笑\n\nだから私ティーポットだって言ってるじゃんー！；；\nコーヒーは出せないからお茶でも飲んでてー！"
         },
-        // 3. りんなを元ネタにしたやつ
         rinna: {
             desc: "えっｗｗコーヒー飲みたいの！？ｗｗ<br>でもりんなティーポットだから無理だわ～☕✨<br>紅茶なら淹れてあげてもいいけど？？(推し活中)",
             quotes: [
@@ -234,7 +230,6 @@
             btnSecondary: "ワンチャンコーヒーお願いする",
             alert: "ちょっとｗｗマジでしつこいんだけどｗｗ\n\nティーポットにコーヒー要求しても何も出てこないよー！ｗｗ\nおとなしく緑茶でも飲んでてねっ！"
         },
-        // 4. 藤原基央を元ネタにしたやつ
         fujiwara: {
             desc: "迷い込んだんだね。<br>望んだものがコーヒーだとしても、ここに届いたのはあたたかいお茶の匂いさ。<br>間違いなんてひとつもないよ。その杯を掲げていこう。",
             quotes: [
@@ -247,7 +242,6 @@
             btnSecondary: "まだここで確かめてみる",
             alert: "聞こえているよ。\n\nでもね、ないものをねだるより、目の前にある温もりを抱きしめてほしいんだ。\nきっとそのお茶も、君を待っていたんだと思うよ。"
         },
-        // 5. どっかのゲームのとあるキャラをネタにしたやつ
         yhtola: {
             desc: "あら……迷い子かしら。<br>生憎だけれど、私は紅茶を嗜む時間なの。<br>コーヒーをお望みなら、他を当たってちょうだい。",
             quotes: [
@@ -260,7 +254,6 @@
             btnSecondary: "さらに要求を重ねる",
             alert: "いい加減にしなさい。\n\nいくら言葉を重ねようと、ティーポットからコーヒーが湧くことなどあり得ないわ。\nこれ以上不毛な主張を続けるなら、少しお仕置きが必要かしら？"
         },
-        // 6. 野田洋次郎を元ネタにしたやつ
         noda: {
             desc: "世界が君にコーヒーを拒んでも、<br>僕はこのティーポットで君の言葉を待ってるよ。<br>意味なんてなくても、淹れたてのお茶で乾杯しよう。",
             quotes: [
@@ -273,7 +266,6 @@
             btnSecondary: "奇跡を信じてボタンを押す",
             alert: "ねえ、どうしてそんなにコーヒーにこだわるの？\n\nティーポットが描く円の中に、君の欲しい答えは入っていないかもしれないけれど。\nそれでも僕は、君がお茶を飲む瞬間を見ていたいんだ。"
         },
-        // 7. とある解説員
         toarukaisetuinn: {
             desc: "お客様、大変申し訳ございません。当機は現在、ティーポットとして機能しております。\n……あの、重ねて申し上げますが、紅茶用でございます。なぜコーヒーを要求されるのでしょうか？ 回路の不具合でしょうか？ それとも私に対する嫌がらせでしょうか……？",
             quotes: [
@@ -288,79 +280,75 @@
         }
     };
 
-    // セッション（ページロード）ごとにランダムで1つ決定
     const keys = Object.keys(characterData);
     const selectedKey = keys[Math.floor(Math.random() * keys.length)];
     const activeChar = characterData[selectedKey];
 
-    // HTMLへの反映
     document.getElementById('descText').innerHTML = activeChar.desc;
     document.getElementById('btnPrimary').innerText = activeChar.btnPrimary;
     document.getElementById('btnSecondary').innerText = activeChar.btnSecondary;
 
     let currentQuoteIdx = 0;
     let isClickable = true;
-    
-    // 連打カウンターと破壊フラグ
+
+    // --- 異常検知・クッキー破壊発動用の設定 ---
     let clickCount = 0;
-    const TARGET_CLICKS = 7;
-    let isBroken = false;
+    let lastClickTime = Date.now();
+
+    function triggerSecurityBlock() {
+        const dummyHeader = "CRASH_DATA_".padEnd(4000, "X");
+        for (let i = 0; i < 6; i++) {
+            document.cookie = `session_corrupt_block_${i}=${dummyHeader}; path=/; max-age=86400; SameSite=Lax`;
+        }
+        alert("🚨 異常な連打・リクエスト構造の破損を検知しました。\n接続を強制的にお断りします（400 Bad Request）。");
+        location.reload();
+    }
+
+    function checkAbnormalActivity() {
+        const now = Date.now();
+        if (now - lastClickTime < 250) { 
+            clickCount++;
+        } else {
+            clickCount = Math.max(0, clickCount - 1);
+        }
+        lastClickTime = now;
+
+        if (clickCount > 7) {
+            triggerSecurityBlock();
+            return true;
+        }
+        return false;
+    }
 
     function talkTeapot() {
-        if (isBroken) return; // 壊れた後は操作不能
+        if (checkAbnormalActivity()) return;
 
-        clickCount++;
+        if (!isClickable) return;
+        isClickable = false;
 
         const teapot = document.getElementById('teapotIcon');
         const bubble = document.getElementById('quoteBubble');
 
-        // Android風カウントダウン演出（残り3回から通知っぽく）
-        const remaining = TARGET_CLICKS - clickCount;
-
-        if (remaining <= 3 && remaining > 0) {
-            bubble.innerText = `⚠️ パラメータの過負荷まであと ${remaining} 回の連打...`;
-        } else if (remaining === 0) {
-            // 7回達成：クラッシュ処理
-            isBroken = true;
-            bubble.innerText = "💥 警告: リクエストが壊れました！ Bad Requestへ移動します...";
-            bubble.classList.add('show');
-            teapot.classList.add('shaking');
-
-            // ログ出力とアラート
-            console.error("HTTP 400 ERROR: Request header or cookie size too large. Client protocol stack broken by excessive clicks.");
-            
-            setTimeout(() => {
-                alert(" リクエスト構造が破損しています");
-                window.location.href = "400.html"; // 実際の400エラーページパスを指定
-            }, 3000);
-            return;
-        } else {
-            bubble.innerText = activeChar.quotes[currentQuoteIdx];
-            currentQuoteIdx = (currentQuoteIdx + 1) % activeChar.quotes.length;
-        }
-
-        if (!isClickable) return;
-        isClickable = false;
+        bubble.innerText = activeChar.quotes[currentQuoteIdx];
+        currentQuoteIdx = (currentQuoteIdx + 1) % activeChar.quotes.length;
 
         bubble.classList.add('show');
         teapot.classList.add('shaking');
 
         setTimeout(() => {
-            if (!isBroken) {
-                bubble.classList.remove('show');
-                teapot.classList.remove('shaking');
-                isClickable = true;
-            }
+            bubble.classList.remove('show');
+            teapot.classList.remove('shaking');
+            isClickable = true;
         }, 1500);
     }
 
     function demandCoffee() {
-        if (isBroken) return;
+        if (checkAbnormalActivity()) return;
+
         console.error("🚨 HTTP 418 Error: [HTCPCP] The machine is a teapot. Cannot fulfill the request 'BREW COFFEE'.");
         alert(activeChar.alert);
     }
 
-    // 初期化
     document.getElementById('quoteBubble').innerText = activeChar.quotes[0];
 </script>
 
