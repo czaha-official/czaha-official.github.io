@@ -1,9 +1,9 @@
-[DATE] 2026-09-28
+[DATE] 2026-09-29
 [CATEGORY] urgent, info
 [TITLE] 【大切なお知らせ】MJaS サービス終了および「MTR Japan Nexus (MJX)」移行のお知らせ
 [BODY] MJaS（MTR Japan Server）をご覧・ご利用の皆様へお知らせです。
 
-MJaSは、2026年9月28日 0:00を持ちましてサービスを終了いたしました。
+MJaSは、2026年9月29日 0:00を持ちましてサービスを終了いたしました。
 
 ワールドは一度まっさらな状態となりますが、当サーバーは新たに「MTR Japan Nexus（MJX）」として生まれ変わります。
 
