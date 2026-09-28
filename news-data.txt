@@ -1,5 +1,5 @@
 [DATE] 2026-09-29
-[CATEGORY] important, info
+[CATEGORY] important
 [TITLE] 【大切なお知らせ】MJaS サービス終了および「MTR Japan Nexus (MJX)」移行のお知らせ
 [BODY] MJaS（MTR Japan Server）をご利用の皆様へ大切なお知らせです。
 
