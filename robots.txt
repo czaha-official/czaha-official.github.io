@@ -1,2 +1,3 @@
 User-agent: Googlebot-Image
-Disallow: /
+Disallow: /logo.png
+Disallow: /profile_top.png
