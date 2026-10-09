@@ -7,7 +7,7 @@
     <title>C'zaha Chell Tia's Official Site</title>
 
     <meta name="description" content="フリーな個人開発者、Japanituremod制作者、MTR向けアドオン Yunzhu Transit Extensionの日本語翻訳者C'zaha Chell Tia(略してザハ)の公式サイトです。">
-    <meta name="keywords" content="C'zaha Chell Tia, ザハ, Japanituremod, MTR, Minecraft Mod, MJaS">
+    <meta name="keywords" content="C'zaha Chell Tia, ザハ, Japanituremod, MTR, Minecraft Mod, MJaS MJX">
     <link rel="canonical" href="https://czaha-official.github.io/">
 
     <meta property="og:title" content="C'zaha Chell Tia's Official Hub">
@@ -16,7 +16,7 @@
     <meta property="og:image" content="https://czaha-official.github.io/profile_top.jpg">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="@warudora36">
+    <meta name="twitter:site" content="@czaha-official">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -306,28 +306,70 @@
             border: 1px solid #ddd;
             color: var(--text-color);
         }
-    .btn-disabled {
-    background-color: #bdc3c7 !important;
-    color: #7f8c8d !important;
-    border-color: #bdc3c7 !important;
-    cursor: not-allowed !important;
-    pointer-events: none; /* クリック無効化 */
-    box-shadow: none !important;
-    transform: none !important;
-}
 
-/* 注記用テキスト */
-.card-note {
-    font-size: 0.75rem;
-    color: #e74c3c;
-    margin-top: 8px;
-    display: block;
-    font-weight: bold;
-}
+        .btn-disabled {
+            background-color: #bdc3c7 !important;
+            color: #7f8c8d !important;
+            border-color: #bdc3c7 !important;
+            cursor: not-allowed !important;
+            pointer-events: none;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+
+        .card-note {
+            font-size: 0.75rem;
+            color: #e74c3c;
+            margin-top: 8px;
+            display: block;
+            font-weight: bold;
+        }
 
         .btn:hover { background: #f8f9fa; transform: translateY(-2px); }
         .btn-discord:hover { background: var(--discord-color); color: white; border-color: var(--discord-color); }
         .btn-primary { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+
+        /* 特設イベント用：タイマースタイル */
+        .countdown-container {
+            background: #fff6f0;
+            border: 1px solid #f2d7c5;
+            border-radius: 12px;
+            padding: 12px 18px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .countdown-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #d35400;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .countdown-digits {
+            display: flex;
+            gap: 8px;
+            align-items: baseline;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .countdown-num {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #d35400;
+        }
+
+        .countdown-unit {
+            font-size: 0.75rem;
+            color: #7f8c8d;
+            margin-right: 2px;
+        }
 
         /* ----------------------------------
            8. フッター & トップへ戻るボタン
@@ -380,6 +422,7 @@
             .profile-card { flex-direction: column; align-items: center; text-align: center; padding: 2rem 1.5rem; gap: 20px; }
             .profile-thumb { width: 130px; height: 130px; }
             .button-group { justify-content: center; }
+            .countdown-container { flex-direction: column; align-items: flex-start; gap: 6px; }
         }
     </style>
 </head>
@@ -468,46 +511,47 @@
             </div>
         </article>
 
-      <!-- ユニット3: MJaS Server -->
-<article class="card">
-    <div>
-        <div class="card-header">
-            <h2><i class="fas fa-server"></i> Community Server</h2>
-        </div>
-        <div class="card-body">
-            <span class="card-tag">Minecraft Server</span>
-            <h3>MJaS (Minecraft Japan Server)</h3>
-            <p>MJaSは2026年9月29日をもってサービスを終了いたしました。約2年間のご愛顧、誠にありがとうございました。今後は「MTR Japan Nexus (MJX)」へ移行いたします。</p>
-        </div>
-    </div>
-    <div>
-        <div class="button-group">
-            <a href="#" class="btn btn-disabled" tabindex="-1" aria-disabled="true">
-                <i class="fas fa-ban"></i> サービス終了しました
-            </a>
-            
-        </div>
-    </div>
-</article>
+        <!-- ユニット3: MJaS Server -->
         <article class="card">
-    <div>
-        <div class="card-header">
-            <h2><i class="fas fa-network-wired"></i> New Community Server</h2>
-        </div>
-        <div class="card-body">
-            <span class="card-tag">Minecraft Server</span>
-            <h3>MJX (MTR Japan Nexus)</h3>
-            <p>MJaSの後継となる新たなサーバープロジェクトです。公式サイトおよび参加申請ページの公開に向けて準備を進めております。</p>
-        </div>
-    </div>
-    <div>
-        <div class="button-group">
-            <a href="#" class="btn btn-disabled" tabindex="-1" aria-disabled="true">
-                <i class="fas fa-clock"></i> Coming Soon.....
-            </a>
-        </div>
-    </div>
-</article>
+            <div>
+                <div class="card-header">
+                    <h2><i class="fas fa-server"></i> Community Server</h2>
+                </div>
+                <div class="card-body">
+                    <span class="card-tag">Minecraft Server</span>
+                    <h3>MJaS (Minecraft Japan Server)</h3>
+                    <p>MJaSは2026年9月29日をもってサービスを終了いたしました。約2年間のご愛顧、誠にありがとうございました。今後は「MTR Japan Nexus (MJX)」へ移行いたします。</p>
+                </div>
+            </div>
+            <div>
+                <div class="button-group">
+                    <a href="#" class="btn btn-disabled" tabindex="-1" aria-disabled="true">
+                        <i class="fas fa-ban"></i> サービス終了しました
+                    </a>
+                </div>
+            </div>
+        </article>
+
+        <!-- ユニット4: MJX Server -->
+        <article class="card">
+            <div>
+                <div class="card-header">
+                    <h2><i class="fas fa-network-wired"></i> New Community Server</h2>
+                </div>
+                <div class="card-body">
+                    <span class="card-tag">Minecraft Server</span>
+                    <h3>MJX (MTR Japan Nexus)</h3>
+                    <p>MJaSの後継となる新たなサーバープロジェクトです。公式サイトおよび参加申請ページの公開に向けて準備を進めております。</p>
+                </div>
+            </div>
+            <div>
+                <div class="button-group">
+                    <a href="#" class="btn btn-disabled" tabindex="-1" aria-disabled="true">
+                        <i class="fas fa-clock"></i> Coming Soon.....
+                    </a>
+                </div>
+            </div>
+        </article>
     </div>
 </div>
 
@@ -565,7 +609,7 @@
 
                 const parsedItems = [];
                 const urgentItems = [];
-                const todayStr = new Date().toISOString().split('T')[0]; // 本日の日付 (YYYY-MM-DD)
+                const todayStr = new Date().toISOString().split('T')[0];
 
                 items.forEach(itemStr => {
                     let date = '', category = '', title = '', link = '', expiry = '', bodyLines = [], currentTag = '';
@@ -584,19 +628,16 @@
                     const itemData = { date, category, title, link, expiry, body: bodyLines.join('\n') };
                     parsedItems.push(itemData);
 
-                    // 掲載期間の判定（EXPIRYが未設定、または本日以前まで有効か）
                     const isValidExpiry = !expiry || expiry >= todayStr;
                     const catLower = category.toLowerCase();
 
-                    // 有効期間内であれば緊急・重要リスト候補に指定
                     if ((catLower === 'urgent' || catLower === 'important') && isValidExpiry) {
                         urgentItems.push(itemData);
                     }
                 });
 
-                // --- 1. 緊急・重要お知らせエリアの描画（最新の1件だけを表示） ---
                 if (urgentItems.length > 0) {
-                    const topUrgent = urgentItems[0]; // 一番上に配置されている（＝最新の）1件を取得
+                    const topUrgent = urgentItems[0];
                     const isUrgent = topUrgent.category.toLowerCase() === 'urgent';
                     const cardClass = isUrgent ? 'urgent-card' : 'important-card';
                     const badgeClass = isUrgent ? 'urgent-badge' : 'important-badge';
@@ -620,8 +661,6 @@
                     urgentContainer.style.display = 'none';
                 }
 
-                // --- 2. 通常のお知らせ簡易表示（最新3件）の描画 ---
-                // 全件（すべての過去記事を含む）から最新3件を表示
                 parsedItems.slice(0, 3).forEach(item => {
                     const div = document.createElement('div');
                     div.className = 'news-item-summary';
@@ -640,7 +679,7 @@
                 document.getElementById('urgent-news-container').style.display = 'none';
             });
 
-        // 特設イベント（event-data.txt）読み込み＆動的表示
+        // 特設イベント（event-data.txt）読み込み＆カウントダウンタイマー付与
         fetch('event-data.txt')
             .then(res => {
                 if (!res.ok) throw new Error('No event data');
@@ -650,11 +689,12 @@
                 const container = document.getElementById('special-event-container');
                 if (!container || !text.trim()) return;
 
-                let tag = '', date = '', title = '', body = '', link = '', btnText = '特設ページを見る';
+                let tag = '', date = '', targetDateStr = '', title = '', body = '', link = '', btnText = '特設ページを見る';
 
                 text.split('\n').forEach(line => {
                     if (line.startsWith('[TAG]')) tag = line.replace('[TAG]', '').trim();
                     else if (line.startsWith('[DATE]')) date = line.replace('[DATE]', '').trim();
+                    else if (line.startsWith('[EVENT_DATE]')) targetDateStr = line.replace('[EVENT_DATE]', '').trim();
                     else if (line.startsWith('[TITLE]')) title = line.replace('[TITLE]', '').trim();
                     else if (line.startsWith('[BODY]')) body = line.replace('[BODY]', '').trim();
                     else if (line.startsWith('[LINK]')) link = line.replace('[LINK]', '').split('|')[0].trim();
@@ -662,6 +702,23 @@
                 });
 
                 if (title) {
+                    let countdownHtml = '';
+                    if (targetDateStr) {
+                        countdownHtml = `
+                            <div class="countdown-container">
+                                <div class="countdown-title">
+                                    <i class="fas fa-hourglass-half"></i> イベント開催まで
+                                </div>
+                                <div class="countdown-digits" id="event-timer">
+                                    <span class="countdown-num" id="cd-days">0</span><span class="countdown-unit">日</span>
+                                    <span class="countdown-num" id="cd-hours">00</span><span class="countdown-unit">時間</span>
+                                    <span class="countdown-num" id="cd-mins">00</span><span class="countdown-unit">分</span>
+                                    <span class="countdown-num" id="cd-secs">00</span><span class="countdown-unit">秒</span>
+                                </div>
+                            </div>
+                        `;
+                    }
+
                     container.innerHTML = `
                         <div class="special-event-card" style="background: #ffffff; border-radius: 16px; padding: 25px; margin: 10px 0 20px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-left: 6px solid #d35400;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
@@ -671,9 +728,10 @@
                                 <span style="font-size: 0.85rem; color: #888;">${date}</span>
                             </div>
                             <h3 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 1.3rem;">${title}</h3>
-                            <p style="margin: 0 0 20px 0; font-size: 0.95rem; color: #555; line-height: 1.6;">${body}</p>
+                            <p style="margin: 0 0 15px 0; font-size: 0.95rem; color: #555; line-height: 1.6;">${body}</p>
+                            ${countdownHtml}
                             ${link ? `
-                                <div style="text-align: right;">
+                                <div style="text-align: right; margin-top: 15px;">
                                     <a href="${link}" style="display: inline-flex; align-items: center; gap: 8px; font-weight: bold; text-decoration: none; padding: 10px 20px; background: #d35400; color: white; border-radius: 50px; font-size: 0.9rem; transition: background 0.3s;" onmouseover="this.style.background='#b34300'" onmouseout="this.style.background='#d35400'">
                                         ${btnText} <i class="fas fa-arrow-right"></i>
                                     </a>
@@ -681,11 +739,37 @@
                             ` : ''}
                         </div>
                     `;
+
+                    // カウントダウンタイマー処理
+                    if (targetDateStr) {
+                        const targetDate = new Date(targetDateStr).getTime();
+
+                        function updateTimer() {
+                            const now = new Date().getTime();
+                            const diff = targetDate - now;
+
+                            if (diff <= 0) {
+                                document.getElementById('event-timer').innerHTML = '<span class="countdown-num" style="font-size:1.0rem;">イベント開催中！</span>';
+                                return;
+                            }
+
+                            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                            document.getElementById('cd-days').textContent = days;
+                            document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+                            document.getElementById('cd-mins').textContent = String(minutes).padStart(2, '0');
+                            document.getElementById('cd-secs').textContent = String(seconds).padStart(2, '0');
+                        }
+
+                        updateTimer();
+                        setInterval(updateTimer, 1000);
+                    }
                 }
             })
-            .catch(() => {
-                // ファイルがない・空の場合はカードを表示しない
-            });
+            .catch(() => {});
     });
 </script>
 
