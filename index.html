@@ -22,7 +22,7 @@
     
     <style>
         /* ----------------------------------
-           1. 変数定義・基本設定
+            1. 変数定義・基本設定
         ---------------------------------- */
         :root {
             --primary-color: #2c3e50;
@@ -50,7 +50,7 @@
         }
 
         /* ----------------------------------
-           2. ヘッダー & ナビゲーション
+            2. ヘッダー & ナビゲーション
         ---------------------------------- */
         nav.top-nav {
             background: rgba(255, 255, 255, 0.95);
@@ -85,7 +85,7 @@
         }
 
         /* ----------------------------------
-           3. レイアウトコンテナ
+            3. レイアウトコンテナ
         ---------------------------------- */
         .container {
             max-width: 1200px;
@@ -103,7 +103,7 @@
         }
 
         /* ----------------------------------
-           4. プロフィールカード
+            4. プロフィールカード
         ---------------------------------- */
         .profile-card {
             background: var(--white);
@@ -129,7 +129,7 @@
         }
 
         /* ----------------------------------
-           5. ニュース簡易表示エリア & 緊急お知らせ
+            5. ニュース簡易表示エリア & 緊急お知らせ
         ---------------------------------- */
         .urgent-card {
             background: #fdf2f2;
@@ -229,7 +229,7 @@
         }
 
         /* ----------------------------------
-           6. ユニット（共通カード）化スタイル
+            6. ユニット（共通カード）化スタイル
         ---------------------------------- */
         .card {
             background: var(--white);
@@ -284,7 +284,7 @@
         }
 
         /* ----------------------------------
-           7. 共通ボタンユニット
+            7. 共通ボタンユニット
         ---------------------------------- */
         .button-group {
             display: flex;
@@ -372,7 +372,7 @@
         }
 
         /* ----------------------------------
-           8. フッター & トップへ戻るボタン
+            8. フッター & トップへ戻るボタン
         ---------------------------------- */
         footer {
             background: var(--primary-color);
@@ -511,12 +511,11 @@
             </div>
         </article>
 
-        <!-- ユニット3: MJX -->
+        <!-- ユニット3: 新・経済MODプロジェクト -->
         <article class="card">
             <div>
                 <div class="card-header">
                     <h2><i class="fas fa-cubes"></i> Mod Development</h2>
-                    <div class="work-item">
                 </div>
                 <div class="card-body">
                     <span class="card-tag">Minecraft MOD</span>
@@ -524,26 +523,34 @@
                     <p>開発中で現状はまだ誰も知る術がない......</p>
                 </div>
             </div>
+            <div class="button-group">
+                <a href="#" class="btn btn-disabled" tabindex="-1" aria-disabled="true">
+                    <i class="fas fa-clock"></i> Coming Soon.....
+                </a>
+            </div>
+        </article>
+
+        <!-- ユニット4: MJX (MTR Japan Nexus) -->
+        <article class="card">
             <div>
-                <div class="button-group">
-                    <a href="#" class="btn btn-disabled" tabindex="-1" aria-disabled="true">
-                        <i class="fas fa-clock"></i> Coming Soon.....</a>
+                <div class="card-header">
+                    <h2><i class="fas fa-network-wired"></i> Minecraft Server</h2>
+                </div>
+                <div class="card-body">
+                    <span class="card-tag">Minecraft Server</span>
+                    <h3>MJX (MTR Japan Nexus)</h3>
+                    <p>MJaSの後継となる新たなサーバープロジェクトです。公式サイトおよび参加申請ページの公開に向けて準備を進めております。</p>
                 </div>
             </div>
-            <hr>
-            <div class="work-item">
-                <span class="badge badge-server">Minecraft Server</span>
-                <div class="work-item">
-                <h3>MJX (MTR Japan Nexus)</h3>
-                <p>MJaSの後継となる新たなサーバープロジェクトです。公式サイトおよび参加申請ページの公開に向けて準備を進めております。</p>
-                <div class="button-group">
-                    <a href="#" class="btn btn-disabled" tabindex="-1" aria-disabled="true">
-                        <i class="fas fa-clock"></i> Coming Soon.....
-                   <!-- <a href="http://pro1.ssnetwork.io:54103/homepage/home" class="link-btn btn-primary" target="_blank"><i class="fas fa-home"></i> Official HP</a> 
-                    <a href="https://x.com/MJaS2024_MTR" class="link-btn btn-x" target="_blank"><i class="fab fa-x-twitter"></i> Official X</a>-->
-        </section>
+            <div class="button-group">
+                <a href="#" class="btn btn-disabled" tabindex="-1" aria-disabled="true">
+                    <i class="fas fa-clock"></i> Coming Soon.....
+                </a>
+            </div>
+        </article>
     </div>
 </div>
+
 <footer>
     <p class="sqex-copyright">
         アカウントアイコン、ロードストーンツールチップ、ファンキット等の素材の著作権はスクウェア・エニックスに帰属します。<br>
