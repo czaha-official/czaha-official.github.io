@@ -316,6 +316,24 @@
             box-shadow: none !important;
             transform: none !important;
         }
+        .link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            padding: 7px 14px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 1px solid #ddd;
+            color: var(--text-color);
+        }
+
+        .link-btn:hover { background: #f8f9fa; transform: translateY(-2px); }
+        .link-btn.btn-x:hover { background: var(--x-color); color: white; border-color: var(--x-color); }
+        .link-btn.btn-discord:hover { background: var(--discord-color); color: white; border-color: var(--discord-color); }
+        .link-btn.btn-primary { background: var(--accent-color); color: white; border-color: var(--accent-color); }
 
         .card-note {
             font-size: 0.75rem;
