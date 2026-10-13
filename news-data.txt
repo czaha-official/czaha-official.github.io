@@ -2,16 +2,16 @@
 [CATEGORY] Release
 [TITLE] Japanituremod v4.0.0 をリリースしました！
 [LINK] https://modrinth.com/mod/japaniture/versions
-[BODY] 【Japaniture】Ver.4.0.0 パッチノート公開のお知らせ
+[BODY] @everyone  
+**【Japaniture】Ver.4.0.0 パッチノート公開のお知らせ**
 みなさんこんにちは。JapanitureMod 開発チームの warudora / C'zaha Chell Tia です。
 
 本日、大型アップデートとなる「Ver.4.0.0」をリリースいたしました。
-開発基盤の刷新に伴い、従来の装飾ブロックから「実際に動作する設備」へと大幅に進化しています。
+開発基盤の刷新に伴い、従来の装飾ブロックから「**実際に動作する設備**」へと大幅に進化しています。
 
-パッチ4.0.0 主な変更点
+**パッチ4.0.0 主な変更点**
 
-照明システムの本格実装
-
+** 1. 照明システムの本格実装**
 体育館・スポーツ施設用照明に実際の光源機能を実装。
 
 設置位置に応じた光源処理および撤去時の光源削除処理を改善。
@@ -20,34 +20,29 @@
 
 映画館用座席の足元照明を調整。
 
-可動式駐車場ロック板の追加
-
+** 2. 可動式駐車場ロック板の追加**
 アニメーションで実際に動作する可動式ロック板を追加。
 
-駐車場満空表示システムの強化
-
+** 3. 駐車場満空表示システムの強化**
 レッドストーン信号による満空（FULL / VACANT）表示切り替えに対応。
 
 複数段の支柱に対応し、最下部への信号入力を上部看板へ反映。
 
 看板本体からの手動切り替えにも対応。
 
-当たり判定（コリジョン）の改善
-
+** 4. 当たり判定（コリジョン）の改善**
 モデル形状に合わせた当たり判定の調整および回転処理の改善。
 
 見えない壁や不自然な通り抜けを修正。
 
-開発基盤の全面刷新
-
+** 5. 開発基盤の全面刷新**
 MCreatorからArchitectury基盤へ移行。
 
 Minecraft 1.20.1（Fabric / Forge）に対応。
 
 内部コードの再構築と最適化。
 
-その他の改善・不具合修正
-
+** 6. その他の改善・不具合修正**
 映画館座席の着席位置調整、一部家具の回転不具合修正。
 
 インターホンの音量・減衰パラメータ調整。
@@ -63,14 +58,14 @@ Java: Java 17～21(ForgeのみJava21の動作を確認しています)
 
 前提Mod: Architectury API / GeckoLib（Fabric版はFabric APIも必須）
 
-【重要】旧バージョンについて
+**【重要】旧バージョンについて**
 
-■ 互換性について
-Ver.4.0.0 は内部構造の全面刷新に伴い、旧バージョン（Ver.3.x以前 / Forge版Ver.0.0.2以前）との互換性がありません。
+**■ 互換性について**
+Ver.4.0.0 は**内部構造の全面刷新**に伴い、旧バージョン（Ver.3.x以前 / Forge版Ver.0.0.2以前）との**互換性がありません。**
 引き継ぎ時のブロック消失やデータ破損を防ぐため、事前のバックアップ作成および新規ワールドでのプレイを強く推奨いたします。
 
-■ 旧バージョンの公開とサポート
-1.19.2対応版は Ver.3.0.2 が最終更新となります。
+**■ 旧バージョンの公開とサポート**
+**1.19.2対応版**は **Ver.3.0.2** が**最終更新**となります。
 
 旧バージョンのファイル公開・ダウンロードは今後も継続いたしますが、
 今後のアップデート（修正・機能追加）は行われません。
@@ -81,7 +76,7 @@ JapanitureMod Development Team
 
 warudora / C'zaha Chell Tia
 
-Japanitureのダウンロードはこちら！
+__Japanitureのダウンロードはこちら！__
 
 Forge
 https://modrinth.com/mod/japaniture/version/4.0.0
@@ -89,9 +84,7 @@ https://www.curseforge.com/minecraft/mc-mods/japanituremod/files/9148692
 
 Fabric
 https://modrinth.com/mod/japaniture/version/puaalFKK
-https://www.curseforge.com/minecraft/mc-mods/japanituremod/files/9148707 
-
-
+https://www.curseforge.com/minecraft/mc-mods/japanituremod/files/9148707
 ---
 
 [DATE] 2026-09-29
