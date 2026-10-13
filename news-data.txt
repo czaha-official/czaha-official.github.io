@@ -2,8 +2,7 @@
 [CATEGORY] Release
 [TITLE] Japanituremod v4.0.0 をリリースしました！
 [LINK] https://modrinth.com/mod/japaniture/versions
-[BODY] @everyone  
-**【Japaniture】Ver.4.0.0 パッチノート公開のお知らせ**
+[BODY]**【Japaniture】Ver.4.0.0 パッチノート公開のお知らせ**
 みなさんこんにちは。JapanitureMod 開発チームの warudora / C'zaha Chell Tia です。
 
 本日、大型アップデートとなる「Ver.4.0.0」をリリースいたしました。
