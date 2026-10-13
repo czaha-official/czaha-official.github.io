@@ -75,13 +75,13 @@ JapanitureMod Development Team
 
 warudora / C'zaha Chell Tia
 
-__Japanitureのダウンロードはこちら！__
+**Japanitureのダウンロードはこちら！**
 
-Forge
+**Forge**
 https://modrinth.com/mod/japaniture/version/4.0.0
 https://www.curseforge.com/minecraft/mc-mods/japanituremod/files/9148692
 
-Fabric
+**Fabric**
 https://modrinth.com/mod/japaniture/version/puaalFKK
 https://www.curseforge.com/minecraft/mc-mods/japanituremod/files/9148707
 ---
