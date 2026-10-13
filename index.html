@@ -603,97 +603,113 @@
     });
     backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-    // トップページ用：お知らせデータ（news-data.txt）読み込み＆期間・最新優先制御
-    document.addEventListener('DOMContentLoaded', () => {
-        fetch('news-data.txt')
-            .then(res => {
-                if (!res.ok) throw new Error('データなし');
-                return res.text();
-            })
-            .then(text => {
-                const topNewsContainer = document.getElementById('top-news-list');
-                const urgentContainer = document.getElementById('urgent-news-container');
-                topNewsContainer.innerHTML = '';
-                
-                const items = text.split('---').map(b => b.trim()).filter(b => b.length > 0);
+  // トップページ用：お知らせデータ（news-data.txt）読み込み＆期間・最新優先制御
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('news-data.txt')
+        .then(res => {
+            if (!res.ok) throw new Error('データなし');
+            return res.text();
+        })
+        .then(text => {
+            const topNewsContainer = document.getElementById('top-news-list');
+            const urgentContainer = document.getElementById('urgent-news-container');
+            topNewsContainer.innerHTML = '';
+            
+            const items = text.split('---').map(b => b.trim()).filter(b => b.length > 0);
 
-                if (items.length === 0) {
-                    topNewsContainer.innerHTML = '<p style="color:#666;">お知らせはありません。</p>';
-                    urgentContainer.style.display = 'none';
-                    return;
-                }
+            if (items.length === 0) {
+                topNewsContainer.innerHTML = '<p style="color:#666;">お知らせはありません。</p>';
+                urgentContainer.style.display = 'none';
+                return;
+            }
 
-                const parsedItems = [];
-                const urgentItems = [];
-                const todayStr = new Date().toISOString().split('T')[0];
+            const parsedItems = [];
+            const urgentItems = [];
+            const todayStr = new Date().toISOString().split('T')[0];
 
-                items.forEach(itemStr => {
-                    let date = '', category = '', title = '', link = '', expiry = '', bodyLines = [], currentTag = '';
+            items.forEach(itemStr => {
+                let date = '', category = '', title = '', link = '', expiry = '', bodyLines = [], currentTag = '';
 
-                    itemStr.split('\n').forEach(line => {
-                        const trimmed = line.trim();
-                        if (trimmed.startsWith('[DATE]')) date = trimmed.replace('[DATE]', '').trim();
-                        else if (trimmed.startsWith('[CATEGORY]')) category = trimmed.replace('[CATEGORY]', '').trim();
-                        else if (trimmed.startsWith('[TITLE]')) title = trimmed.replace('[TITLE]', '').trim();
-                        else if (trimmed.startsWith('[LINK]')) link = trimmed.replace('[LINK]', '').trim().split('|')[0];
-                        else if (trimmed.startsWith('[EXPIRY]')) expiry = trimmed.replace('[EXPIRY]', '').trim();
-                        else if (trimmed.startsWith('[BODY]')) { bodyLines.push(trimmed.replace('[BODY]', '').trim()); currentTag = 'BODY'; }
-                        else if (currentTag === 'BODY' && trimmed !== '') bodyLines.push(trimmed);
-                    });
-
-                    const itemData = { date, category, title, link, expiry, body: bodyLines.join('\n') };
-                    parsedItems.push(itemData);
-
-                    const isValidExpiry = !expiry || expiry >= todayStr;
-                    const catLower = category.toLowerCase();
-
-                    if ((catLower === 'urgent' || catLower === 'important') && isValidExpiry) {
-                        urgentItems.push(itemData);
-                    }
+                itemStr.split('\n').forEach(line => {
+                    const trimmed = line.trim();
+                    if (trimmed.startsWith('[DATE]')) date = trimmed.replace('[DATE]', '').trim();
+                    else if (trimmed.startsWith('[CATEGORY]')) category = trimmed.replace('[CATEGORY]', '').trim();
+                    else if (trimmed.startsWith('[TITLE]')) title = trimmed.replace('[TITLE]', '').trim();
+                    else if (trimmed.startsWith('[LINK]')) link = trimmed.replace('[LINK]', '').trim().split('|')[0];
+                    else if (trimmed.startsWith('[EXPIRY]')) expiry = trimmed.replace('[EXPIRY]', '').trim();
+                    else if (trimmed.startsWith('[BODY]')) { bodyLines.push(trimmed.replace('[BODY]', '').trim()); currentTag = 'BODY'; }
+                    else if (currentTag === 'BODY' && trimmed !== '') bodyLines.push(trimmed);
                 });
 
-                if (urgentItems.length > 0) {
-                    const topUrgent = urgentItems[0];
-                    const isUrgent = topUrgent.category.toLowerCase() === 'urgent';
-                    const cardClass = isUrgent ? 'urgent-card' : 'important-card';
-                    const badgeClass = isUrgent ? 'urgent-badge' : 'important-badge';
-                    const label = isUrgent ? '緊急' : '重要';
-                    const textColor = isUrgent ? '#78281f' : '#7e5109';
-                    const linkColor = isUrgent ? '#e74c3c' : '#e67e22';
+                const itemData = { date, category, title, link, expiry, body: bodyLines.join('\n') };
+                parsedItems.push(itemData);
 
-                    urgentContainer.style.display = 'block';
-                    urgentContainer.innerHTML = `
-                        <div class="${cardClass}">
-                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
-                                <span class="${badgeClass}">${label}</span>
-                                <span style="font-size: 0.85rem; color: #666; font-weight: 600;">${topUrgent.date}</span>
-                            </div>
-                            <h3 style="margin: 0 0 0.5rem 0; color: ${textColor}; font-size: 1.1rem; font-weight: bold;">${topUrgent.title}</h3>
-                            ${topUrgent.body ? `<p style="margin: 0; font-size: 0.92rem; color: #444; white-space: pre-wrap; word-break: break-word;">${topUrgent.body}</p>` : ''}
-                            ${topUrgent.link ? `<div style="margin-top: 0.8rem;"><a href="${topUrgent.link}" style="color: ${linkColor}; font-weight: bold; text-decoration: underline; font-size: 0.85rem;">詳細を確認する &rarr;</a></div>` : ''}
-                        </div>
-                    `;
-                } else {
-                    urgentContainer.style.display = 'none';
+                const isValidExpiry = !expiry || expiry >= todayStr;
+                const catLower = category.toLowerCase();
+
+                if ((catLower === 'urgent' || catLower === 'important') && isValidExpiry) {
+                    urgentItems.push(itemData);
                 }
-
-                parsedItems.slice(0, 3).forEach(item => {
-                    const div = document.createElement('div');
-                    div.className = 'news-item-summary';
-                    div.innerHTML = `
-                        <div class="news-meta-line">
-                            <span class="news-date">${item.date}</span>
-                            <span style="background:#edf2f7; font-size:0.7rem; padding:1px 6px; border-radius:4px; font-weight:bold; color:#3498db;">${item.category.toUpperCase()}</span>
-                        </div>
-                        <p class="news-title-text">${item.title}</p>
-                    `;
-                    topNewsContainer.appendChild(div);
-                });
-            })
-            .catch(() => {
-                document.getElementById('top-news-list').innerHTML = '<p style="color:#e74c3c;">読み込みに失敗しました。</p>';
-                document.getElementById('urgent-news-container').style.display = 'none';
             });
+
+            // 緊急・重要お知らせの表示
+            if (urgentItems.length > 0) {
+                const topUrgent = urgentItems[0];
+                const isUrgent = topUrgent.category.toLowerCase() === 'urgent';
+                const cardClass = isUrgent ? 'urgent-card' : 'important-card';
+                const badgeClass = isUrgent ? 'urgent-badge' : 'important-badge';
+                const label = isUrgent ? '緊急' : '重要';
+                const textColor = isUrgent ? '#78281f' : '#7e5109';
+                const linkColor = isUrgent ? '#e74c3c' : '#e67e22';
+
+                urgentContainer.style.display = 'block';
+                urgentContainer.innerHTML = `
+                    <div class="${cardClass}">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                            <span class="${badgeClass}">${label}</span>
+                            <span style="font-size: 0.85rem; color: #666; font-weight: 600;">${topUrgent.date}</span>
+                        </div>
+                        <h3 style="margin: 0 0 0.5rem 0; color: ${textColor}; font-size: 1.1rem; font-weight: bold;">${topUrgent.title}</h3>
+                        ${topUrgent.body ? `<p style="margin: 0; font-size: 0.92rem; color: #444; white-space: pre-wrap; word-break: break-word;">${topUrgent.body}</p>` : ''}
+                        ${topUrgent.link ? `<div style="margin-top: 0.8rem;"><a href="${topUrgent.link}" style="color: ${linkColor}; font-weight: bold; text-decoration: underline; font-size: 0.85rem;">詳細を確認する &rarr;</a></div>` : ''}
+                    </div>
+                `;
+            } else {
+                urgentContainer.style.display = 'none';
+            }
+
+            // 通常ニュース表示（最新3件）
+            parsedItems.slice(0, 3).forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'news-item-summary';
+                
+                // カテゴリに応じたタグスタイル（リリース・更新情報を綺麗に区別）
+                let tagBg = '#edf2f7';
+                let tagColor = '#3498db';
+                const catLower = item.category.toLowerCase();
+
+                if (catLower === 'release' || item.category === 'リリース') {
+                    tagBg = '#e8f8f5';
+                    tagColor = '#1abc9c';
+                } else if (catLower === 'update' || item.category === '更新情報') {
+                    tagBg = '#ebf5fb';
+                    tagColor = '#2980b9';
+                }
+
+                div.innerHTML = `
+                    <div class="news-meta-line">
+                        <span class="news-date">${item.date}</span>
+                        <span style="background:${tagBg}; font-size:0.7rem; padding:1px 6px; border-radius:4px; font-weight:bold; color:${tagColor};">${item.category.toUpperCase()}</span>
+                    </div>
+                    <p class="news-title-text">${item.title}</p>
+                `;
+                topNewsContainer.appendChild(div);
+            });
+        })
+        .catch(() => {
+            document.getElementById('top-news-list').innerHTML = '<p style="color:#e74c3c;">読み込みに失敗しました。</p>';
+            document.getElementById('urgent-news-container').style.display = 'none';
+        });
 
         // 特設イベント（event-data.txt）読み込み＆カウントダウンタイマー付与
         fetch('event-data.txt')
