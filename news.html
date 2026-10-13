@@ -105,6 +105,7 @@
         /* カテゴリ毎の色設定 */
         .badge-info { background: #e3f2fd; color: #1976d2; }
         .badge-update { background: #e8f5e9; color: #2e7d32; }
+        .badge-release { background: #e8f8f5; color: #1abc9c; }
         .badge-event { background: #fff3e0; color: #e65100; }
         .badge-urgent { background: #fadbd8; color: #78281f; } /* 赤：緊急 */
         .badge-important { background: #fdebd0; color: #7e5109; } /* 橙：重要 */
@@ -173,6 +174,25 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // --- 簡易Markdown & URL自動リンク変換用ヘルパー関数 ---
+        function parseMarkdownAndLinks(inputText) {
+            if (!inputText) return '';
+            // 1. HTMLエスケープ（セキュリティ対策）
+            let escaped = inputText
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+
+            // 2. 簡易Markdown: 太字 (**text**)
+            let formatted = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+            // 3. URL自動リンク化 (http:// または https:// で始まる文字列を <a> タグに変換)
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            formatted = formatted.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">$1</a>');
+
+            return formatted;
+        }
+
         fetch('news-data.txt')
             .then(res => res.text())
             .then(text => {
@@ -230,9 +250,9 @@
                             <span class="news-date">${date}</span>
                             <span class="badge badge-${catLower}">${catLabel}</span>
                         </div>
-                        <h2 class="news-title">${title}</h2>
-                        <p class="news-body">${body}</p>
-                        ${link ? `<div style="text-align: left;"><a href="${link}" class="news-link-btn">${btnText} <i class="fas fa-arrow-right"></i></a></div>` : ''}
+                        <h2 class="news-title">${parseMarkdownAndLinks(title)}</h2>
+                        <p class="news-body">${parseMarkdownAndLinks(body)}</p>
+                        ${link ? `<div style="text-align: left;"><a href="${link}" target="_blank" rel="noopener noreferrer" class="news-link-btn">${btnText} <i class="fas fa-arrow-right"></i></a></div>` : ''}
                     `;
                     container.appendChild(card);
                 });
