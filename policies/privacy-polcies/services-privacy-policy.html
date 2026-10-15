@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 検索エンジン除外が必要な場合（LINE用等）は下の行のコメントアウトを外してください -->
+    <title>利用規約 | C'zaha Chell Tia's Official Site</title>
+
+    <meta name="description" content="C'zaha Chell Tia(ザハ)の公式サイト 総合利用規約">
+    
+    <!-- Marked.js（Markdownパーサー） -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f0f2f5;
+            --text-color: #2c3e50;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            line-height: 1.7;
+            margin: 0;
+            color: var(--text-color);
+            background: linear-gradient(135deg, #f0f2f5 0%, #e0e6ed 100%);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        nav.top-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            padding: 10px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-back-link {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logo-area img { height: 30px; width: auto; }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a252f 100%);
+            color: var(--white);
+            padding: 4rem 1rem 6rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+        }
+
+        header h1 { font-size: 2rem; margin: 0; }
+        header p { margin: 0.5rem 0 0; color: #bdc3c7; font-size: 0.95rem; }
+
+        .container {
+            max-width: 900px;
+            width: 90%;
+            margin: -20px auto 0;
+            padding: 0 0 3rem 0;
+            flex-grow: 1;
+        }
+
+        /* 記事カード風のコンテナ */
+        .policy-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            border-left: 5px solid var(--accent-color);
+        }
+
+        /* Markdown描画内容のスタイル調整 */
+        .policy-content h1 { font-size: 1.6rem; color: var(--primary-color); border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; margin-top: 0; }
+        .policy-content h2 { font-size: 1.25rem; color: var(--primary-color); border-left: 4px solid var(--accent-color); padding-left: 10px; margin-top: 2rem; }
+        .policy-content h3 { font-size: 1.1rem; color: var(--primary-color); margin-top: 1.5rem; }
+        .policy-content p { margin: 1em 0; color: #444; word-break: break-word; }
+        .policy-content ul, .policy-content ol { padding-left: 1.5rem; color: #444; }
+        .policy-content li { margin-bottom: 0.5rem; }
+        .policy-content blockquote { border-left: 4px solid #cbd5e1; margin: 1rem 0; padding-left: 1rem; color: #64748b; background: #f8fafc; padding: 10px; border-radius: 0 8px 8px 0; }
+        .policy-content code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; color: #e11d48; }
+        .policy-content a { color: var(--accent-color); text-decoration: underline; font-weight: bold; }
+
+        footer {
+            background: var(--primary-color);
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-top: 3rem;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="top-nav">
+    <a href="../index.html" class="nav-back-link"><i class="fas fa-arrow-left"></i> ホームに戻る</a>
+    <div class="logo-area"><img src="../logo.png" alt="warudora logo" onerror="this.src='https://via.placeholder.com/200x50?text=WARUDORA+LOGO'"></div>
+</nav>
+
+<header>
+    <h1>Terms of Use</h1>
+    <p>利用規約</p>
+</header>
+
+<div class="container">
+    <article class="policy-card">
+        <!-- Markdownが自動でパースされ、ここに反映されます -->
+        <div id="markdown-output" class="policy-content">
+            <p style="color: #666; text-align: center;">読み込み中...</p>
+        </div>
+    </article>
+</div>
+
+<!-- ↓↓↓ ここにMarkdownを直接記述してください ↓↓↓ -->
+<textarea id="markdown-src" style="display: none;">
+# C'zaha Chell tia プライバシーポリシー
+
+C'zaha Chell tia（以下「当方」といいます）は、提供するすべてのサービスおよびウェブサイト（以下「本サービス」といいます）におけるユーザーの個人情報を含む利用者情報の取扱いについて、個人情報の保護に関する法律（以下「個人情報保護法」といいます）その他の関係法令を遵守し、以下の通りプライバシーポリシー（以下「本ポリシー」といいます）を定めます。
+
+# 1. 個人情報の収集・管理主体
+本サービスにおける個人情報の収集・管理・運用は、すべてC'zaha Chell tiaが直接行います。当方は、ユーザーのプライバシー保護を最優先事項とし、収集した情報を「本サービスの提供・向上」および「システムの安全維持・防衛」以外の目的で使用することはありません。
+
+# 2. 収集する情報の項目および取得方法
+当方は、本サービスの提供にあたり、以下の情報を**収集**します。
+
+アクセスログおよび端末情報: IPアドレス、ホスト名、ブラウザ情報、OS情報、アクセス日時、滞在時間、リファラ、ユーザーエージェント。これらは、不正アクセス検知、セッション維持、および規約違反（反社会的勢力の侵入等）の調査・立証のために自動的に記録されます。
+
+Cookie（クッキー）および類似技術: ログイン状態の維持、ユーザー設定の保存など、サービスの利便性向上のために使用します。当方は広告による収益化を行っておらず、広告配信、第三者による行動追跡、またはデータマイニングを目的としたCookieは一切使用しません。ユーザーはブラウザの設定によりCookieを無効化できますが、その場合、本サービスの一部機能が利用できなくなることがあります。
+
+お問い合わせ・アカウント情報: 氏名（ハンドルネーム可）、メールアドレス、その他当方が定める入力フォームにてユーザーが入力する情報。
+
+# 3. 利用目的
+当方は、収集した個人情報を以下の目的の範囲内で適切に利用します。
+
+本サービスのアカウント管理、認証、およびサービスの提供のため
+
+本サービスに関するお問い合わせへの対応のため
+
+本規約に違反する行為、不正アクセス、サイバー攻撃等の検知、調査、および防衛措置（IPA等への技術的証拠の提供を含む）のため
+
+本サービスの**システム維持**、**不具合対応**、および**技術的な向上**のため
+
+その他、上記利用目的に付随する目的のため
+
+# 4. データの保存期間および削除について
+
+保存期間: 通常のアクセスログは最大**24ヶ月間**保持されます。ただし、規約違反やサイバー攻撃等が検知されたログについては、法的対応が完了するまで、または防衛上の証拠として必要な期間、保持されます。
+
+削除・利用停止の要求: ユーザーは、本ポリシー第8条に定める窓口を通じて、個人情報保護法の定めに基づき、自身の個人情報の開示、訂正、追加、削除、利用停止、または消去を請求することができます。ただし、法令に基づく保存義務がある場合や、規約違反の証拠隠滅が疑われる場合など、個人情報保護法その他の法令により当方が義務を負わない場合は、この限りではありません。
+
+# 5. 第三者提供・広告利用の完全排除
+当方の理念において、ユーザーは**「売買されるデータ」**ではなく、等しく尊重されるべき**「利用者」**です。そのため、以下の事項を徹底します。
+
+広告収益モデルの否定: 本サービス内において広告掲載による収益化を行うことはなく、ユーザーの注意力を広告主に**提供する**ことは**ありません**。
+
+データ売却の禁止: ユーザーの利用データを**マーケティング目的**で外部へ**売却**、**譲渡**、または**共有する**ことは**一切ありません**。
+
+第三者提供の制限: 個人情報保護法その他の法令で認められる場合（警察、裁判所、IPA等からの法令に基づく正当な照会や、人の生命・身体・財産の保護のために必要がある場合等）を除き、ユーザーの同意を得ることなく、個人情報を第三者に提供することはありません。
+
+# 6. 安全管理措置
+当方は、ユーザーの個人情報の漏洩、滅失、または毀損の防止その他の安全管理のために、必要かつ適切な技術的・組織的措置を講じます。
+
+# 7. 法定代理人（親権者）による対応
+本サービスの制作者（制定者）は未成年者であるため、本ポリシーに基づく情報管理、法令対応、および紛争解決等に関する法的な意思決定や対外的な手続きは、法定代理人である親権者（父親／IPA登録セキスペ）の監督・経由のもとで実施されます。
+
+# 8. お問い合わせ窓口
+ご意見、ご質問、苦情のお申出、その他利用者情報の取扱いに関するお問い合わせは、公式サイト内の専用コンタクトフォームよりお願いいたします。
+
+# 9. プライバシーポリシーの変更手続
+当方は、必要に応じて、本ポリシーを変更することがあります。変更した場合には、当方のウェブサイト上での掲示その他の方法によりユーザーに通知します。
+
+附則
+改定適用日：2026年10月15日
+制定者：C'zaha Chell tia
+</textarea>
+
+<footer>
+    <div class="footer-meta-container" style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
+        <div class="meta-item"><span class="meta-role" style="color: #3498db;">Japanituremod Developers</span></div>
+        <div class="meta-item"><span class="meta-name" style="font-weight: bold; color: #d0d0d0;">warudora:</span><span class="meta-role" style="color: #aaaaaa;">5H1H0 Engineer & Sales Rep / Admin of MJaS / Founder of MTRJapanUsers</span></div>
+        <div class="meta-item"><span class="meta-name" style="font-weight: bold; color: #d0d0d0;">C'zaha Chell tia:</span><span class="meta-role" style="color: #aaaaaa;">Independent Developer / Trumpet Player / YTE Translator</span></div>
+        
+        <div class="meta-note" style="margin-top: 10px; font-size: 0.75rem; color: #aaaaaa; max-width: 650px; line-height: 1.4; text-align: center;">
+            ※演奏依頼は原則お断りしております（所属団体およびその姉妹団体からのご依頼を除く）。なお、引退後であっても所属・出身団体からの要請であればOBとして喜んでお引き受けいたします。
+        </div>
+
+        <div class="sqex-copyright" style="margin-top: 15px; font-size: 0.7rem; color: #888888; max-width: 700px; line-height: 1.4; text-align: center;">
+            アカウントアイコン及びロードストーンツールキットなどのファンキットの著作権は以下にすべて帰属します<br>©SQUARE ENIX
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const mdSrc = document.getElementById('markdown-src').value;
+        const output = document.getElementById('markdown-output');
+        
+        if (mdSrc && typeof marked !== 'undefined') {
+            output.innerHTML = marked.parse(mdSrc);
+        } else {
+            output.innerHTML = '<p style="color: #e74c3c;">コンテンツの読み込みに失敗しました。</p>';
+        }
+    });
+</script>
+</body>
+</html>
