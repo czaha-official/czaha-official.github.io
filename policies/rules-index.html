@@ -1,0 +1,403 @@
+<!DOCTYPE html> 
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>規約・ポリシー一覧 | C'zaha Chell Tia's Official Site</title>
+
+    <meta name="description" content="C'zaha Chell Tiaが提供する各種サービス、ウェブサイトの利用規約およびプライバシーポリシーの一覧です。">
+    <link rel="canonical" href="[https://czaha-official.github.io/rules-index.html](https://czaha-official.github.io/rules-index.html)">
+
+    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css)">
+    
+    <style>
+        /* ----------------------------------
+            1. 変数定義・基本設定
+        ---------------------------------- */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f0f2f5;
+            --text-color: #2c3e50;
+            --white: #ffffff;
+            --x-color: #000000;
+            --insta-color: #E1306C;
+            --yt-color: #FF0000;
+            --discord-color: #5865F2;
+            --line-color: #06C755;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            color: var(--text-color);
+            background: linear-gradient(135deg, #f0f2f5 0%, #e0e6ed 100%);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* ----------------------------------
+            2. ヘッダー & ナビゲーション
+        ---------------------------------- */
+        nav.top-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            padding: 10px 5%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-area img { 
+            height: 30px; 
+            width: auto; 
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a252f 100%);
+            color: var(--white);
+            padding: 4rem 1rem 6rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+        }
+
+        header h1 { 
+            font-size: 2.2rem; 
+            margin: 0 0 0.5rem 0; 
+            letter-spacing: 1px; 
+        }
+        
+        header p {
+            margin: 0;
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+
+        /* ----------------------------------
+            3. レイアウトコンテナ
+        ---------------------------------- */
+        .container {
+            max-width: 1200px;
+            width: 90%;
+            margin: -20px auto 0;
+            padding: 0 0 3rem 0;
+            flex-grow: 1;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 1.8rem;
+        }
+
+        /* ----------------------------------
+            4. イントロダクション・ユニット化スタイル
+        ---------------------------------- */
+        .intro-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            border-left: 6px solid var(--accent-color);
+        }
+
+        .intro-card p {
+            margin: 0;
+            color: #444;
+            font-weight: 500;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.8rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover { 
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-header h2 {
+            font-size: 1.3rem;
+            margin: 0;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body h3 {
+            margin: 10px 0 6px 0;
+            font-size: 1.1rem;
+        }
+
+        .card-body p {
+            font-size: 0.88rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .card-tag {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 50px;
+            background: #edf2f7;
+            color: var(--accent-color);
+        }
+
+        /* ----------------------------------
+            5. ボタンユニット
+        ---------------------------------- */
+        .button-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: auto;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            padding: 8px 16px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 1px solid #ddd;
+            color: var(--text-color);
+        }
+
+        .btn:hover { background: #f8f9fa; transform: translateY(-2px); }
+        .btn-primary { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        
+        .link-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            padding: 10px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            background: var(--white);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            transition: all 0.3s;
+        }
+        
+        .link-btn:hover {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        /* ----------------------------------
+            6. フッター & トップへ戻る
+        ---------------------------------- */
+        footer {
+            background: var(--primary-color);
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-top: auto; /* コンテンツが短くても最下部に配置 */
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        footer p { margin: 0.5rem 0; }
+
+        .sqex-copyright {
+            color: #bdc3c7;
+            font-size: 0.8rem;
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 45px;
+            height: 45px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+        }
+
+        #back-to-top.show { opacity: 1; visibility: visible; }
+
+        @media (max-width: 768px) {
+            header { padding: 3rem 1rem 5rem; }
+            header h1 { font-size: 1.8rem; }
+            .container { width: 94%; margin-top: -10px; }
+            .button-group { justify-content: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="top-nav">
+    <div class="logo-area">
+        <a href="index.html">
+            <img src="logo.png" alt="warudora logo" onerror="this.src='[https://via.placeholder.com/200x50?text=WARUDORA+LOGO](https://via.placeholder.com/200x50?text=WARUDORA+LOGO)'">
+        </a>
+    </div>
+</nav>
+
+<header>
+    <h1>規約・ポリシー一覧</h1>
+    <p>Terms and Policies</p>
+</header>
+
+<div class="container">
+    
+    <!-- 概要・案内文 -->
+    <div class="intro-card">
+        <p>当方が開発・提供するすべてのサービス、コンテンツ、およびウェブサイトをご利用いただくにあたり、以下の各種規約・ガイドラインおよびポリシーへの同意をお願いしております。<br>各リンク先より、最新の内容を必ずご確認ください。</p>
+    </div>
+
+    <!-- グリッド領域 -->
+    <div class="grid">
+        <!-- サービス利用規約 -->
+        <article class="card">
+            <div>
+                <div class="card-header">
+                    <h2><i class="fas fa-file-contract"></i> サービス利用規約</h2>
+                </div>
+                <div class="card-body">
+                    <span class="card-tag" style="background:#e8f8f5; color:#1abc9c;">Terms of Service</span>
+                    <h3>利用規約</h3>
+                    <p>当方が提供する全サービスに適用される、最も基本的な利用条件です。知的財産権の帰属、MODデータの二次配布厳禁、禁止事項、および法的措置に関する厳格な基準を定めています。</p>
+                </div>
+            </div>
+            <div class="button-group">
+                <a href="policies/terms-of-use/zaha-services.html" class="btn btn-primary"><i class="fas fa-book-open"></i> 規約を読む</a>
+            </div>
+        </article>
+
+        <!-- プライバシーポリシー -->
+        <article class="card">
+            <div>
+                <div class="card-header">
+                    <h2><i class="fas fa-user-shield"></i> プライバシーポリシー</h2>
+                </div>
+                <div class="card-body">
+                    <span class="card-tag" style="background:#ebf5fb; color:#2980b9;">Privacy Policy</span>
+                    <h3>個人情報の取扱い</h3>
+                    <p>当方におけるユーザーの個人情報やアクセスログ等の取り扱い方針です。「広告収益モデルの完全排除」と「データ売却の禁止」を掲げ、データは防衛およびシステム維持にのみ使用します。</p>
+                </div>
+            </div>
+            <div class="button-group">
+                <a href="policies/privacy-policies/services-privacy-policy.html" class="btn btn-primary"><i class="fas fa-book-open"></i> ポリシーを読む</a>
+            </div>
+        </article>
+
+        <!-- 総合ガイドライン -->
+        <article class="card">
+            <div>
+                <div class="card-header">
+                    <h2><i class="fas fa-book"></i> 総合ガイドライン</h2>
+                </div>
+                <div class="card-body">
+                    <span class="card-tag">General Guidelines</span>
+                    <h3>コミュニティルール</h3>
+                    <p>当方の提供するコミュニティへの参加や、サービスを利用する上での一般的なルール、マナー、ならびに各種注意事項についてまとめた全体向けのガイドラインです。</p>
+                </div>
+            </div>
+            <div class="button-group">
+                <a href="policies/guideline/rules/general.html" class="btn btn-primary"><i class="fas fa-book-open"></i> ガイドラインを読む</a>
+            </div>
+        </article>
+
+        <!-- LINEガイドライン -->
+        <article class="card">
+            <div>
+                <div class="card-header">
+                    <h2><i class="fab fa-line" style="color: var(--line-color);"></i> LINE向けルール</h2>
+                </div>
+                <div class="card-body">
+                    <span class="card-tag" style="background:#e8f5e9; color:var(--line-color);">LINE Guidelines</span>
+                    <h3>LINEオープンチャット規約</h3>
+                    <p>運営するLINEオープンチャット等のコミュニケーション空間における、固有のルールや参加条件を定めています。参加される方は必ずご確認ください。</p>
+                </div>
+            </div>
+            <div class="button-group">
+                <a href="policies/guideline/rules/line.html" class="btn btn-primary"><i class="fas fa-book-open"></i> ガイドラインを読む</a>
+            </div>
+        </article>
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="index.html" class="link-btn"><i class="fas fa-home"></i> トップページへ戻る</a>
+    </div>
+
+</div>
+
+<footer>
+    <p class="sqex-copyright">
+        アカウントアイコン、ロードストーンツールチップ、ファンキット等の素材の著作権はスクウェア・エニックスに帰属します。<br>
+        &copy; SQUARE ENIX
+    </p>
+    <a href="policies/terms-of-use/zaha-services.html" class="link-btn" style="background: transparent; border: none; color: #ffffff; padding: 5px; font-size: 0.9rem;">
+        <i class="fas fa-file-alt"></i> 利用規約
+    </a>
+    <a href="policies/privacy-policies/services-privacy-policy.html" class="link-btn" style="background: transparent; border: none; color: #ffffff; padding: 5px; font-size: 0.9rem;">
+        <i class="fas fa-file-alt"></i> プライバシーポリシー
+    </a>
+    <p class="site-copyright">
+        &copy; <span id="current-year"></span> warudora / C'zaha Chell tia. All Rights Reserved.
+    </p>
+</footer>
+
+<button id="back-to-top" title="Go to top"><i class="fas fa-chevron-up"></i></button>
+
+<script>
+    // コピーライトの年号自動更新
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // トップへ戻るボタンの制御
+    const backToTopBtn = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) backToTopBtn.classList.add('show');
+        else backToTopBtn.classList.remove('show');
+    });
+    backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+</script>
+
+</body>
+</html>
