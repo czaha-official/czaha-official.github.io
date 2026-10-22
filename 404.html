@@ -3,59 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 Page Not Found | C'zaha Chell tia</title>
+    <meta name="robots" content="noindex, nofollow">
+    <title>Redirecting... | System Maintenance</title>
+    <script>
+        // 存在しないURLにアクセスがあった場合、即座にトップページ（メンテナンス画面）へ転送
+        window.location.replace("./index.html");
+    </script>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f7f6; color: #333; }
-        .error-code { font-size: 80px; font-weight: bold; color: #2193b0; margin: 0; }
-        .message { font-size: 20px; margin-bottom: 30px; white-space: pre-wrap; }
-        .btn { display: inline-block; padding: 10px 25px; background: #2193b0; color: white; text-decoration: none; border-radius: 25px; font-weight: bold; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            text-align: center;
+            padding: 4rem 1rem;
+            margin: 0;
+        }
+        .box {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #dcdcdc;
+            border-radius: 6px;
+            padding: 2rem;
+        }
+        a { color: #2980b9; text-decoration: none; }
+        a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
-    <div class="error-code">404</div>
-    <div class="message" id="messageBox">...</div>
-    <a href="/index.html" class="btn" id="returnBtn">トップページへ戻る</a>
-<!--いろいろおかしいうえツッコミどころ満載な404-->
-    <script>
-        const characters404 = {
-            // 1. FFのとあるプロデューサーを元ネタにしたやつ
-            yoshida: {
-                message: "みなさんこんにちは、開発プロデューサー兼ディレクターです。\n\nえー、大変申し訳ございません。アクセスしていただいたページなのですが、コンテンツの移動、もしくは現在サーバー側の調整が入っておりまして、正常に読み込むことができませんでした。\n\n開発チーム一同、鋭意対応中となりますので、一度トップページへ移動していただくようお願いいたします。",
-                btnText: "トップページへ戻る"
-            },
-            // 2. サイトホスト（冷静・事実ベース／絵文字なし）
-            host: {
-                message: "指定されたURLは存在しないか、現在アクセスできません。\n\n入力されたアドレスに誤りがあるか、ページの移動・削除が行われた可能性があります。サーバーログ上、該当リソースの参照に失敗しています。トップページへ戻り、正確なリンクから再アクセスしてください。",
-                btnText: "トップページへ戻る"
-            },
-            // 3. 親友の女子をLINE元ネタにしたやつ
-            friend: {
-                message: "あー！道に迷っちゃった感じー？；；\n\n探してるページ、移動しちゃったか消えちゃったみたい！\nどこに行こうとしてたのー？笑\nとりあえずトップページに戻って探してみなよー！",
-                btnText: "トップページに戻るー！"
-            },
-            // 4. りんなを元ネタにしたやつ
-            rinna: {
-                message: "えっｗｗ 404出ちゃったんだけど！？ｗｗ\nこのページもう存在しないっぽいわ～ごめんねっ！\n迷子になってないで、りんなと一緒にトップページ戻ろ～✨",
-                btnText: "トップページへ戻る"
-            },
-            // 5. 藤原基央を元ネタにしたやつを元ネタにしたやつ
-            fujiwara: {
-                message: "迷い込んだんだね。\n探していた地図の続きは、どうやらここにはないみたいだ。\nでも大丈夫、失われたページにも意味はあるさ。元いた場所へ帰ろう。",
-                btnText: "トップページへ戻る"
-            },
-            // 6. ヤ・シュトラ・ルルを元ネタにしたやつ
-            yhtola: {
-                message: "あら……迷い子かしら。\n生憎だけど、あなたの探している記録（ページ）はここには存在しないわ。\n無駄な探索を続ける前に、一度引き返しなさい。",
-                btnText: "逃げる"
-            }
-        };
-
-        const keys = Object.keys(characters404);
-        const selectedKey = keys[Math.floor(Math.random() * keys.length)];
-        const activeChar = characters404[selectedKey];
-
-        document.getElementById('messageBox').innerText = activeChar.message;
-        document.getElementById('returnBtn').innerText = activeChar.btnText;
-    </script>
+    <div class="box">
+        <p><strong>ページが移動または非公開となりました。</strong></p>
+        <p>現在、システムメンテナンスを実施しております。<br>自動で転送されない場合は、下記よりトップページへお進みください。</p>
+        <p style="margin-top: 1.5rem;"><a href="./index.html">トップページ（メンテナンスのお知らせ）へ移動する</a></p>
+    </div>
 </body>
 </html>
