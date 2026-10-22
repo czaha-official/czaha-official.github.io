@@ -1,0 +1,63 @@
+name: "CodeQL For Forge 1.20.1"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '30 1 * * 1' # 週に1回自動スキャン
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # 言語指定。HTML/JSも同梱している場合は 'javascript-typescript' も追加可能
+        language: [ 'java-kotlin' ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 💡 最適化1: 使用するMinecraftのバージョンに合わせた正確なJavaバージョンを設定
+    # (1.20以降ならJava 17や21、1.16ならJava 8など環境に合わせて変更してください)
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17' 
+
+    # 💡 最適化2: Gradleのキャッシュを有効化して、毎回のリパブリック（依存関係のDL）を回避
+    # これによりGitHub Actionsの実行時間が劇的に短縮されます
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
+
+    # CodeQLの初期化 (autobuildではなく手動ビルドを指定するために build-mode: manual に設定)
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+        build-mode: manual
+        # より厳しいセキュリティルールを適用
+        queries: security-extended
+
+    # 💡 最適化3: Forgeのビルド用コマンドを明示的に実行
+    # autobuildに任せるとForge特有のタスク（genSources等）が走らずエラーになるのを防ぎます
+    - name: Command Line Build (Forge Gradle)
+      run: |
+        chmod +x gradlew
+        ./gradlew compileJava --no-daemon
+
+    # スキャン実行
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"
