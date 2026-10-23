@@ -10,12 +10,29 @@ jobs:
   php-scan:
     name: Run Custom Security Detector
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write #  重要: セキュリティタブへの書き込み権限を許可
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Ubuntuのコンテナには標準でPHPが入っているため、即座に実行可能です
+    #  改善: どのフォルダにファイルがあっても自動で見つけて、そのフォルダ内で実行します
     - name: Execute Security Detector
       run: |
-        php .github/workflows/security-detector.php
+        DETECTOR_PATH=$(find . -name "security-detector.php" | head -n 1)
+        if [ -z "$DETECTOR_PATH" ]; then
+          echo "security-detector.php がリポジトリ内に見つかりません！"
+          exit 1
+         Dino
+        DETECTOR_DIR=$(dirname "$DETECTOR_PATH")
+        cd "$DETECTOR_DIR"
+        php security-detector.php
+
+    #  独自のアクションで検出した結果をGitHubの「Security」タブにアップロードして合流させる
+    - name: Upload SARIF to GitHub Security Tab
+      uses: github/codeql-action/upload-sarif@v3
+      if: always() # スキャンで危険なコードが見つかっても、必ずアップロードを実行する設定
+      with:
+        # スクリプトが生成したSARIFファイルの場所を自動指定
+        sarif_file: ${{ github.workspace }}/**/results.sarif
