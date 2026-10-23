@@ -20,7 +20,7 @@ jobs:
     # 改善：パスを「.github/workflows/security-detector.php」に完全固定
     - name: Execute Security Detector
       run: |
-        php .github/workflows/security-detector.php
+        python .github/workflows/security-detector.py
 
     # 改善：生成されるSARIFファイルの場所もトップ階層に固定指定
     - name: Upload SARIF to GitHub Security Tab
