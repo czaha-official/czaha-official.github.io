@@ -1,7 +1,7 @@
 <?php
 // security-detector.php
 
-$target_dir = __DIR__; 
+$target_dir = getcwd(); 
 $danger_patterns = [
     'OSコマンド注入の危険' => '/\b(eval|system|exec|passthru|shell_exec)\s*\(/',
     '生データの出力（XSSの危険）' => '/echo\s+\$_(GET|POST|REQUEST|COOKIE)/',
