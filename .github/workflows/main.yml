@@ -25,9 +25,7 @@ jobs:
           echo "security-detector.php がリポジトリ内に見つかりません！"
           exit 1
          Dino
-        DETECTOR_DIR=$(dirname "$DETECTOR_PATH")
-        cd "$DETECTOR_DIR"
-        php security-detector.php
+         php .github/workflows/security-detector.php
 
     #  独自のアクションで検出した結果をGitHubの「Security」タブにアップロードして合流させる
     - name: Upload SARIF to GitHub Security Tab
