@@ -1,0 +1,21 @@
+name: "PHP Security Scanner"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  php-scan:
+    name: Run Custom Security Detector
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Ubuntuのコンテナには標準でPHPが入っているため、即座に実行可能です
+    - name: Execute Security Detector
+      run: |
+        php security-detector.php
