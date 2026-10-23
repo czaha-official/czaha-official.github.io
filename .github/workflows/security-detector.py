@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import sys  # 💡 修正：スクリプトエラー（終了コード）を吐き出すために追加
 
 # 1. スキャン対象（リポジトリのルート）
 target_dir = os.getcwd()
@@ -37,7 +38,6 @@ rules_config = {
 
 print("START: Custom Security Detector (Python)")
 
-#  修正点1: GitHub公式が要求する、完全に正しいSARIFの骨組み構造に修正
 sarif = {
     "$schema": "https://githubusercontent.com",
     "version": "2.1.0",
@@ -45,7 +45,7 @@ sarif = {
         "tool": {
             "driver": {
                 "name": "CustomSecurityDetectorPython",
-                "version": "1.3.6",
+                "version": "1.3.7",
                 "rules": []
             }
         },
@@ -53,7 +53,7 @@ sarif = {
     }]
 }
 
-# 修正点2: 配列の「0番目 ([0])」のオブジェクトを明示的に指定してルールを登録
+# ルール一覧をSARIFに登録
 for rule_id, cfg in rules_config.items():
     sarif["runs"][0]["tool"]["driver"]["rules"].append({
         "id": rule_id,
@@ -66,6 +66,9 @@ for rule_id, cfg in rules_config.items():
             "tags": ["security", f"external/cwe/{cfg['cwe']}"]
         }
     })
+
+# 💡 深刻なエラー（error）を見つけたかどうかを記憶するフラグ
+critical_error_detected = False
 
 # ファイル探索とテキスト一括スキャン
 for root, dirs, files in os.walk(target_dir):
@@ -96,7 +99,10 @@ for root, dirs, files in os.walk(target_dir):
                 lines_list = content.split('\n')
                 target_line_text = lines_list[line_num - 1].strip() if line_num <= len(lines_list) else "Unknown line"
                 
-                #  修正点3: アラートデータ(results)も、配列の「0番目 ([0])」に正しく追加
+                # 💡 もし検知したバグのレベルが 'error'（深刻）なら、フラグをONにする
+                if cfg['level'] == 'error':
+                    critical_error_detected = True
+                
                 sarif["runs"][0]["results"].append({
                     "ruleId": rule_id,
                     "message": {"text": f"[{cfg['level']}] Vulnerability detected: {target_line_text}"},
@@ -112,8 +118,16 @@ for root, dirs, files in os.walk(target_dir):
                 })
                 print(f"FOUND: [{cfg['level']}] -> {relative_path} (Line: {line_num}) [{rule_id}]")
 
-# レポート出力
+# レポート出力（エラーで落ちる前に必ずSARIFファイルは書き出す）
 with open('results.sarif', 'w', encoding='utf-8') as f:
     json.dump(sarif, f, indent=2, ensure_ascii=False)
 
-print("[ OK ] Finished Generated results.sarif")
+print("SUCCESS: Generated results.sarif")
+
+#  修正：深刻なバグ（error）が1件でもあれば、強制的にスクリプトエラー（終了コード1）をはいてActionsを落とす
+if critical_error_detected:
+    print("[ FAILD ] Severe security vulnerabilities found. Blocking build.")
+    sys.exit(1)
+else:
+    print("[ OK ]: No critical errors found.")
+    sys.exit(0)
