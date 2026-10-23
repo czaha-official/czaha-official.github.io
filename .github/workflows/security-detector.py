@@ -1,7 +1,7 @@
 import os
 import re
 import json
-import sys  # 💡 修正：スクリプトエラー（終了コード）を吐き出すために追加
+import sys
 
 # 1. スキャン対象（リポジトリのルート）
 target_dir = os.getcwd()
@@ -23,7 +23,6 @@ rules_config = {
         'level': 'error',
         'cwe': 'CWE-78'
     },
-    # ----------------------------------------------------------------
     'インラインスクリプト内での外部データ直接参照': {
         'pattern': r'location\.search|document\.cookie|window\.name',
         'level': 'warning',
@@ -39,13 +38,13 @@ rules_config = {
 print("START: Custom Security Detector (Python)")
 
 sarif = {
-    "$schema": "https://githubusercontent.com",
+    "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
     "version": "2.1.0",
     "runs": [{
         "tool": {
             "driver": {
                 "name": "CustomSecurityDetectorPython",
-                "version": "1.3.7",
+                "version": "1.0.0",
                 "rules": []
             }
         },
@@ -67,12 +66,13 @@ for rule_id, cfg in rules_config.items():
         }
     })
 
-# 💡 深刻なエラー（error）を見つけたかどうかを記憶するフラグ
 critical_error_detected = False
 
-# ファイル探索とテキスト一括スキャン
+# ファイル探索とテキスト一括スキャン（1行ずつ直接読み込む）
 for root, dirs, files in os.walk(target_dir):
-    if '.github' in root or any(d.startswith('.') for d in root.split(os.sep)):
+    # .git と .github フォルダを完全に除外（ドットを含むリポジトリ名は除外されない）
+    path_parts = root.split(os.sep)
+    if '.github' in path_parts or '.git' in path_parts:
         continue
         
     for file in files:
@@ -80,54 +80,26 @@ for root, dirs, files in os.walk(target_dir):
             continue
             
         filepath = os.path.join(root, file)
+        relative_path = os.path.relpath(filepath, target_dir).replace(os.sep, '/')
         
         try:
             with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
-                content = f.read()
+                lines = f.readlines()
         except Exception:
             continue
 
-        relative_path = os.path.relpath(filepath, target_dir).replace(os.sep, '/')
-
-        for rule_id, cfg in rules_config.items():
-            matches = re.finditer(cfg['pattern'], content, re.IGNORECASE)
+        for line_num_zero_indexed, line_text in enumerate(lines):
+            line_num = line_num_zero_indexed + 1
             
-            for match in matches:
-                start_pos = match.start()
-                line_num = content[:start_pos].count('\n') + 1
-                
-                lines_list = content.split('\n')
-                target_line_text = lines_list[line_num - 1].strip() if line_num <= len(lines_list) else "Unknown line"
-                
-                # 💡 もし検知したバグのレベルが 'error'（深刻）なら、フラグをONにする
-                if cfg['level'] == 'error':
-                    critical_error_detected = True
-                
-                sarif["runs"][0]["results"].append({
-                    "ruleId": rule_id,
-                    "message": {"text": f"[{cfg['level']}] Vulnerability detected: {target_line_text}"},
-                    "locations": [{
-                        "physicalLocation": {
-                            "artifactLocation": {"uri": relative_path},
-                            "region": {
-                                "startLine": line_num,
-                                "endLine": line_num
-                            }
-                        }
-                    }]
-                })
-                print(f"FOUND: [{cfg['level']}] -> {relative_path} (Line: {line_num}) [{rule_id}]")
-
-# レポート出力（エラーで落ちる前に必ずSARIFファイルは書き出す）
-with open('results.sarif', 'w', encoding='utf-8') as f:
-    json.dump(sarif, f, indent=2, ensure_ascii=False)
-
-print("SUCCESS: Generated results.sarif")
-
-#  修正：深刻なバグ（error）が1件でもあれば、強制的にスクリプトエラー（終了コード1）をはいてActionsを落とす
-if critical_error_detected:
-    print("[ FAILD ] Severe security vulnerabilities found. Blocking build.")
-    sys.exit(1)
-else:
-    print("[ OK ]: No critical errors found.")
-    sys.exit(0)
+            for rule_id, cfg in rules_config.items():
+                if re.search(cfg['pattern'], line_text, re.IGNORECASE):
+                    # 深刻なバグ（error）を見つけた場合はフラグをON
+                    if cfg['level'] == 'error':
+                        critical_error_detected = True
+                    
+                    clean_text = line_text.strip()
+                    print(f"FOUND: [{cfg['level']}] -> {relative_path} (Line: {line_num}) [{rule_id}]")
+                    
+                    sarif["runs"][0]["results"].append({
+                        "ruleId": rule_id,
+                        "message": {"text": f"[{cfg['level']}] Vulnerability detected:
