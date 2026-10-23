@@ -5,31 +5,31 @@ import json
 # 1. スキャン対象（リポジトリのルート）
 target_dir = os.getcwd()
 
-# 2. 構文ごとの「ヤバさ（level）」と「セキュリティ規格ID（CWE）」の仕分け定義
+# 2. 確実に引っかけられるように正規表現パターンを徹底的にシンプル化
 rules_config = {
     'HTMLへの危険な生データ挿入(XSS)': {
-        'pattern': r'\.(innerHTML|outerHTML|document\.write)\s*=',
+        'pattern': r'innerHTML|outerHTML|document\.write',
         'level': 'error',
         'cwe': 'CWE-79'
     },
     '文字列をコードとして実行する関数': {
-        'pattern': r'\b(eval|setTimeout|setInterval)\s*\(\s*["\']',
+        'pattern': r'eval|setTimeout|setInterval',
         'level': 'error',
         'cwe': 'CWE-95'
     },
     'OSコマンド注入の危険': {
-        'pattern': r'\b(system|exec|passthru|shell_exec)\s*\(',
+        'pattern': r'system|exec|passthru|shell_exec',
         'level': 'error',
         'cwe': 'CWE-78'
     },
     # ----------------------------------------------------------------
     'インラインスクリプト内での外部データ直接参照': {
-        'pattern': r'<script>.*?(location\.search|document\.cookie|window\.name).*?</script>',
+        'pattern': r'location\.search|document\.cookie|window\.name',
         'level': 'warning',
         'cwe': 'CWE-20'
     },
     '危険なイベントハンドラ構文': {
-        'pattern': r'\bon(error|load|mouseover)\s*=\s*["\']',
+        'pattern': r'onerror|onload|onmouseover',
         'level': 'warning',
         'cwe': 'CWE-74'
     }
@@ -44,7 +44,7 @@ sarif = {
         "tool": {
             "driver": {
                 "name": "CustomSecurityDetectorPython",
-                "version": "1.3.4",
+                "version": "1.3.5",
                 "rules": []
             }
         },
@@ -66,7 +66,7 @@ for rule_id, cfg in rules_config.items():
         }
     })
 
-# ファイル探索と正規表現チェック
+# ファイル探索とテキスト一括スキャン
 for root, dirs, files in os.walk(target_dir):
     if '.github' in root or any(d.startswith('.') for d in root.split(os.sep)):
         continue
@@ -85,20 +85,21 @@ for root, dirs, files in os.walk(target_dir):
 
         relative_path = os.path.relpath(filepath, target_dir).replace(os.sep, '/')
 
+        # 単純なキーワードマッチに変更して取りこぼしを完全に防ぐ
         for rule_id, cfg in rules_config.items():
-            matches = re.finditer(cfg['pattern'], content, re.IGNORECASE | re.DOTALL)
+            matches = re.finditer(cfg['pattern'], content, re.IGNORECASE)
             
             for match in matches:
                 start_pos = match.start()
                 line_num = content[:start_pos].count('\n') + 1
                 
-                # 💡 修正：[0]を指定して1行目を安全に取り出し、リスト型エラーを解消
-                full_matched_text = match.group(0)
-                first_line_text = full_matched_text.split('\n')[0].strip()
+                # 前回のバグ（リスト型エラー）を確実に防ぐ安全な文字列切り出し
+                lines_list = content.split('\n')
+                target_line_text = lines_list[line_num - 1].strip() if line_num <= len(lines_list) else "Unknown line"
                 
                 sarif["runs"][0]["results"].append({
                     "ruleId": rule_id,
-                    "message": {"text": f"[{cfg['level']}] Vulnerability detected: {first_line_text}"},
+                    "message": {"text": f"[{cfg['level']}] Vulnerability detected: {target_line_text}"},
                     "locations": [{
                         "physicalLocation": {
                             "artifactLocation": {"uri": relative_path},
