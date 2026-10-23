@@ -18,4 +18,4 @@ jobs:
     # Ubuntuのコンテナには標準でPHPが入っているため、即座に実行可能です
     - name: Execute Security Detector
       run: |
-        php security-detector.php
+        php .github/workflows/security-detector.php
