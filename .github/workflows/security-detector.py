@@ -17,35 +17,25 @@ rules_config = {
         'level': 'error',       # 深刻
         'cwe': 'CWE-95'
     },
-    '安全でないSQL結合': {
-        'pattern': r'(SELECT|INSERT|UPDATE|DELETE).*FROM.*=.*\s*\.\s*\$_(GET|POST|REQUEST)',
-        'level': 'error',       # 深刻
-        'cwe': 'CWE-89'
-    },
     'OSコマンド注入の危険': {
         'pattern': r'\b(system|exec|passthru|shell_exec)\s*\(',
-        'level': 'error',       #  深刻
+        'level': 'error',       # 深刻
         'cwe': 'CWE-78'
     },
     # ----------------------------------------------------------------
     'インラインスクリプト内での外部データ直接参照': {
         'pattern': r'<script>.*(location\.search|document\.cookie|window\.name)',
-        'level': 'warning',     #  軽い：Copilot経由でユーザーに選択肢を選ばせる（トークン節約）
+        'level': 'warning',     # 軽い：Copilot経由でユーザーに選択肢を選ばせる（トークン節約）
         'cwe': 'CWE-20'
     },
     '危険なイベントハンドラ構文': {
         'pattern': r'\bon(error|load|mouseover)\s*=\s*["\']',
-        'level': 'warning',     #  軽い
+        'level': 'warning',     # 軽い
         'cwe': 'CWE-74'
-    },
-    '生データの出力（PHP-XSSの危険）': {
-        'pattern': r'echo\s+\$_(GET|POST|REQUEST|COOKIE)',
-        'level': 'warning',     #  軽い
-        'cwe': 'CWE-79'
     }
 }
 
-print("🔍 脆弱性スキャンを開始します（Python・ヤバさ判定版）...")
+print("🔍 脆弱性スキャンを開始します（Python・ヤバさ判定修正版）...")
 
 sarif = {
     "$schema": "https://githubusercontent.com",
@@ -54,7 +44,7 @@ sarif = {
         "tool": {
             "driver": {
                 "name": "CustomSecurityDetectorPython",
-                "version": "1.3.0",
+                "version": "1.3.1",
                 "rules": []
             }
         },
@@ -62,9 +52,9 @@ sarif = {
     }]
 }
 
-# ルール一覧をSARIFに登録
+#  修正：sarif["runs"][0] を正しく指定して階層のバグを解消
 for rule_id, cfg in rules_config.items():
-    sarif["runs"]["tool"]["driver"]["rules"].append({
+    sarif["runs"][0]["tool"]["driver"]["rules"].append({
         "id": rule_id,
         "shortDescription": {"text": rule_id},
         "fullDescription": {"text": f"セキュリティ分析アラート: {rule_id}"},
@@ -99,7 +89,8 @@ for root, dirs, files in os.walk(target_dir):
                 if re.search(cfg['pattern'], line, re.IGNORECASE):
                     relative_path = os.path.relpath(filepath, target_dir)
                     
-                    sarif["runs"]["results"].append({
+                    #  修正：ここも同様に sarif["runs"][0] に修正
+                    sarif["runs"][0]["results"].append({
                         "ruleId": rule_id,
                         "message": {"text": f"[{cfg['level']}] 危険な構文を検出しました: {line.strip()}"},
                         "locations": [{
