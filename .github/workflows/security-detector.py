@@ -6,7 +6,7 @@ import sys
 # 1. スキャン対象（リポジトリのルート）
 target_dir = os.getcwd()
 
-# 2. 構文ごとの「ヤバさ（level）」と「セキュリティ規格ID（CWE）」の仕分け定義
+# 2. 構文ごとの「ヤバさ（level）」とキュリティ規格ID（CWE）」の仕分け定義
 rules_config = {
     'HTMLへの危険な生データ挿入(XSS)': {
         'pattern': r'innerHTML|outerHTML|document\.write',
@@ -70,7 +70,7 @@ critical_error_detected = False
 
 # ファイル探索とテキスト一括スキャン（1行ずつ直接読み込む）
 for root, dirs, files in os.walk(target_dir):
-    # .git と .github フォルダを完全に除外（ドットを含むリポジトリ名は除外されない）
+    # .git と .github フォルダを完全に除外
     path_parts = root.split(os.sep)
     if '.github' in path_parts or '.git' in path_parts:
         continue
@@ -93,13 +93,30 @@ for root, dirs, files in os.walk(target_dir):
             
             for rule_id, cfg in rules_config.items():
                 if re.search(cfg['pattern'], line_text, re.IGNORECASE):
-                    # 深刻なバグ（error）を見つけた場合はフラグをON
                     if cfg['level'] == 'error':
                         critical_error_detected = True
                     
                     clean_text = line_text.strip()
                     print(f"FOUND: [{cfg['level']}] -> {relative_path} (Line: {line_num}) [{rule_id}]")
                     
+                    # SARIFに結果を追加
                     sarif["runs"][0]["results"].append({
                         "ruleId": rule_id,
-                        "message": {"text": f"[{cfg['level']}] Vulnerability detected:
+                        "message": {"text": f"[{cfg['level']}] Vulnerability detected: {rule_id} in {relative_path} (Line {line_num})"},
+                        "locations": [{
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": relative_path
+                                },
+                                "region": {
+                                    "startLine": line_num
+                                }
+                            }
+                        }]
+                    })
+
+# 最後に必ず results.sarif ファイルを出力する
+with open("results.sarif", "w", encoding="utf-8") as f:
+    json.dump(sarif, f, indent=2, ensure_ascii=False)
+
+print("COMPLETE: results.sarif generated successfully.")
