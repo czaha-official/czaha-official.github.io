@@ -449,7 +449,7 @@
 
 <nav class="top-nav">
     <div class="logo-area">
-        <img src="logo.png" alt="warudora logo" onerror="this.src='https://via.placeholder.com/200x50?text=WARUDORA+LOGO'">
+        <img src="logo.png" alt="warudora logo">
     </div>
 </nav>
 
@@ -461,7 +461,7 @@
 <div class="container">
     <!-- プロフィールユニット -->
     <div class="profile-card">
-        <img src="profile_top.jpg" alt="warudora" class="profile-thumb" onerror="this.src='https://via.placeholder.com/150'">
+        <img src="profile_top.jpg" alt="warudora" class="profile-thumb">
         <div>
             <h2><i class="fas fa-id-card"></i> Profile</h2>
             <p>
@@ -507,7 +507,7 @@
                 </div>
             </div>
             <div class="button-group">
-                <a href="https://modrinth.com/mod/yunzhu-transit-extension" class="btn btn-primary" target="_blank"><i class="fas fa-download"></i> Download</a>
+                <a href="https://modrinth.com/mod/yunzhu-transit-extension" class="btn btn-primary" target="_blank" rel="noopener noreferrer"><i class="fas fa-download"></i> Download</a>
             </div>
         </article>
 
@@ -524,9 +524,9 @@
                 </div>
             </div>
             <div class="button-group">
-                <a href="https://modrinth.com/mod/japaniture/versions" class="btn btn-primary" target="_blank"><i class="fas fa-download"></i> Download</a>
-                <a href="https://discord.gg/VBUyKskneM" class="btn btn-discord" target="_blank"><i class="fab fa-discord"></i> Discord</a>
-              　<a href="https://japaniture-official.foggybook.chatgpt.site/" class="link-btn" target"_blank"><i class "fas fa-home"></i>Official Site</a>
+                <a href="https://modrinth.com/mod/japaniture/versions" class="btn btn-primary" target="_blank" rel="noopener noreferrer"><i class="fas fa-download"></i> Download</a>
+                <a href="https://discord.gg/VBUyKskneM" class="btn btn-discord" target="_blank" rel="noopener noreferrer"><i class="fab fa-discord"></i> Discord</a>
+              　<a href="https://japaniture-official.foggybook.chatgpt.site/" class="link-btn" target="_blank" rel="noopener noreferrer"><i class="fas fa-home"></i>Official Site</a>
 
             </div>
         </article>
@@ -613,12 +613,15 @@
             .then(text => {
                 const topNewsContainer = document.getElementById('top-news-list');
                 const urgentContainer = document.getElementById('urgent-news-container');
-                topNewsContainer.innerHTML = '';
+                topNewsContainer.replaceChildren();
                 
                 const items = text.split('---').map(b => b.trim()).filter(b => b.length > 0);
 
                 if (items.length === 0) {
-                    topNewsContainer.innerHTML = '<p style="color:#666;">お知らせはありません。</p>';
+                    const empty = document.createElement('p');
+                    empty.style.color = '#666';
+                    empty.textContent = 'お知らせはありません。';
+                    topNewsContainer.appendChild(empty);
                     urgentContainer.style.display = 'none';
                     return;
                 }
@@ -627,23 +630,39 @@
                 const urgentItems = [];
                 const todayStr = new Date().toISOString().split('T')[0];
 
-                // --- 簡易Markdown & URL自動リンク変換用ヘルパー関数 ---
-                function parseMarkdownAndLinks(inputText) {
-                    if (!inputText) return '';
-                    // 1. HTMLエスケープ（セキュリティ対策）
-                    let escaped = inputText
-                        .replace(/&/g, "&amp;")
-                        .replace(/</g, "&lt;")
-                        .replace(/>/g, "&gt;");
+                function safeHttpUrl(value) {
+                    try {
+                        const url = new URL(value, window.location.href);
+                        return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : null;
+                    } catch { return null; }
+                }
 
-                    // 2. 簡易Markdown: 太字 (**text**)
-                    let formatted = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-                    // 3. URL自動リンク化 (http:// または https:// で始まる文字列を <a> タグに変換)
-                    const urlRegex = /(https?:\/\/[^\s]+)/g;
-                    formatted = formatted.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">$1</a>');
-
-                    return formatted;
+                function appendFormattedText(parent, inputText) {
+                    const text = inputText || '';
+                    const tokenRegex = /(https?:\/\/[^\s]+|\*\*[^*]+\*\*)/g;
+                    let lastIndex = 0;
+                    for (const match of text.matchAll(tokenRegex)) {
+                        parent.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+                        const token = match[0];
+                        if (token.startsWith('**')) {
+                            const strong = document.createElement('strong');
+                            strong.textContent = token.slice(2, -2);
+                            parent.appendChild(strong);
+                        } else {
+                            const url = safeHttpUrl(token);
+                            if (url) {
+                                const link = document.createElement('a');
+                                link.href = url;
+                                link.target = '_blank';
+                                link.rel = 'noopener noreferrer';
+                                link.style.cssText = 'color: inherit; text-decoration: underline;';
+                                link.textContent = token;
+                                parent.appendChild(link);
+                            } else parent.appendChild(document.createTextNode(token));
+                        }
+                        lastIndex = match.index + token.length;
+                    }
+                    parent.appendChild(document.createTextNode(text.slice(lastIndex)));
                 }
 
                 items.forEach(itemStr => {
@@ -682,17 +701,42 @@
                     const linkColor = isUrgent ? '#e74c3c' : '#e67e22';
 
                     urgentContainer.style.display = 'block';
-                    urgentContainer.innerHTML = `
-                        <div class="${cardClass}">
-                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
-                                <span class="${badgeClass}">${label}</span>
-                                <span style="font-size: 0.85rem; color: #666; font-weight: 600;">${topUrgent.date}</span>
-                            </div>
-                            <h3 style="margin: 0 0 0.5rem 0; color: ${textColor}; font-size: 1.1rem; font-weight: bold;">${parseMarkdownAndLinks(topUrgent.title)}</h3>
-                            ${topUrgent.body ? `<p style="margin: 0; font-size: 0.92rem; color: #444; white-space: pre-wrap; word-break: break-word;">${parseMarkdownAndLinks(topUrgent.body)}</p>` : ''}
-                            ${topUrgent.link ? `<div style="margin-top: 0.8rem;"><a href="${topUrgent.link}" target="_blank" rel="noopener noreferrer" style="color: ${linkColor}; font-weight: bold; text-decoration: underline; font-size: 0.85rem;">詳細を確認する &rarr;</a></div>` : ''}
-                        </div>
-                    `;
+                    urgentContainer.replaceChildren();
+                    const urgentCard = document.createElement('div');
+                    urgentCard.className = cardClass;
+                    const urgentMeta = document.createElement('div');
+                    urgentMeta.style.cssText = 'display:flex; align-items:center; gap:10px; margin-bottom:0.5rem;';
+                    const urgentBadge = document.createElement('span');
+                    urgentBadge.className = badgeClass;
+                    urgentBadge.textContent = label;
+                    const urgentDate = document.createElement('span');
+                    urgentDate.style.cssText = 'font-size:0.85rem; color:#666; font-weight:600;';
+                    urgentDate.textContent = topUrgent.date;
+                    urgentMeta.append(urgentBadge, urgentDate);
+                    const urgentTitle = document.createElement('h3');
+                    urgentTitle.style.cssText = `margin:0 0 0.5rem 0; color:${textColor}; font-size:1.1rem; font-weight:bold;`;
+                    appendFormattedText(urgentTitle, topUrgent.title);
+                    urgentCard.append(urgentMeta, urgentTitle);
+                    if (topUrgent.body) {
+                        const urgentBody = document.createElement('p');
+                        urgentBody.style.cssText = 'margin:0; font-size:0.92rem; color:#444; white-space:pre-wrap; word-break:break-word;';
+                        appendFormattedText(urgentBody, topUrgent.body);
+                        urgentCard.appendChild(urgentBody);
+                    }
+                    const urgentLink = safeHttpUrl(topUrgent.link);
+                    if (urgentLink) {
+                        const linkWrap = document.createElement('div');
+                        linkWrap.style.marginTop = '0.8rem';
+                        const link = document.createElement('a');
+                        link.href = urgentLink;
+                        link.target = '_blank';
+                        link.rel = 'noopener noreferrer';
+                        link.style.cssText = `color:${linkColor}; font-weight:bold; text-decoration:underline; font-size:0.85rem;`;
+                        link.textContent = '詳細を確認する →';
+                        linkWrap.appendChild(link);
+                        urgentCard.appendChild(linkWrap);
+                    }
+                    urgentContainer.appendChild(urgentCard);
                 } else {
                     urgentContainer.style.display = 'none';
                 }
@@ -714,18 +758,29 @@
                         tagColor = '#2980b9';
                     }
 
-                    div.innerHTML = `
-                        <div class="news-meta-line">
-                            <span class="news-date">${item.date}</span>
-                            <span style="background:${tagBg}; font-size:0.7rem; padding:1px 6px; border-radius:4px; font-weight:bold; color:${tagColor};">${item.category.toUpperCase()}</span>
-                        </div>
-                        <p class="news-title-text">${parseMarkdownAndLinks(item.title)}</p>
-                    `;
+                    const meta = document.createElement('div');
+                    meta.className = 'news-meta-line';
+                    const dateEl = document.createElement('span');
+                    dateEl.className = 'news-date';
+                    dateEl.textContent = item.date;
+                    const categoryEl = document.createElement('span');
+                    categoryEl.style.cssText = `background:${tagBg}; font-size:0.7rem; padding:1px 6px; border-radius:4px; font-weight:bold; color:${tagColor};`;
+                    categoryEl.textContent = item.category.toUpperCase();
+                    meta.append(dateEl, categoryEl);
+                    const titleEl = document.createElement('p');
+                    titleEl.className = 'news-title-text';
+                    appendFormattedText(titleEl, item.title);
+                    div.append(meta, titleEl);
                     topNewsContainer.appendChild(div);
                 });
             })
             .catch(() => {
-                document.getElementById('top-news-list').innerHTML = '<p style="color:#e74c3c;">読み込みに失敗しました。</p>';
+                const error = document.getElementById('top-news-list');
+                error.replaceChildren();
+                const errorText = document.createElement('p');
+                errorText.style.color = '#e74c3c';
+                errorText.textContent = '読み込みに失敗しました。';
+                error.appendChild(errorText);
                 document.getElementById('urgent-news-container').style.display = 'none';
             });
 
@@ -752,43 +807,72 @@
                 });
 
                 if (title) {
-                    let countdownHtml = '';
+                    let countdownElements = null;
                     if (targetDateStr) {
-                        countdownHtml = `
-                            <div class="countdown-container">
-                                <div class="countdown-title">
-                                    <i class="fas fa-hourglass-half"></i> イベント開催まで
-                                </div>
-                                <div class="countdown-digits" id="event-timer">
-                                    <span class="countdown-num" id="cd-days">0</span><span class="countdown-unit">日</span>
-                                    <span class="countdown-num" id="cd-hours">00</span><span class="countdown-unit">時間</span>
-                                    <span class="countdown-num" id="cd-mins">00</span><span class="countdown-unit">分</span>
-                                    <span class="countdown-num" id="cd-secs">00</span><span class="countdown-unit">秒</span>
-                                </div>
-                            </div>
-                        `;
+                        const countdown = document.createElement('div');
+                        countdown.className = 'countdown-container';
+                        const countdownTitle = document.createElement('div');
+                        countdownTitle.className = 'countdown-title';
+                        const hourglass = document.createElement('i');
+                        hourglass.className = 'fas fa-hourglass-half';
+                        countdownTitle.append(hourglass, ' イベント開催まで');
+                        const digits = document.createElement('div');
+                        digits.className = 'countdown-digits';
+                        const makeDigit = (id, value, unit) => {
+                            const digit = document.createElement('span');
+                            digit.className = 'countdown-num';
+                            digit.id = id;
+                            digit.textContent = value;
+                            const unitEl = document.createElement('span');
+                            unitEl.className = 'countdown-unit';
+                            unitEl.textContent = unit;
+                            digits.append(digit, unitEl);
+                            return digit;
+                        };
+                        const countdownData = { container: countdown, days: makeDigit('cd-days', '0', '日'), hours: makeDigit('cd-hours', '00', '時間'), mins: makeDigit('cd-mins', '00', '分'), secs: makeDigit('cd-secs', '00', '秒') };
+                        countdown.append(countdownTitle, digits);
+                        countdownElements = countdownData;
                     }
 
-                    container.innerHTML = `
-                        <div class="special-event-card" style="background: #ffffff; border-radius: 16px; padding: 25px; margin: 10px 0 20px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-left: 6px solid #d35400;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-                                <span style="background: #fbeee6; color: #d35400; font-size: 0.8rem; font-weight: bold; padding: 4px 12px; border-radius: 50px;">
-                                    <i class="fas fa-music"></i> ${tag || 'Special Info'}
-                                </span>
-                                <span style="font-size: 0.85rem; color: #888;">${date}</span>
-                            </div>
-                            <h3 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 1.3rem;">${title}</h3>
-                            <p style="margin: 0 0 15px 0; font-size: 0.95rem; color: #555; line-height: 1.6;">${body}</p>
-                            ${countdownHtml}
-                            ${link ? `
-                                <div style="text-align: right; margin-top: 15px;">
-                                    <a href="${link}" style="display: inline-flex; align-items: center; gap: 8px; font-weight: bold; text-decoration: none; padding: 10px 20px; background: #d35400; color: white; border-radius: 50px; font-size: 0.9rem; transition: background 0.3s;" onmouseover="this.style.background='#b34300'" onmouseout="this.style.background='#d35400'">
-                                        ${btnText} <i class="fas fa-arrow-right"></i>
-                                    </a>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
+                    const eventCard = document.createElement('div');
+                    eventCard.className = 'special-event-card';
+                    eventCard.style.cssText = 'background:#fff; border-radius:16px; padding:25px; margin:10px 0 20px; box-shadow:0 4px 15px rgba(0,0,0,.08); border-left:6px solid #d35400;';
+                    const eventMeta = document.createElement('div');
+                    eventMeta.style.cssText = 'display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;';
+                    const eventTag = document.createElement('span');
+                    eventTag.style.cssText = 'background:#fbeee6; color:#d35400; font-size:.8rem; font-weight:bold; padding:4px 12px; border-radius:50px;';
+                    const music = document.createElement('i');
+                    music.className = 'fas fa-music';
+                    eventTag.append(music, ` ${tag || 'Special Info'}`);
+                    const eventDate = document.createElement('span');
+                    eventDate.style.cssText = 'font-size:.85rem; color:#888;';
+                    eventDate.textContent = date;
+                    eventMeta.append(eventTag, eventDate);
+                    const eventTitle = document.createElement('h3');
+                    eventTitle.style.cssText = 'margin:0 0 10px; color:#2c3e50; font-size:1.3rem;';
+                    eventTitle.textContent = title;
+                    const eventBody = document.createElement('p');
+                    eventBody.style.cssText = 'margin:0 0 15px; font-size:.95rem; color:#555; line-height:1.6;';
+                    eventBody.textContent = body;
+                    eventCard.append(eventMeta, eventTitle, eventBody);
+                    if (countdownElements) eventCard.appendChild(countdownElements.container);
+                    const eventUrl = safeHttpUrl(link);
+                    if (eventUrl) {
+                        const linkWrap = document.createElement('div');
+                        linkWrap.style.cssText = 'text-align:right; margin-top:15px;';
+                        const eventLink = document.createElement('a');
+                        eventLink.href = eventUrl;
+                        eventLink.style.cssText = 'display:inline-flex; align-items:center; gap:8px; font-weight:bold; text-decoration:none; padding:10px 20px; background:#d35400; color:white; border-radius:50px; font-size:.9rem; transition:background .3s;';
+                        eventLink.addEventListener('mouseenter', () => eventLink.style.background = '#b34300');
+                        eventLink.addEventListener('mouseleave', () => eventLink.style.background = '#d35400');
+                        eventLink.textContent = btnText;
+                        const arrow = document.createElement('i');
+                        arrow.className = 'fas fa-arrow-right';
+                        eventLink.append(' ', arrow);
+                        linkWrap.appendChild(eventLink);
+                        eventCard.appendChild(linkWrap);
+                    }
+                    container.replaceChildren(eventCard);
 
                     // カウントダウンタイマー処理
                     if (targetDateStr) {
@@ -799,7 +883,10 @@
                             const diff = targetDate - now;
 
                             if (diff <= 0) {
-                                document.getElementById('event-timer').innerHTML = '<span class="countdown-num" style="font-size:1.0rem;">イベント開催中！</span>';
+                                const timer = document.getElementById('event-timer');
+                                timer.textContent = 'イベント開催中！';
+                                timer.classList.add('countdown-num');
+                                timer.style.fontSize = '1rem';
                                 return;
                             }
 

@@ -247,7 +247,7 @@
 
 </div>
 
-<button id="back-to-top" onclick="scrollToTop()">
+<button id="back-to-top">
     <i class="fas fa-chevron-up"></i>
 </button>
 
@@ -287,43 +287,60 @@
             const calcPercent = Math.floor((g.current / g.total) * 100);
             const barWidth = Math.min(calcPercent, 100);
 
-            goalsDiv.innerHTML += `
-                <div style="margin-bottom:15px">
-                    <div style="display:flex; justify-content:space-between; font-size:0.85rem">
-                        <span>${g.label} (${g.current}/${g.total})</span>
-                        <span>${calcPercent}%</span>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" style="width:${barWidth}%"></div>
-                    </div>
-                </div>`;
+            const goal = document.createElement('div');
+            goal.style.marginBottom = '15px';
+            const summary = document.createElement('div');
+            summary.style.cssText = 'display:flex; justify-content:space-between; font-size:0.85rem';
+            const label = document.createElement('span');
+            label.textContent = `${g.label} (${g.current}/${g.total})`;
+            const percent = document.createElement('span');
+            percent.textContent = `${calcPercent}%`;
+            summary.append(label, percent);
+            const background = document.createElement('div');
+            background.className = 'progress-bar-bg';
+            const fill = document.createElement('div');
+            fill.className = 'progress-bar-fill';
+            fill.style.width = `${barWidth}%`;
+            background.appendChild(fill);
+            goal.append(summary, background);
+            goalsDiv.appendChild(goal);
         });
 
         // SNS
         const snsDiv = document.getElementById('sns-list');
         snsTags.forEach(s => {
-            snsDiv.innerHTML += `
-                <div class="tag-box">
-                    <span>${s.label}: <strong>${s.value}</strong></span>
-                    <button class="copy-btn" onclick="copyText(event, '${reEscape(s.value)}')">コピー</button>
-                </div>`;
+            const box = document.createElement('div');
+            box.className = 'tag-box';
+            const text = document.createElement('span');
+            text.append(`${s.label}: `);
+            const value = document.createElement('strong');
+            value.textContent = s.value;
+            text.appendChild(value);
+            const copyButton = document.createElement('button');
+            copyButton.className = 'copy-btn';
+            copyButton.textContent = 'コピー';
+            copyButton.addEventListener('click', event => copyText(event, s.value));
+            box.append(text, copyButton);
+            snsDiv.appendChild(box);
         });
 
         // 辞典
         const dictDiv = document.getElementById('dictionary-list');
         dictionary.forEach(d => {
-            dictDiv.innerHTML += `
-                <div class="dict-item">
-                    <div class="dict-word">${d.word}</div>
-                    <div class="dict-desc">${d.desc}</div>
-                </div>`;
+            const item = document.createElement('div');
+            item.className = 'dict-item';
+            const word = document.createElement('div');
+            word.className = 'dict-word';
+            word.textContent = d.word;
+            const desc = document.createElement('div');
+            desc.className = 'dict-desc';
+            desc.textContent = d.desc;
+            item.append(word, desc);
+            dictDiv.appendChild(item);
         });
 
         window.addEventListener('scroll', toggleBackToTopBtn);
-    }
-
-    function reEscape(str) {
-        return str.replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
+        document.getElementById('back-to-top').addEventListener('click', scrollToTop);
     }
 
     function toggleBackToTopBtn() {

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>脆弱性テスト用ダミーページ</title>
+</head>
+<body>
+    <h1>セキュリティテスト</h1>
+    <div id="output">ここに結果が出ます</div>
+
+    <script>
+        const userInput = new URLSearchParams(window.location.search).get('data') || '';
+        const output = document.getElementById('output');
+        output.textContent = userInput;
+        console.info('入力値を安全にテキスト表示しました。');
+    </script>
+</body>
+</html>
