@@ -1,3 +1,16 @@
+[DATE] 2026-10-17
+[CATEGORY] info
+[TITLE] Japaniture Mod 10,000DL突破！
+[BODY]
+
+皆さまのおかげで、Japaniture Modの累計ダウンロード数が10,000回を突破しました！
+
+日頃からご利用・応援いただき、本当にありがとうございます！
+
+今後もさらなる機能追加・改善を進めてまいりますので、引き続きよろしくお願いいたします！
+
+warudora / C'zaha Chell Tia
+---
 [DATE] 2026-10-12
 [CATEGORY] Release
 [TITLE] Japanituremod v4.0.0 をリリースしました！
