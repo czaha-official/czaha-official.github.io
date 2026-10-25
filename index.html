@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -912,3 +913,176 @@
 
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>[緊急] システムメンテナンス実施のお知らせ | C'zaha Chell Tia's Official Site</title>
+
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #222222;
+            --text-sub: #555555;
+            --border-color: #dcdcdc;
+            --accent-color: #e67e22;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.75;
+            margin: 0;
+            padding: 0;
+            color: var(--text-main);
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        nav.top-nav {
+            background: #ffffff;
+            padding: 12px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-back-link {
+            text-decoration: none;
+            color: #666;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .logo-area img { height: 26px; width: auto; }
+
+        header {
+            background: #ffffff;
+            color: var(--text-main);
+            padding: 2.5rem 1rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        header h1 { font-size: 1.5rem; margin: 0; font-weight: 700; letter-spacing: 0.05em; }
+        header p { margin: 0.4rem 0 0; color: #666; font-size: 0.88rem; }
+
+        .container {
+            max-width: 700px;
+            width: 90%;
+            margin: 2rem auto;
+            flex-grow: 1;
+        }
+
+        .maintenance-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 2rem;
+        }
+
+        .maintenance-title {
+            font-size: 1.15rem;
+            color: var(--text-main);
+            margin-bottom: 1.2rem;
+            font-weight: bold;
+            line-height: 1.5;
+            border-bottom: 2px solid #222;
+            padding-bottom: 0.75rem;
+        }
+
+        .maintenance-body {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            text-align: left;
+            line-height: 1.8;
+        }
+
+        .section-subheading {
+            font-weight: bold;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 4px;
+            margin-top: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            background: #ffffff;
+            color: #666666;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+<nav class="top-nav">
+<div class="logo-area"><img src="logo.png" alt="warudora logo" onerror="this.src='https://via.placeholder.com/200x50?text=WARUDORA+LOGO'"></div>
+</nav>
+
+<header>
+    <h1>System Maintenance</h1>
+    <p>全サービス全サーバー 緊急メンテナンス作業実施のお知らせ</p>
+</header>
+
+<div class="container">
+    <article class="maintenance-card">
+        <div class="maintenance-title">
+            【緊急】全サービス システム点検・公開リポジトリの完全非公開化に伴うメンテナンス作業について
+        </div>
+        <div class="maintenance-body">
+            日頃は本サイトおよび各種コンテンツをご利用いただき、誠にありがとうございます。<br><br>
+            このたび、システム全体の安全確認、運用環境の精査、およびセキュリティ対策強化のため、公開コンテンツの取り下げならびに全サービスを対象とした緊急システムメンテナンスを実施しております。
+
+            <div class="section-subheading">■ メンテナンス日時</div>
+            未定（点検・安全確認作業完了次第、順次終了いたします）
+
+            <div class="section-subheading">■ 影響を受けるサービス</div>
+            本サイト内のすべてのコンテンツ閲覧、各種機能、および公開ページの利用
+
+            <div class="section-subheading">■ 主な作業内容・実施理由</div>
+            * <b>公開リポジトリおよび全コンテンツの非公開化・完全除外</b><br>
+            Git追跡インデックスの全面クリーンアップを行い、公開サーバー上の全サブページおよび管理対象ファイルを非公開状態へ移行<br>
+            * <b>PHP等関連プログラムの点検およびコード刷新・修正</b><br>
+            ローカル開発環境および既存リポジトリ内におけるPHPスクリプトの存在有無を確認し、該当する場合は適切なセキュリティ修正の適用、または最新規格のHTML + JavaScript化を実施<br>
+            * <b>セキュリティおよび被害・影響有無の安全確認</b><br>
+            外部からの不正アクセスや脆弱性による影響がないかの全般的な調査・動作検証およびアクセスルートの遮断<br>
+            なお、MTR Japan Nexusに関しては安全性が確認されていますので、通常通りサービスをご利用頂けます。
+
+            <hr style="border: none; border-top: 1px dashed #ddd; margin: 1.5rem 0 1rem 0;">
+            ご利用の皆様にはご不便・ご迷惑をおかけいたしますことを深くお詫び申し上げます。<br>
+            サービスの安全な運用のための厳格な措置となりますので、ご理解とご協力のほどよろしくお願い申し上げます。
+            <br><br>
+            <span style="font-size: 0.82rem; color: #7f8c8d;">
+                ※作業の進捗状況により、再開時刻が前後する場合がございます。あらかじめご了承ください。
+            </span>
+        </div>
+    </article>
+</div>
+
+<footer>
+    <div class="footer-meta-container" style="display: flex; flex-direction: column; gap: 4px; align-items: center;">
+        <div class="meta-item"><span class="meta-role" style="color: #2980b9;">Japanituremod Developers</span></div>
+        <div class="meta-item"><span class="meta-name" style="font-weight: bold;">warudora:</span><span class="meta-role" style="color: #666666;"> 5H1H0 Engineer & Sales Rep / Admin of MJaS / Founder of MTRJapanUsers</span></div>
+        <div class="meta-item"><span class="meta-name" style="font-weight: bold;">C'zaha Chell tia:</span><span class="meta-role" style="color: #666666;"> Independent Developer / Trumpet Player / YTE Translator</span></div>
+
+        <div class="copyright-notice" style="margin-top: 12px; font-size: 0.72rem; color: #888888; max-width: 700px; line-height: 1.4; text-align: center;">
+            アカウントアイコン及びロードストーンツールキットなどのファンキットの著作権は以下にすべて帰属します<br>©SQUARE ENIX
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
+>>>>>>> 2c12cf5f6b9ebf38f0fc0b324c09f2bfdb3f9ff5
