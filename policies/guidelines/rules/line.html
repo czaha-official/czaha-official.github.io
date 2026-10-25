@@ -10,6 +10,7 @@
     <meta name="description" content="C'zaha Chell Tia(ザハ)の公式サイト 公式Lineアカウント用ガイドラインページです。">
     
     <!-- Marked.js（Markdownパーサー） -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
@@ -110,7 +111,7 @@
 
 <!--<nav class="top-nav">
     <a href="../index.html" class="nav-back-link"><i class="fas fa-arrow-left"></i> ホームに戻る</a>
-    <div class="logo-area"><img src="../logo.png" alt="warudora logo"></div>
+    <div class="logo-area"><img src="../logo.png" alt="warudora logo" onerror="this.src='https://via.placeholder.com/200x50?text=WARUDORA+LOGO'"></div>
 </nav> -->
 
 <header>
@@ -222,14 +223,12 @@ LINE上、または実生活等において前条の禁止事項（ヘイト、�
         const output = document.getElementById('markdown-output');
         
         output.replaceChildren();
-
         function safeHttpUrl(value) {
             try {
                 const url = new URL(value, window.location.href);
                 return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : null;
             } catch { return null; }
         }
-
         function appendInline(parent, value) {
             const tokenRegex = /(https?:\/\/[^\s]+|\*\*[^*]+\*\*)/g;
             let lastIndex = 0;
@@ -255,7 +254,6 @@ LINE上、または実生活等において前条の禁止事項（ヘイト、�
             }
             parent.appendChild(document.createTextNode(value.slice(lastIndex)));
         }
-
         if (mdSrc) {
             mdSrc.split(/\r?\n/).forEach(line => {
                 const heading = line.match(/^(#{1,3})\s+(.+)$/);
