@@ -110,7 +110,7 @@
 
 <nav class="top-nav">
     <a href="../rules-index.html" class="nav-back-link"><i class="fas fa-arrow-left"></i> ホームに戻る</a>
-    <div class="logo-area"><img src="../logo.png" alt="warudora logo" onerror="this.src='https://via.placeholder.com/200x50?text=WARUDORA+LOGO'"></div>
+    <div class="logo-area"><img id="site-logo" src="../logo.png" alt="warudora logo"></div>
 </nav>
 
 <header>
@@ -207,6 +207,9 @@ Cookie（クッキー）および類似技術: ログイン状態の維持、ユ
 </footer>
 
 <script>
+    document.getElementById('site-logo').addEventListener('error', event => {
+        event.currentTarget.src = 'https://via.placeholder.com/200x50?text=WARUDORA+LOGO';
+    }, { once: true });
     document.addEventListener('DOMContentLoaded', () => {
         const mdSrc = document.getElementById('markdown-src').value;
         const output = document.getElementById('markdown-output');
