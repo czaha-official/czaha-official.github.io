@@ -924,7 +924,9 @@
                     }
                 }
             })
-            .catch(() => {});
+            .catch(error => {
+                console.error('イベントデータの描画に失敗しました。', error);
+            });
     });
 </script>
 
