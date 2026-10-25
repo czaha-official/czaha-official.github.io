@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <!-- トップページ -->
+  <url>
+    <loc>https://czaha-official.github.io/index.html</loc>
+    <lastmod>2026-10-09</lastmod>
+  </url>
+
+  <!-- お知らせページ -->
+  <url>
+    <loc>https://czaha-official.github.io/news.html</loc>
+    <lastmod>2026-10-09</lastmod>
+  </url>
+
+  <!-- コンサート情報ページ -->
+  <url>
+    <loc>https://czaha-official.github.io/concert.html</loc>
+    <lastmod>2026-09-25</lastmod>
+  </url>
+
+</urlset>

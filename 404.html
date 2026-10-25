@@ -3,35 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <title>Redirecting... | System Maintenance</title>
-    <script>
-        // 存在しないURLにアクセスがあった場合、即座にトップページ（メンテナンス画面）へ転送
-        window.location.replace("./index.html");
-    </script>
+    <title>404 Page Not Found | C'zaha Chell tia</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-            text-align: center;
-            padding: 4rem 1rem;
-            margin: 0;
-        }
-        .box {
-            max-width: 500px;
-            margin: 0 auto;
-            background: #fff;
-            border: 1px solid #dcdcdc;
-            border-radius: 6px;
-            padding: 2rem;
-        }
-        a { color: #2980b9; text-decoration: none; }
-        a:hover { text-decoration: underline; }
+        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f4f7f6; color: #333; }
+        .error-code { font-size: 80px; font-weight: bold; color: #2193b0; margin: 0; }
+        .message { font-size: 20px; margin-bottom: 30px; white-space: pre-wrap; }
+        .btn { display: inline-block; padding: 10px 25px; background: #2193b0; color: white; text-decoration: none; border-radius: 25px; font-weight: bold; }
     </style>
 </head>
 <body>
-<<<<<<< HEAD
     <div class="error-code">404</div>
     <div class="message" id="messageBox">...</div>
     <a href="/index.html" class="btn" id="returnBtn">トップページへ戻る</a>
@@ -77,12 +57,5 @@
         document.getElementById('messageBox').innerText = activeChar.message;
         document.getElementById('returnBtn').innerText = activeChar.btnText;
     </script>
-=======
-    <div class="box">
-        <p><strong>ページが移動または非公開となりました。</strong></p>
-        <p>現在、システムメンテナンスを実施しております。<br>自動で転送されない場合は、下記よりトップページへお進みください。</p>
-        <p style="margin-top: 1.5rem;"><a href="./index.html">トップページ（メンテナンスのお知らせ）へ移動する</a></p>
-    </div>
->>>>>>> 2c12cf5f6b9ebf38f0fc0b324c09f2bfdb3f9ff5
 </body>
 </html>
