@@ -218,58 +218,49 @@ LINE上、または実生活等において前条の禁止事項（ヘイト、�
 </footer>
 
 <script>
-    document.getElementById('site-logo').addEventListener('error', event => {
-        event.currentTarget.src = 'https://via.placeholder.com/200x50?text=WARUDORA+LOGO';
-    }, { once: true });
+    const siteLogo = document.getElementById('site-logo');
+    if (siteLogo) {
+        siteLogo.addEventListener('error', event => {
+            event.currentTarget.src = 'https://via.placeholder.com/200x50?text=WARUDORA+LOGO';
+        }, { once: true });
+    }
     document.addEventListener('DOMContentLoaded', () => {
         const mdSrc = document.getElementById('markdown-src').value;
         const output = document.getElementById('markdown-output');
         
-        output.replaceChildren();
-        function safeHttpUrl(value) {
-            try {
-                const url = new URL(value, window.location.href);
-                return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : null;
-            } catch { return null; }
-        }
-        function appendInline(parent, value) {
-            const tokenRegex = /(https?:\/\/[^\s]+|\*\*[^*]+\*\*)/g;
-            let lastIndex = 0;
-            for (const match of value.matchAll(tokenRegex)) {
-                parent.appendChild(document.createTextNode(value.slice(lastIndex, match.index)));
-                const token = match[0];
-                if (token.startsWith('**')) {
-                    const strong = document.createElement('strong');
-                    strong.textContent = token.slice(2, -2);
-                    parent.appendChild(strong);
-                } else {
-                    const url = safeHttpUrl(token);
-                    if (url) {
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.target = '_blank';
-                        link.rel = 'noopener noreferrer';
-                        link.textContent = token;
-                        parent.appendChild(link);
-                    } else parent.appendChild(document.createTextNode(token));
+        function safeMarkdownFragment(markup) {
+            const parsed = new DOMParser().parseFromString(markup, 'text/html');
+            const allowedTags = new Set(['A', 'BLOCKQUOTE', 'BR', 'CODE', 'DEL', 'EM', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'HR', 'LI', 'OL', 'P', 'PRE', 'STRONG', 'TABLE', 'TBODY', 'TD', 'TH', 'THEAD', 'TR', 'UL']);
+            const dangerousTags = parsed.body.querySelectorAll('script, iframe, object, embed, style, link, form');
+            dangerousTags.forEach(element => element.remove());
+            parsed.body.querySelectorAll('*').forEach(element => {
+                if (!allowedTags.has(element.tagName)) {
+                    while (element.firstChild) element.parentNode.insertBefore(element.firstChild, element);
+                    element.remove();
+                    return;
                 }
-                lastIndex = match.index + token.length;
-            }
-            parent.appendChild(document.createTextNode(value.slice(lastIndex)));
-        }
-        if (mdSrc) {
-            mdSrc.split(/\r?\n/).forEach(line => {
-                const heading = line.match(/^(#{1,3})\s+(.+)$/);
-                const element = heading ? document.createElement(`h${heading[1].length}`) : document.createElement(line.trim() ? 'p' : 'div');
-                if (heading) appendInline(element, heading[2]);
-                else if (line.trim()) appendInline(element, line);
-                output.appendChild(element);
+                Array.from(element.attributes).forEach(attribute => {
+                    const name = attribute.name.toLowerCase();
+                    if (name.startsWith('on') || name === 'style' || !['class', 'href', 'title', 'target', 'rel'].includes(name)) element.removeAttribute(attribute.name);
+                    if (name === 'href') {
+                        try {
+                            const url = new URL(attribute.value, window.location.href);
+                            if (!['http:', 'https:'].includes(url.protocol)) element.removeAttribute(attribute.name);
+                        } catch { element.removeAttribute(attribute.name); }
+                    }
+                });
             });
+            const fragment = document.createDocumentFragment();
+            while (parsed.body.firstChild) fragment.appendChild(parsed.body.firstChild);
+            return fragment;
+        }
+        if (mdSrc && typeof marked !== 'undefined') {
+            output.replaceChildren(safeMarkdownFragment(marked.parse(mdSrc)));
         } else {
             const error = document.createElement('p');
             error.style.color = '#e74c3c';
             error.textContent = 'コンテンツの読み込みに失敗しました。';
-            output.appendChild(error);
+            output.replaceChildren(error);
         }
     });
 </script>
