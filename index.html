@@ -229,7 +229,7 @@
         }
 
         /* ----------------------------------
-            6. イベントカレンダー用スタイル
+            6. Googleカレンダー埋め込み用スタイル
         ---------------------------------- */
         .calendar-section {
             background: var(--white);
@@ -239,107 +239,28 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .calendar-header h2 {
+        .calendar-section h2 {
             font-size: 1.2rem;
-            margin: 0;
+            margin: 0 0 15px 0;
             color: var(--primary-color);
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .calendar-nav-btns {
-            display: flex;
-            gap: 8px;
-        }
-
-        .calendar-nav-btn {
-            background: #f0f2f5;
-            border: none;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-color);
-            transition: background 0.2s;
-        }
-
-        .calendar-nav-btn:hover {
-            background: #e2e8f0;
-        }
-
-        .calendar-month-title {
-            font-weight: bold;
-            font-size: 1.05rem;
-            color: var(--primary-color);
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            text-align: center;
-        }
-
-        .calendar-day-header {
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #7f8c8d;
-            padding: 8px 0;
-        }
-
-        .calendar-day-header:nth-child(1) { color: #e74c3c; } /* 日曜日 */
-        .calendar-day-header:nth-child(7) { color: #3498db; } /* 土曜日 */
-
-        .calendar-cell {
-            aspect-ratio: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            border-radius: 8px;
-            background: #fafbfc;
-            color: #333;
+        .calendar-responsive-wrapper {
             position: relative;
-            user-select: none;
+            width: 100%;
+            height: 550px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fafbfc;
         }
 
-        .calendar-cell.other-month {
-            color: #cbd5e1;
-            background: transparent;
-        }
-
-        .calendar-cell.today {
-            border: 2px solid var(--accent-color);
-            font-weight: bold;
-        }
-
-        .calendar-cell.has-event {
-            background: #ebf5fb;
-            color: #2980b9;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .calendar-cell.has-event::after {
-            content: '';
-            width: 4px;
-            height: 4px;
-            background-color: var(--accent-color);
-            border-radius: 50%;
-            position: absolute;
-            bottom: 4px;
+        .calendar-responsive-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
         }
 
         /* ----------------------------------
@@ -547,6 +468,7 @@
             .profile-thumb { width: 130px; height: 130px; }
             .button-group { justify-content: center; }
             .countdown-container { flex-direction: column; align-items: flex-start; gap: 6px; }
+            .calendar-responsive-wrapper { height: 450px; }
         }
     </style>
 </head>
@@ -598,28 +520,12 @@
         </div>
     </div>
 
-    <!-- イベントカレンダーセクション -->
+    <!-- Googleカレンダー埋め込みセクション -->
     <div class="calendar-section">
-        <div class="calendar-header">
-            <h2><i class="fas fa-calendar-alt"></i> Event Calendar</h2>
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <span id="calendar-month-title" class="calendar-month-title">2026年 10月</span>
-                <div class="calendar-nav-btns">
-                    <button class="calendar-nav-btn" id="prev-month-btn" title="前月"><i class="fas fa-chevron-left"></i></button>
-                    <button class="calendar-nav-btn" id="next-month-btn" title="次月"><i class="fas fa-chevron-right"></i></button>
-                </div>
-            </div>
+        <h2><i class="fas fa-calendar-alt"></i> Event Calendar</h2>
+        <div class="calendar-responsive-wrapper">
+            <iframe src="https://calendar.google.com/calendar/embed?src=3a24a1a35cac35fc914d78d8e5523fb806142460f2a96c2fef4a962e7fdc3683%40group.calendar.google.com&ctz=Asia%2FTokyo" frameborder="0" scrolling="no"></iframe>
         </div>
-        <div class="calendar-grid">
-            <div class="calendar-day-header">日</div>
-            <div class="calendar-day-header">月</div>
-            <div class="calendar-day-header">火</div>
-            <div class="calendar-day-header">水</div>
-            <div class="calendar-day-header">木</div>
-            <div class="calendar-day-header">金</div>
-            <div class="calendar-day-header">土</div>
-        </div>
-        <div id="calendar-days-grid" class="calendar-grid" style="margin-top: 4px;"></div>
     </div>
 
     <!-- グリッド領域 -->
@@ -749,83 +655,6 @@
         else backToTopBtn.classList.remove('show');
     });
     backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-    // イベントカレンダー機能の実装
-    let currentCalendarDate = new Date();
-    // イベントがある日付のサンプル配列（'YYYY-MM-DD' 形式で追加可能）
-    const eventDates = ['2026-10-28', '2026-11-05']; 
-
-    function renderCalendar() {
-        const year = currentCalendarDate.getFullYear();
-        const month = currentCalendarDate.getMonth();
-        
-        document.getElementById('calendar-month-title').textContent = `${year}年 ${month + 1}月`;
-        
-        const gridEl = document.getElementById('calendar-days-grid');
-        gridEl.replaceChildren();
-
-        const firstDayIndex = new Date(year, month, 1).getDay();
-        const lastDay = new Date(year, month + 1, 0).getDate();
-        const prevLastDay = new Date(year, month, 0).getDate();
-        
-        const today = new Date();
-        const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-
-        // 前月のはみ出し日数分
-        for (let i = firstDayIndex; i > 0; i--) {
-            const cell = document.createElement('div');
-            cell.className = 'calendar-cell other-month';
-            cell.textContent = prevLastDay - i + 1;
-            gridEl.appendChild(cell);
-        }
-
-        // 当月の日付
-        for (let i = 1; i <= lastDay; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'calendar-cell';
-            cell.textContent = i;
-
-            const monthStr = String(month + 1).padStart(2, '0');
-            const dayStr = String(i).padStart(2, '0');
-            const dateStr = `${year}-${monthStr}-${dayStr}`;
-
-            if (dateStr === todayStr) {
-                cell.classList.add('today');
-            }
-
-            if (eventDates.includes(dateStr)) {
-                cell.classList.add('has-event');
-                cell.title = 'イベントがあります';
-                cell.addEventListener('click', () => {
-                    alert(`${dateStr} にイベントが予定されています。`);
-                });
-            }
-
-            gridEl.appendChild(cell);
-        }
-
-        // 次月のはみ出し日数分（グリッドを綺麗に埋めるため）
-        const totalCells = firstDayIndex + lastDay;
-        const nextDaysCount = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
-        for (let i = 1; i <= nextDaysCount; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'calendar-cell other-month';
-            cell.textContent = i;
-            gridEl.appendChild(cell);
-        }
-    }
-
-    document.getElementById('prev-month-btn').addEventListener('click', () => {
-        currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
-        renderCalendar();
-    });
-
-    document.getElementById('next-month-btn').addEventListener('click', () => {
-        currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
-        renderCalendar();
-    });
-
-    renderCalendar();
 
     // トップページ用：お知らせデータ（news-data.txt）読み込み＆URL自動リンク・簡易Markdown対応
     document.addEventListener('DOMContentLoaded', () => {
