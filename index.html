@@ -623,6 +623,13 @@
 
 // トップページ用：お知らせデータ（news-data.txt）読み込み＆URL自動リンク・簡易Markdown対応
     document.addEventListener('DOMContentLoaded', () => {
+        function safeHttpUrl(value) {
+            try {
+                const url = new URL(value, window.location.href);
+                return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : null;
+            } catch { return null; }
+        }
+
         fetch('news-data.txt')
             .then(res => {
                 if (!res.ok) throw new Error('データなし');
@@ -647,13 +654,6 @@
                 const parsedItems = [];
                 const urgentItems = [];
                 const todayStr = new Date().toISOString().split('T')[0];
-
-                function safeHttpUrl(value) {
-                    try {
-                        const url = new URL(value, window.location.href);
-                        return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : null;
-                    } catch { return null; }
-                }
 
                 function appendFormattedText(parent, inputText) {
                     const text = inputText || '';
