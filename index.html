@@ -3,169 +3,832 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <title>[緊急] システムメンテナンス実施のお知らせ | C'zaha Chell Tia's Official Site</title>
+    <meta name="google-site-verification" content="489U6RumqucmrUUGLNtXVbfNU7rbwe30tUckZ14GPUo" />
+    <title>C'zaha Chell Tia's Official Site</title>
 
+    <meta name="description" content="フリーな個人開発者、Japanituremod制作者、MTR向けアドオン Yunzhu Transit Extensionの日本語翻訳者C'zaha Chell Tia(略してザハ)の公式サイトです。">
+    <meta name="keywords" content="C'zaha Chell Tia, ザハ, Japanituremod, MTR, Minecraft Mod, MJaS MJX">
+    <link rel="canonical" href="https://czaha-official.github.io/">
+
+    <meta property="og:title" content="C'zaha Chell Tia's Official Hub">
+    <meta property="og:description" content="Minecraft Mod Developer C'zaha Chell Tia OFFICIAL SITE">
+    <meta property="og:url" content="https://czaha-official.github.io/">
+    <meta property="og:image" content="https://czaha-official.github.io/profile_top.jpg">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@czaha-official">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
+        /* ----------------------------------
+            1. 変数定義・基本設定
+        ---------------------------------- */
         :root {
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-main: #222222;
-            --text-sub: #555555;
-            --border-color: #dcdcdc;
-            --accent-color: #e67e22;
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f0f2f5;
+            --text-color: #2c3e50;
+            --white: #ffffff;
+            --x-color: #000000;
+            --insta-color: #E1306C;
+            --yt-color: #FF0000;
+            --discord-color: #5865F2;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.75;
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            line-height: 1.6;
             margin: 0;
-            padding: 0;
-            color: var(--text-main);
-            background-color: var(--bg-color);
+            color: var(--text-color);
+            background: linear-gradient(135deg, #f0f2f5 0%, #e0e6ed 100%);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
         }
 
+        /* ----------------------------------
+            2. ヘッダー & ナビゲーション
+        ---------------------------------- */
         nav.top-nav {
-            background: #ffffff;
-            padding: 12px 5%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            padding: 10px 5%;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
-            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .nav-back-link {
-            text-decoration: none;
-            color: #666;
-            font-weight: 600;
-            font-size: 0.85rem;
+        .logo-area img { 
+            height: 30px; 
+            width: auto; 
         }
-
-        .logo-area img { height: 26px; width: auto; }
 
         header {
-            background: #ffffff;
-            color: var(--text-main);
-            padding: 2.5rem 1rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a252f 100%);
+            color: var(--white);
+            padding: 5rem 1rem 7rem;
             text-align: center;
-            border-bottom: 1px solid var(--border-color);
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
         }
 
-        header h1 { font-size: 1.5rem; margin: 0; font-weight: 700; letter-spacing: 0.05em; }
-        header p { margin: 0.4rem 0 0; color: #666; font-size: 0.88rem; }
+        header h1 { 
+            font-size: 2.2rem; 
+            margin: 0; 
+            letter-spacing: 1px; 
+        }
 
+        /* ----------------------------------
+            3. レイアウトコンテナ
+        ---------------------------------- */
         .container {
-            max-width: 700px;
+            max-width: 1200px;
             width: 90%;
-            margin: 2rem auto;
+            margin: -20px auto 0;
+            padding: 0 0 3rem 0;
             flex-grow: 1;
         }
 
-        .maintenance-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 2rem;
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 1.8rem;
         }
 
-        .maintenance-title {
-            font-size: 1.15rem;
-            color: var(--text-main);
-            margin-bottom: 1.2rem;
-            font-weight: bold;
-            line-height: 1.5;
-            border-bottom: 2px solid #222;
-            padding-bottom: 0.75rem;
-        }
-
-        .maintenance-body {
-            font-size: 0.9rem;
-            color: var(--text-sub);
+        /* ----------------------------------
+            4. プロフィールカード
+        ---------------------------------- */
+        .profile-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 2.5rem;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
             text-align: left;
-            line-height: 1.8;
+            gap: 35px;
         }
 
-        .section-subheading {
+        .profile-thumb {
+            width: 160px;
+            height: 160px;
+            border-radius: 25px;
+            object-fit: cover;
+            border: 4px solid #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+
+        /* ----------------------------------
+            5. ニュース簡易表示エリア & 緊急お知らせ
+        ---------------------------------- */
+        .urgent-card {
+            background: #fdf2f2;
+            border-left: 6px solid #e74c3c;
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.1);
+        }
+
+        .important-card {
+            background: #fef9e7;
+            border-left: 6px solid #e67e22;
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 12px rgba(230, 126, 34, 0.1);
+        }
+
+        .urgent-badge {
+            background: #e74c3c;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
             font-weight: bold;
-            color: var(--text-main);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 4px;
-            margin-top: 1.2rem;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
+            font-size: 0.75rem;
         }
 
-        footer {
-            background: #ffffff;
-            color: #666666;
-            text-align: center;
-            padding: 2rem 1rem;
-            margin-top: 3rem;
+        .important-badge {
+            background: #e67e22;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.75rem;
+        }
+
+        .top-news-section {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 20px 25px;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .top-news-section h2 {
+            font-size: 1.2rem;
+            margin: 0 0 15px 0;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .news-item-summary {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .news-item-summary:last-child {
+            border-bottom: none;
+        }
+
+        .news-meta-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .news-date {
             font-size: 0.8rem;
-            border-top: 1px solid var(--border-color);
+            color: #7f8c8d;
+        }
+
+        .news-title-text {
+            font-size: 0.98rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .news-more-link {
+            text-align: right;
+            margin-top: 15px;
+        }
+
+        .news-more-link a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: bold;
+        }
+
+        .news-more-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ----------------------------------
+            6. ユニット（共通カード）化スタイル
+        ---------------------------------- */
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.8rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover { 
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-header h2 {
+            font-size: 1.3rem;
+            margin: 0;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body h3 {
+            margin: 10px 0 6px 0;
+            font-size: 1.1rem;
+        }
+
+        .card-body p {
+            font-size: 0.88rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .card-tag {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 50px;
+            background: #edf2f7;
+            color: var(--accent-color);
+        }
+
+        /* ----------------------------------
+            7. 共通ボタンユニット
+        ---------------------------------- */
+        .button-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: auto;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            padding: 7px 14px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 1px solid #ddd;
+            color: var(--text-color);
+        }
+
+        .btn-disabled {
+            background-color: #bdc3c7 !important;
+            color: #7f8c8d !important;
+            border-color: #bdc3c7 !important;
+            cursor: not-allowed !important;
+            pointer-events: none;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+        .link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            padding: 7px 14px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 1px solid #ddd;
+            color: var(--text-color);
+        }
+
+        .link-btn:hover { background: #f8f9fa; transform: translateY(-2px); }
+        .link-btn.btn-x:hover { background: var(--x-color); color: white; border-color: var(--x-color); }
+        .link-btn.btn-discord:hover { background: var(--discord-color); color: white; border-color: var(--discord-color); }
+        .link-btn.btn-primary { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+
+        .card-note {
+            font-size: 0.75rem;
+            color: #e74c3c;
+            margin-top: 8px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .btn:hover { background: #f8f9fa; transform: translateY(-2px); }
+        .btn-discord:hover { background: var(--discord-color); color: white; border-color: var(--discord-color); }
+        .btn-primary { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+
+        /* 特設イベント用：タイマースタイル */
+        .countdown-container {
+            background: #fff6f0;
+            border: 1px solid #f2d7c5;
+            border-radius: 12px;
+            padding: 12px 18px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .countdown-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #d35400;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .countdown-digits {
+            display: flex;
+            gap: 8px;
+            align-items: baseline;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .countdown-num {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #d35400;
+        }
+
+        .countdown-unit {
+            font-size: 0.75rem;
+            color: #7f8c8d;
+            margin-right: 2px;
+        }
+
+        /* ----------------------------------
+            8. フッター & トップへ戻るボタン
+        ---------------------------------- */
+        footer {
+            background: var(--primary-color);
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-top: 3rem;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        footer p { margin: 0.5rem 0; }
+
+        .sqex-copyright {
+            color: #bdc3c7;
+            font-size: 0.8rem;
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 45px;
+            height: 45px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+        }
+
+        #back-to-top.show { opacity: 1; visibility: visible; }
+
+        @media (max-width: 768px) {
+            header { padding: 4rem 1rem 6rem; }
+            header h1 { font-size: 1.8rem; }
+            .container { width: 94%; margin-top: -10px; }
+            .profile-card { flex-direction: column; align-items: center; text-align: center; padding: 2rem 1.5rem; gap: 20px; }
+            .profile-thumb { width: 130px; height: 130px; }
+            .button-group { justify-content: center; }
+            .countdown-container { flex-direction: column; align-items: flex-start; gap: 6px; }
         }
     </style>
 </head>
 <body>
+<script src="https://lds-img.finalfantasyxiv.com/pc/global/js/eorzeadb/loader.js?v3"></script>
 
 <nav class="top-nav">
-<div class="logo-area"><img src="logo.png" alt="warudora logo" onerror="this.src='https://via.placeholder.com/200x50?text=WARUDORA+LOGO'"></div>
+    <div class="logo-area">
+        <img src="logo.png" alt="warudora logo" onerror="this.src='https://via.placeholder.com/200x50?text=WARUDORA+LOGO'">
+    </div>
 </nav>
 
 <header>
-    <h1>System Maintenance</h1>
-    <p>全サービス全サーバー 緊急メンテナンス作業実施のお知らせ</p>
+    <h1>C'zaha Chell tia's OFFICIAL SITE</h1>
+    <p>Independent Developer & Trumpet Player | Joint Developer of Japanituremod</p>
 </header>
 
 <div class="container">
-    <article class="maintenance-card">
-        <div class="maintenance-title">
-            【緊急】全サービス システム点検・公開リポジトリの完全非公開化に伴うメンテナンス作業について
+    <!-- プロフィールユニット -->
+    <div class="profile-card">
+        <img src="profile_top.jpg" alt="warudora" class="profile-thumb" onerror="this.src='https://via.placeholder.com/150'">
+        <div>
+            <h2><i class="fas fa-id-card"></i> Profile</h2>
+            <p>
+                Japanituremod制作者、Yunzhu Transit Extensionの日本語翻訳者の<strong>C'zaha Chell tia</strong>です。<br>
+                Japanituremodの制作陣、個人開発者として、クリエイティブな活動をしております。<br>
+                MinecraftのMod開発などを通じ、新しい体験を届けることを目標にしています。
+            </p>
+            <div class="button-group">
+                <a href="https://jp.finalfantasyxiv.com/lodestone/playguide/db/item/cf6f923c9ee/" class="eorzeadb_link">グランドチャンピオン・ファルシオン</a>
+            </div> 
         </div>
-        <div class="maintenance-body">
-            日頃は本サイトおよび各種コンテンツをご利用いただき、誠にありがとうございます。<br><br>
-            このたび、システム全体の安全確認、運用環境の精査、およびセキュリティ対策強化のため、公開コンテンツの取り下げならびに全サービスを対象とした緊急システムメンテナンスを実施しております。
+    </div>
 
-            <div class="section-subheading">■ メンテナンス日時</div>
-            未定（点検・安全確認作業完了次第、順次終了いたします）
+    <!-- 特設イベントエリア -->
+    <div id="special-event-container" style="grid-column: 1 / -1;"></div>
 
-            <div class="section-subheading">■ 影響を受けるサービス</div>
-            本サイト内のすべてのコンテンツ閲覧、各種機能、および公開ページの利用
+    <!-- 緊急・重要お知らせ用コンテナ（最新の1件のみ自動描画） -->
+    <div id="urgent-news-container" style="display: none; margin-bottom: 2rem;"></div>
 
-            <div class="section-subheading">■ 主な作業内容・実施理由</div>
-            * <b>公開リポジトリおよび全コンテンツの非公開化・完全除外</b><br>
-            Git追跡インデックスの全面クリーンアップを行い、公開サーバー上の全サブページおよび管理対象ファイルを非公開状態（非アクティブ化）へ移行<br>
-            * <b>PHP等関連プログラムの点検およびコード刷新・修正</b><br>
-            ローカル開発環境および既存リポジトリ内におけるPHPスクリプトの存在有無を確認し、該当する場合は適切なセキュリティ修正の適用、または最新規格のHTML + JavaScript化（静的構成へのリプレイス）を実施<br>
-            * <b>セキュリティおよび被害・影響有無の安全確認</b><br>
-            外部からの不正アクセスや脆弱性による影響がないかの全般的な調査・動作検証およびアクセスルートの遮断<br>
-            なお、MTR Japan Nexusに関しては安全性が確認されていますので、通常通りサービスをご利用頂けます。
-
-            <hr style="border: none; border-top: 1px dashed #ddd; margin: 1.5rem 0 1rem 0;">
-            ご利用の皆様にはご不便・ご迷惑をおかけいたしますことを深くお詫び申し上げます。<br>
-            サービスの安全な運用のための厳格な措置となりますので、ご理解とご協力のほどよろしくお願い申し上げます。
-            <br><br>
-            <span style="font-size: 0.82rem; color: #7f8c8d;">
-                ※作業の進捗状況により、再開時刻が前後する場合がございます。あらかじめご了承ください。
-            </span>
+    <!-- お知らせ簡易一覧（最新3件表示） -->
+    <div class="top-news-section">
+        <h2><i class="fas fa-bullhorn"></i> News & Updates</h2>
+        <div id="top-news-list">
+            <p style="color: #888; font-size: 0.9rem;">お知らせを読み込んでいます...</p>
         </div>
-    </article>
+        <div class="news-more-link">
+            <a href="news.html">お知らせ一覧・詳細を見る &rarr;</a>
+        </div>
+    </div>
+
+    <!-- グリッド領域 -->
+    <div class="grid">
+        <!-- ユニット1: Yunzhu Transit Extension -->
+        <article class="card">
+            <div>
+                <div class="card-header">
+                    <h2><i class="fas fa-cube"></i> Mod Translation</h2>
+                </div>
+                <div class="card-body">
+                    <span class="card-tag">MTR Addon / Translation</span>
+                    <h3>Yunzhu Transit Extension</h3>
+                    <p>エレベーターの操作盤や挙動を忠実に再現したMOD（MTR前提）。エレベーターのリアリティが深まるMODです。日本語翻訳をザハが担当しました。</p>
+                </div>
+            </div>
+            <div class="button-group">
+                <a href="https://modrinth.com/mod/yunzhu-transit-extension" class="btn btn-primary" target="_blank"><i class="fas fa-download"></i> Download</a>
+            </div>
+        </article>
+
+        <!-- ユニット2: Japanituremod -->
+        <article class="card">
+            <div>
+                <div class="card-header">
+                    <h2><i class="fas fa-cubes"></i> Mod Development</h2>
+                </div>
+                <div class="card-body">
+                    <span class="card-tag">Minecraft Mod</span>
+                    <h3>Japanituremod</h3>
+                    <p>日本の家具や家電を追加し、現代建築を彩るMod。幅広い建築が可能になることを目指して開発を行っています。</p>
+                </div>
+            </div>
+            <div class="button-group">
+                <a href="https://modrinth.com/mod/japaniture/versions" class="btn btn-primary" target="_blank"><i class="fas fa-download"></i> Download</a>
+                <a href="https://discord.gg/VBUyKskneM" class="btn btn-discord" target="_blank"><i class="fab fa-discord"></i> Discord</a>
+              　<a href="https://japaniture-official.foggybook.chatgpt.site/" class="link-btn" target"_blank"><i class "fas fa-home"></i>Official Site</a>
+
+            </div>
+        </article>
+
+        <!-- ユニット3: 新・経済MODプロジェクト -->
+        <article class="card">
+            <div>
+                <div class="card-header">
+                    <h2><i class="fas fa-cubes"></i> Mod Development</h2>
+                </div>
+                <div class="card-body">
+                    <span class="card-tag">Minecraft MOD</span>
+                    <h3>新・経済MODプロジェクト</h3>
+                    <p>開発中で現状はまだ誰も知る術がない......</p>
+                </div>
+            </div>
+            <div class="button-group">
+                <a href="#" class="btn btn-disabled" tabindex="-1" aria-disabled="true">
+                    <i class="fas fa-clock"></i> Coming Soon.....
+                </a>
+            </div>
+        </article>
+
+        <!-- ユニット4: MJX (MTR Japan Nexus) -->
+        <article class="card">
+            <div>
+                <div class="card-header">
+                    <h2><i class="fas fa-network-wired"></i> Minecraft Server</h2>
+                </div>
+                <div class="card-body">
+                    <span class="card-tag">Minecraft Server</span>
+                    <h3>MJX (MTR Japan Nexus)</h3>
+                    <p>MJaSの後継となる新たなサーバープロジェクトです。公式サイトおよび参加申請ページの公開に向けて準備を進めております。</p>
+                </div>
+            </div>
+            <div class="button-group">
+                <a href="#" class="btn btn-disabled" tabindex="-1" aria-disabled="true">
+                    <i class="fas fa-clock"></i> Coming Soon.....
+                </a>
+            </div>
+        </article>
+    </div>
 </div>
 
 <footer>
-    <div class="footer-meta-container" style="display: flex; flex-direction: column; gap: 4px; align-items: center;">
-        <div class="meta-item"><span class="meta-role" style="color: #2980b9;">Japanituremod Developers</span></div>
-        <div class="meta-item"><span class="meta-name" style="font-weight: bold;">warudora:</span><span class="meta-role" style="color: #666666;"> 5H1H0 Engineer & Sales Rep / Admin of MJaS / Founder of MTRJapanUsers</span></div>
-        <div class="meta-item"><span class="meta-name" style="font-weight: bold;">C'zaha Chell tia:</span><span class="meta-role" style="color: #666666;"> Independent Developer / Trumpet Player / YTE Translator</span></div>
+    <p class="sqex-copyright">
+        アカウントアイコン、ロードストーンツールチップ、ファンキット等の素材の著作権はスクウェア・エニックスに帰属します。<br>
+        &copy; SQUARE ENIX
+    </p>
+    <!-- 📄 アイコンクラスを fab から fas fa-file-alt に修正 -->
+        <a href="https://czaha-official.github.io/policies/terms-of-use/zaha-services" class="link-btn" target="_blank" style="color: #ffffff; text-decoration: none;">
+        <i class="fas fa-file-alt terms-icon"></i> 利用規約
+    </a>
+    <a href="https://czaha-official.github.io/policies/privacy-policies/services-privacy-policy" class="link-btn" target="_blank" style="color: #ffffff; text-decoration: none;">
+        <i class="fas fa-file-alt terms-icon"></i> プライバシーポリシー
+        </a>
+    <p class="site-copyright">
+        &copy; <span id="current-year"></span> warudora / C'zaha Chell tia. All Rights Reserved.
+    </p>
 
-        <div class="copyright-notice" style="margin-top: 12px; font-size: 0.72rem; color: #888888; max-width: 700px; line-height: 1.4; text-align: center;">
-            アカウントアイコン及びロードストーンツールキットなどのファンキットの著作権は以下にすべて帰属します<br>©SQUARE ENIX
+    <div class="footer-meta-container" style="margin-top: 15px; font-size: 0.75rem; color: #a0a0a0; display: flex; flex-direction: column; gap: 6px; align-items: center;">
+        <div class="meta-item"><span class="meta-role" style="color: #3498db;">Japanituremod Developers</span></div>
+        <div class="meta-item"><span class="meta-name" style="font-weight: bold; color: #d0d0d0;">warudora:</span><span class="meta-role" style="color: #888888;">5H1H0 Engineer & Sales Rep / Admin of MJaS / Founder of MTRJapanUsers</span></div>
+        <div class="meta-item"><span class="meta-name" style="font-weight: bold; color: #d0d0d0;">C'zaha Chell tia:</span><span class="meta-role" style="color: #888888;">Independent Developer / Admin of MJaS / Trumpet Player / YTE Translator</span></div>
+        <div class="meta-note" style="margin-top: 6px; font-size: 0.7rem; color: #888888; max-width: 650px; line-height: 1.4; text-align: center;">
+            ※演奏依頼は原則お断りしております（所属団体およびその姉妹団体からのご依頼を除く）。なお、引退後であっても所属・出身団体からの要請であればOBとして喜んでお引き受けいたします。
         </div>
     </div>
 </footer>
+
+
+<button id="back-to-top" title="Go to top"><i class="fas fa-chevron-up"></i></button>
+
+<script>
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    const backToTopBtn = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) backToTopBtn.classList.add('show');
+        else backToTopBtn.classList.remove('show');
+    });
+    backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+// トップページ用：お知らせデータ（news-data.txt）読み込み＆URL自動リンク・簡易Markdown対応
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('news-data.txt')
+            .then(res => {
+                if (!res.ok) throw new Error('データなし');
+                return res.text();
+            })
+            .then(text => {
+                const topNewsContainer = document.getElementById('top-news-list');
+                const urgentContainer = document.getElementById('urgent-news-container');
+                topNewsContainer.innerHTML = '';
+                
+                const items = text.split('---').map(b => b.trim()).filter(b => b.length > 0);
+
+                if (items.length === 0) {
+                    topNewsContainer.innerHTML = '<p style="color:#666;">お知らせはありません。</p>';
+                    urgentContainer.style.display = 'none';
+                    return;
+                }
+
+                const parsedItems = [];
+                const urgentItems = [];
+                const todayStr = new Date().toISOString().split('T')[0];
+
+                // --- 簡易Markdown & URL自動リンク変換用ヘルパー関数 ---
+                function parseMarkdownAndLinks(inputText) {
+                    if (!inputText) return '';
+                    // 1. HTMLエスケープ（セキュリティ対策）
+                    let escaped = inputText
+                        .replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;");
+
+                    // 2. 簡易Markdown: 太字 (**text**)
+                    let formatted = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+                    // 3. URL自動リンク化 (http:// または https:// で始まる文字列を <a> タグに変換)
+                    const urlRegex = /(https?:\/\/[^\s]+)/g;
+                    formatted = formatted.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">$1</a>');
+
+                    return formatted;
+                }
+
+                items.forEach(itemStr => {
+                    let date = '', category = '', title = '', link = '', expiry = '', bodyLines = [], currentTag = '';
+
+                    itemStr.split('\n').forEach(line => {
+                        const trimmed = line.trim();
+                        if (trimmed.startsWith('[DATE]')) date = trimmed.replace('[DATE]', '').trim();
+                        else if (trimmed.startsWith('[CATEGORY]')) category = trimmed.replace('[CATEGORY]', '').trim();
+                        else if (trimmed.startsWith('[TITLE]')) title = trimmed.replace('[TITLE]', '').trim();
+                        else if (trimmed.startsWith('[LINK]')) link = trimmed.replace('[LINK]', '').trim().split('|')[0];
+                        else if (trimmed.startsWith('[EXPIRY]')) expiry = trimmed.replace('[EXPIRY]', '').trim();
+                        else if (trimmed.startsWith('[BODY]')) { bodyLines.push(trimmed.replace('[BODY]', '').trim()); currentTag = 'BODY'; }
+                        else if (currentTag === 'BODY' && trimmed !== '') bodyLines.push(trimmed);
+                    });
+
+                    const itemData = { date, category, title, link, expiry, body: bodyLines.join('\n') };
+                    parsedItems.push(itemData);
+
+                    const isValidExpiry = !expiry || expiry >= todayStr;
+                    const catLower = category.toLowerCase();
+
+                    if ((catLower === 'urgent' || catLower === 'important') && isValidExpiry) {
+                        urgentItems.push(itemData);
+                    }
+                });
+
+                // 緊急・重要お知らせの表示
+                if (urgentItems.length > 0) {
+                    const topUrgent = urgentItems[0];
+                    const isUrgent = topUrgent.category.toLowerCase() === 'urgent';
+                    const cardClass = isUrgent ? 'urgent-card' : 'important-card';
+                    const badgeClass = isUrgent ? 'urgent-badge' : 'important-badge';
+                    const label = isUrgent ? '緊急' : '重要';
+                    const textColor = isUrgent ? '#78281f' : '#7e5109';
+                    const linkColor = isUrgent ? '#e74c3c' : '#e67e22';
+
+                    urgentContainer.style.display = 'block';
+                    urgentContainer.innerHTML = `
+                        <div class="${cardClass}">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;">
+                                <span class="${badgeClass}">${label}</span>
+                                <span style="font-size: 0.85rem; color: #666; font-weight: 600;">${topUrgent.date}</span>
+                            </div>
+                            <h3 style="margin: 0 0 0.5rem 0; color: ${textColor}; font-size: 1.1rem; font-weight: bold;">${parseMarkdownAndLinks(topUrgent.title)}</h3>
+                            ${topUrgent.body ? `<p style="margin: 0; font-size: 0.92rem; color: #444; white-space: pre-wrap; word-break: break-word;">${parseMarkdownAndLinks(topUrgent.body)}</p>` : ''}
+                            ${topUrgent.link ? `<div style="margin-top: 0.8rem;"><a href="${topUrgent.link}" target="_blank" rel="noopener noreferrer" style="color: ${linkColor}; font-weight: bold; text-decoration: underline; font-size: 0.85rem;">詳細を確認する &rarr;</a></div>` : ''}
+                        </div>
+                    `;
+                } else {
+                    urgentContainer.style.display = 'none';
+                }
+
+                // 通常ニュース表示（最新3件）
+                parsedItems.slice(0, 3).forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'news-item-summary';
+                    
+                    let tagBg = '#edf2f7';
+                    let tagColor = '#3498db';
+                    const catLower = item.category.toLowerCase();
+
+                    if (catLower === 'release' || item.category === 'リリース') {
+                        tagBg = '#e8f8f5';
+                        tagColor = '#1abc9c';
+                    } else if (catLower === 'update' || item.category === '更新情報') {
+                        tagBg = '#ebf5fb';
+                        tagColor = '#2980b9';
+                    }
+
+                    div.innerHTML = `
+                        <div class="news-meta-line">
+                            <span class="news-date">${item.date}</span>
+                            <span style="background:${tagBg}; font-size:0.7rem; padding:1px 6px; border-radius:4px; font-weight:bold; color:${tagColor};">${item.category.toUpperCase()}</span>
+                        </div>
+                        <p class="news-title-text">${parseMarkdownAndLinks(item.title)}</p>
+                    `;
+                    topNewsContainer.appendChild(div);
+                });
+            })
+            .catch(() => {
+                document.getElementById('top-news-list').innerHTML = '<p style="color:#e74c3c;">読み込みに失敗しました。</p>';
+                document.getElementById('urgent-news-container').style.display = 'none';
+            });
+
+        // 特設イベント（event-data.txt）読み込み＆カウントダウンタイマー付与
+        fetch('event-data.txt')
+            .then(res => {
+                if (!res.ok) throw new Error('No event data');
+                return res.text();
+            })
+            .then(text => {
+                const container = document.getElementById('special-event-container');
+                if (!container || !text.trim()) return;
+
+                let tag = '', date = '', targetDateStr = '', title = '', body = '', link = '', btnText = '特設ページを見る';
+
+                text.split('\n').forEach(line => {
+                    if (line.startsWith('[TAG]')) tag = line.replace('[TAG]', '').trim();
+                    else if (line.startsWith('[DATE]')) date = line.replace('[DATE]', '').trim();
+                    else if (line.startsWith('[EVENT_DATE]')) targetDateStr = line.replace('[EVENT_DATE]', '').trim();
+                    else if (line.startsWith('[TITLE]')) title = line.replace('[TITLE]', '').trim();
+                    else if (line.startsWith('[BODY]')) body = line.replace('[BODY]', '').trim();
+                    else if (line.startsWith('[LINK]')) link = line.replace('[LINK]', '').split('|')[0].trim();
+                    else if (line.startsWith('[BTN_TEXT]')) btnText = line.replace('[BTN_TEXT]', '').trim();
+                });
+
+                if (title) {
+                    let countdownHtml = '';
+                    if (targetDateStr) {
+                        countdownHtml = `
+                            <div class="countdown-container">
+                                <div class="countdown-title">
+                                    <i class="fas fa-hourglass-half"></i> イベント開催まで
+                                </div>
+                                <div class="countdown-digits" id="event-timer">
+                                    <span class="countdown-num" id="cd-days">0</span><span class="countdown-unit">日</span>
+                                    <span class="countdown-num" id="cd-hours">00</span><span class="countdown-unit">時間</span>
+                                    <span class="countdown-num" id="cd-mins">00</span><span class="countdown-unit">分</span>
+                                    <span class="countdown-num" id="cd-secs">00</span><span class="countdown-unit">秒</span>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    container.innerHTML = `
+                        <div class="special-event-card" style="background: #ffffff; border-radius: 16px; padding: 25px; margin: 10px 0 20px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-left: 6px solid #d35400;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                                <span style="background: #fbeee6; color: #d35400; font-size: 0.8rem; font-weight: bold; padding: 4px 12px; border-radius: 50px;">
+                                    <i class="fas fa-music"></i> ${tag || 'Special Info'}
+                                </span>
+                                <span style="font-size: 0.85rem; color: #888;">${date}</span>
+                            </div>
+                            <h3 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 1.3rem;">${title}</h3>
+                            <p style="margin: 0 0 15px 0; font-size: 0.95rem; color: #555; line-height: 1.6;">${body}</p>
+                            ${countdownHtml}
+                            ${link ? `
+                                <div style="text-align: right; margin-top: 15px;">
+                                    <a href="${link}" style="display: inline-flex; align-items: center; gap: 8px; font-weight: bold; text-decoration: none; padding: 10px 20px; background: #d35400; color: white; border-radius: 50px; font-size: 0.9rem; transition: background 0.3s;" onmouseover="this.style.background='#b34300'" onmouseout="this.style.background='#d35400'">
+                                        ${btnText} <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+
+                    // カウントダウンタイマー処理
+                    if (targetDateStr) {
+                        const targetDate = new Date(targetDateStr).getTime();
+
+                        function updateTimer() {
+                            const now = new Date().getTime();
+                            const diff = targetDate - now;
+
+                            if (diff <= 0) {
+                                document.getElementById('event-timer').innerHTML = '<span class="countdown-num" style="font-size:1.0rem;">イベント開催中！</span>';
+                                return;
+                            }
+
+                            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                            document.getElementById('cd-days').textContent = days;
+                            document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+                            document.getElementById('cd-mins').textContent = String(minutes).padStart(2, '0');
+                            document.getElementById('cd-secs').textContent = String(seconds).padStart(2, '0');
+                        }
+
+                        updateTimer();
+                        setInterval(updateTimer, 1000);
+                    }
+                }
+            })
+            .catch(() => {});
+    });
+</script>
 
 </body>
 </html>

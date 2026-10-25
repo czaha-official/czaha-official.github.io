@@ -1,0 +1,30 @@
+name: "PHP Security Scanner"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  php-scan:
+    name: Run Custom Security Detector
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 改善：パスを「.github/workflows/security-detector.php」に完全固定
+    - name: Execute Security Detector
+      run: |
+        python .github/workflows/security-detector.py
+
+    # 改善：生成されるSARIFファイルの場所もトップ階層に固定指定
+    - name: Upload SARIF to GitHub Security Tab
+      uses: github/codeql-action/upload-sarif@v4
+      if: always()
+      with:
+        sarif_file: ./results.sarif
