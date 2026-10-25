@@ -458,7 +458,7 @@
 
 <nav class="top-nav">
     <div class="logo-area">
-        <img src="logo.png" alt="warudora logo" onerror="this.src='https://via.placeholder.com/200x50?text=WARUDORA+LOGO'">
+        <img src="logo.png" alt="warudora logo">
     </div>
 </nav>
 
@@ -472,7 +472,7 @@
         <div class="event-layout">
             <!-- ポスター画像＋注意書きエリア -->
             <div class="poster-wrapper">
-                <img src="poster.jpg" alt="綾瀬市立綾瀬中学校吹奏楽部 第18回定期演奏会 ポスター" class="event-poster" onerror="this.src='https://via.placeholder.com/320x450?text=Concert+Poster'">
+                <img src="poster.jpg" alt="綾瀬市立綾瀬中学校吹奏楽部 第18回定期演奏会 ポスター" class="event-poster">
                 
                 <!-- AI生成画像に関する警告・注記 -->
                 <div class="ai-notice">
@@ -626,7 +626,10 @@
 
             if (diff <= 0) {
                 // 期限切れ時の文字とスタイルの変更
-                document.getElementById('form-timer').innerHTML = '<span class="countdown-num" style="font-size:0.95rem;">受付は終了しました</span>';
+                const formTimer = document.getElementById('form-timer');
+                formTimer.textContent = '受付は終了しました';
+                formTimer.classList.add('countdown-num');
+                formTimer.style.fontSize = '0.95rem';
                 document.getElementById('form-timer-card').classList.add('expired');
 
                 // 案内文章の書き換え（感謝メッセージと演奏会への期待文）
@@ -635,11 +638,16 @@
                 
                 if (noticeBox && noticeContent) {
                     noticeBox.classList.add('expired-notice');
-                    noticeContent.innerHTML = `
-                        <i class="fas fa-check-circle" style="color:#27ae60;"></i> <strong>たくさんのリクエストありがとうございました！</strong><br>
-                        曲目リクエストの受付は10月末をもって終了いたしました。たくさんのご投票、誠にありがとうございました。<br>
-                        当日の第2部での演奏を、どうぞご期待ください！
-                    `;
+                    noticeContent.replaceChildren();
+                    const icon = document.createElement('i');
+                    icon.className = 'fas fa-check-circle';
+                    icon.style.color = '#27ae60';
+                    noticeContent.append(icon, ' ');
+                    const strong = document.createElement('strong');
+                    strong.textContent = 'たくさんのリクエストありがとうございました！';
+                    noticeContent.append(strong, document.createElement('br'));
+                    noticeContent.append('曲目リクエストの受付は10月末をもって終了いたしました。たくさんのご投票、誠にありがとうございました。', document.createElement('br'));
+                    noticeContent.append('当日の第2部での演奏を、どうぞご期待ください！');
                 }
 
                 // ボタンの無効化（閉じられた状態）
@@ -648,7 +656,10 @@
                     btn.classList.add('btn-disabled');
                     btn.removeAttribute('href');
                     btn.removeAttribute('target');
-                    btn.innerHTML = '<i class="fas fa-lock"></i> リクエスト受付終了';
+                    btn.replaceChildren();
+                    const lockIcon = document.createElement('i');
+                    lockIcon.className = 'fas fa-lock';
+                    btn.append(lockIcon, ' リクエスト受付終了');
                 }
                 return;
             }
@@ -670,7 +681,10 @@
             const diff = eventDate - now;
 
             if (diff <= 0) {
-                document.getElementById('event-timer').innerHTML = '<span class="countdown-num" style="font-size:0.95rem;">本日開催中！</span>';
+                const eventTimer = document.getElementById('event-timer');
+                eventTimer.textContent = '本日開催中！';
+                eventTimer.classList.add('countdown-num');
+                eventTimer.style.fontSize = '0.95rem';
                 return;
             }
 

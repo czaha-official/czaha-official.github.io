@@ -211,10 +211,51 @@ Cookie（クッキー）および類似技術: ログイン状態の維持、ユ
         const mdSrc = document.getElementById('markdown-src').value;
         const output = document.getElementById('markdown-output');
         
-        if (mdSrc && typeof marked !== 'undefined') {
-            output.innerHTML = marked.parse(mdSrc);
+        output.replaceChildren();
+        function safeHttpUrl(value) {
+            try {
+                const url = new URL(value, window.location.href);
+                return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : null;
+            } catch { return null; }
+        }
+        function appendInline(parent, value) {
+            const tokenRegex = /(https?:\/\/[^\s]+|\*\*[^*]+\*\*)/g;
+            let lastIndex = 0;
+            for (const match of value.matchAll(tokenRegex)) {
+                parent.appendChild(document.createTextNode(value.slice(lastIndex, match.index)));
+                const token = match[0];
+                if (token.startsWith('**')) {
+                    const strong = document.createElement('strong');
+                    strong.textContent = token.slice(2, -2);
+                    parent.appendChild(strong);
+                } else {
+                    const url = safeHttpUrl(token);
+                    if (url) {
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.target = '_blank';
+                        link.rel = 'noopener noreferrer';
+                        link.textContent = token;
+                        parent.appendChild(link);
+                    } else parent.appendChild(document.createTextNode(token));
+                }
+                lastIndex = match.index + token.length;
+            }
+            parent.appendChild(document.createTextNode(value.slice(lastIndex)));
+        }
+        if (mdSrc) {
+            mdSrc.split(/\r?\n/).forEach(line => {
+                const heading = line.match(/^(#{1,3})\s+(.+)$/);
+                const element = heading ? document.createElement(`h${heading[1].length}`) : document.createElement(line.trim() ? 'p' : 'div');
+                if (heading) appendInline(element, heading[2]);
+                else if (line.trim()) appendInline(element, line);
+                output.appendChild(element);
+            });
         } else {
-            output.innerHTML = '<p style="color: #e74c3c;">コンテンツの読み込みに失敗しました。</p>';
+            const error = document.createElement('p');
+            error.style.color = '#e74c3c';
+            error.textContent = 'コンテンツの読み込みに失敗しました。';
+            output.appendChild(error);
         }
     });
 </script>

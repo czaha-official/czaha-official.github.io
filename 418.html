@@ -124,6 +124,7 @@
             line-height: 1.8;
             color: #555;
             margin-bottom: 35px;
+            white-space: pre-line;
         }
 
         .btn-group {
@@ -175,7 +176,7 @@
     <h1 class="error-code">418</h1>
     <div class="error-title">I'm a teapot.</div>
     
-    <div class="teapot-container" onclick="talkTeapot()">
+    <div class="teapot-container" id="teapot-container">
         <div class="bubble" id="quoteBubble">...</div>
         <div class="teapot" id="teapotIcon">🫖</div>
     </div>
@@ -184,7 +185,7 @@
 
     <div class="btn-group">
         <a href="/" class="btn btn-primary" id="btnPrimary">トップページに戻る</a>
-        <button class="btn btn-secondary" id="btnSecondary" onclick="demandCoffee()">それでもコーヒーを要求する</button>
+        <button class="btn btn-secondary" id="btnSecondary">それでもコーヒーを要求する</button>
     </div>
 </div>
 
@@ -284,7 +285,7 @@
     const selectedKey = keys[Math.floor(Math.random() * keys.length)];
     const activeChar = characterData[selectedKey];
 
-    document.getElementById('descText').innerHTML = activeChar.desc;
+    document.getElementById('descText').textContent = activeChar.desc.replace(/<br\s*\/?>/gi, '\n');
     document.getElementById('btnPrimary').innerText = activeChar.btnPrimary;
     document.getElementById('btnSecondary').innerText = activeChar.btnSecondary;
 
@@ -296,26 +297,7 @@
     let lastClickTime = Date.now();
 // 1. 異常検知時にクッキーを壊し、明示的にサーバーへリクエストを飛ばして 400 を受信させる
 function triggerSecurityBlock() {
-    // クッキーを限界まで巨大化（ヘッダー上限オーバー）
-    const dummyHeader = "CRASH_DATA_".padEnd(4000, "X");
-    for (let i = 0; i < 6; i++) {
-        document.cookie = `session_corrupt_block_${i}=${dummyHeader}; path=/; max-age=86400; SameSite=Lax`;
-    }
-
-    console.error("🚨 異常なリクエストを検知したため、セッションを破壊して 400 Bad Request を受領します。");
-
-    // キャッシュを無視してサーバーへ直接 Fetch リクエストを発行
-    // これによりブラウザの Network タブ・レスポンスに直接 400 Bad Request が記録されます
-    fetch(window.location.href, { cache: 'no-store' })
-        .then(response => {
-            console.log("HTTP Status:", response.status); // 400 または 431 が表示されます
-            // サーバーから 400 エラーが返ってきたら、画面を完全に 400 表示へ遷移
-            window.location.href = window.location.href;
-        })
-        .catch(err => {
-            // リクエストヘッダーが大きすぎて fetch 自体がブラウザに拒否された場合も強制リロード
-            window.location.reload(true);
-        });
+    console.warn('異常なクリック操作を検知しました。安全のため操作を停止します。');
 }
 
     function checkAbnormalActivity() {
@@ -364,6 +346,8 @@ function triggerSecurityBlock() {
     }
 
     document.getElementById('quoteBubble').innerText = activeChar.quotes[0];
+    document.getElementById('teapot-container').addEventListener('click', talkTeapot);
+    document.getElementById('btnSecondary').addEventListener('click', demandCoffee);
 </script>
 
 </body>

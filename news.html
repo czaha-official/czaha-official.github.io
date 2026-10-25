@@ -141,7 +141,7 @@
 
 <nav class="top-nav">
     <a href="index.html" class="nav-back-link"><i class="fas fa-arrow-left"></i> ホームに戻る</a>
-    <div class="logo-area"><img src="logo.png" alt="warudora logo" onerror="this.src='https://via.placeholder.com/200x50?text=WARUDORA+LOGO'"></div>
+    <div class="logo-area"><img src="logo.png" alt="warudora logo"></div>
 </nav>
 
 <header>
@@ -175,33 +175,55 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- 簡易Markdown & URL自動リンク変換用ヘルパー関数 ---
-        function parseMarkdownAndLinks(inputText) {
-            if (!inputText) return '';
-            // 1. HTMLエスケープ（セキュリティ対策）
-            let escaped = inputText
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;");
+        function safeHttpUrl(value) {
+            try {
+                const url = new URL(value, window.location.href);
+                return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : null;
+            } catch { return null; }
+        }
 
-            // 2. 簡易Markdown: 太字 (**text**)
-            let formatted = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-            // 3. URL自動リンク化 (http:// または https:// で始まる文字列を <a> タグに変換)
-            const urlRegex = /(https?:\/\/[^\s]+)/g;
-            formatted = formatted.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">$1</a>');
-
-            return formatted;
+        function appendFormattedText(parent, inputText) {
+            const text = inputText || '';
+            const tokenRegex = /(https?:\/\/[^\s]+|\*\*[^*]+\*\*)/g;
+            let lastIndex = 0;
+            for (const match of text.matchAll(tokenRegex)) {
+                parent.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+                const token = match[0];
+                if (token.startsWith('**')) {
+                    const strong = document.createElement('strong');
+                    strong.textContent = token.slice(2, -2);
+                    parent.appendChild(strong);
+                } else {
+                    const url = safeHttpUrl(token);
+                    if (url) {
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.target = '_blank';
+                        link.rel = 'noopener noreferrer';
+                        link.style.cssText = 'color: inherit; text-decoration: underline;';
+                        link.textContent = token;
+                        parent.appendChild(link);
+                    } else {
+                        parent.appendChild(document.createTextNode(token));
+                    }
+                }
+                lastIndex = match.index + token.length;
+            }
+            parent.appendChild(document.createTextNode(text.slice(lastIndex)));
         }
 
         fetch('news-data.txt')
             .then(res => res.text())
             .then(text => {
                 const container = document.getElementById('all-news-list');
-                container.innerHTML = '';
+                container.replaceChildren();
                 const items = text.split('---').map(b => b.trim()).filter(b => b.length > 0);
 
                 if (items.length === 0) {
-                    container.innerHTML = '<p style="text-align: center; color: #666;">現在お知らせはありません。</p>';
+                    const empty = document.createElement('p');
+                    empty.style.cssText = 'text-align: center; color: #666;';
+                    empty.textContent = '現在お知らせはありません。';
+                    container.appendChild(empty);
                     return;
                 }
 
@@ -239,28 +261,56 @@
                     const card = document.createElement('article');
                     card.className = `news-card ${extraCardClass} ${link ? 'has-link' : ''}`;
 
-                    if (link) {
+                    const safeCardLink = safeHttpUrl(link);
+                    if (safeCardLink) {
                         card.addEventListener('click', (e) => {
-                            if (e.target.tagName !== 'A') window.location.href = link;
+                            if (e.target.tagName !== 'A') window.location.href = safeCardLink;
                         });
                     }
 
-                    card.innerHTML = `
-                        <div class="news-meta">
-                            <span class="news-date">${date}</span>
-                            <span class="badge badge-${catLower}">${catLabel}</span>
-                        </div>
-                        <h2 class="news-title">${parseMarkdownAndLinks(title)}</h2>
-                        <p class="news-body">${parseMarkdownAndLinks(body)}</p>
-                        ${link ? `<div style="text-align: left;"><a href="${link}" target="_blank" rel="noopener noreferrer" class="news-link-btn">${btnText} <i class="fas fa-arrow-right"></i></a></div>` : ''}
-                    `;
+                    const meta = document.createElement('div');
+                    meta.className = 'news-meta';
+                    const dateEl = document.createElement('span');
+                    dateEl.className = 'news-date';
+                    dateEl.textContent = date;
+                    const badge = document.createElement('span');
+                    badge.className = `badge badge-${catLower.replace(/[^a-z0-9_-]/gi, '')}`;
+                    badge.textContent = catLabel;
+                    meta.append(dateEl, badge);
+                    const titleEl = document.createElement('h2');
+                    titleEl.className = 'news-title';
+                    appendFormattedText(titleEl, title);
+                    const bodyEl = document.createElement('p');
+                    bodyEl.className = 'news-body';
+                    appendFormattedText(bodyEl, body);
+                    card.append(meta, titleEl, bodyEl);
+                    const safeLink = safeHttpUrl(link);
+                    if (safeLink) {
+                        const linkWrap = document.createElement('div');
+                        linkWrap.style.textAlign = 'left';
+                        const linkEl = document.createElement('a');
+                        linkEl.href = safeLink;
+                        linkEl.target = '_blank';
+                        linkEl.rel = 'noopener noreferrer';
+                        linkEl.className = 'news-link-btn';
+                        linkEl.textContent = btnText;
+                        const arrow = document.createElement('i');
+                        arrow.className = 'fas fa-arrow-right';
+                        linkEl.append(' ', arrow);
+                        linkWrap.appendChild(linkEl);
+                        card.appendChild(linkWrap);
+                    }
                     container.appendChild(card);
                 });
             })
             .catch(err => {
                 console.error(err);
                 const container = document.getElementById('all-news-list');
-                container.innerHTML = '<p style="text-align: center; color: #666;">お知らせの読み込みに失敗しました。</p>';
+                container.replaceChildren();
+                const error = document.createElement('p');
+                error.style.cssText = 'text-align: center; color: #666;';
+                error.textContent = 'お知らせの読み込みに失敗しました。';
+                container.appendChild(error);
             });
     });
 </script>
