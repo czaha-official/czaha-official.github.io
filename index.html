@@ -9,6 +9,12 @@
     <meta name="description" content="フリーな個人開発者、Japanituremod制作者、MTR向けアドオン Yunzhu Transit Extensionの日本語翻訳者C'zaha Chell Tia(略してザハ)の公式サイトです。">
     <meta name="keywords" content="C'zaha Chell Tia, ザハ, Japanituremod, MTR, Minecraft Mod, MJaS MJX">
     <link rel="canonical" href="https://czaha-official.github.io/">
+    
+    <!-- 外部への不要なリファラー漏洩を防ぐ -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <!-- 画像をGoogle画像検索等にインデックスさせない -->
+    <meta name="robots" content="noimageindex">
 
     <meta property="og:title" content="C'zaha Chell Tia's Official Hub">
     <meta property="og:description" content="Minecraft Mod Developer C'zaha Chell Tia OFFICIAL SITE">
@@ -524,7 +530,8 @@
     <div class="calendar-section">
         <h2><i class="fas fa-calendar-alt"></i> Event Calendar</h2>
         <div class="calendar-responsive-wrapper">
-            <iframe src="https://calendar.google.com/calendar/embed?src=3a24a1a35cac35fc914d78d8e5523fb806142460f2a96c2fef4a962e7fdc3683%40group.calendar.google.com&ctz=Asia%2FTokyo" frameborder="0" scrolling="no"></iframe>
+            <!-- sandbox属性でセキュリティを強化 -->
+            <iframe src="https://calendar.google.com/calendar/embed?src=3a24a1a35cac35fc914d78d8e5523fb806142460f2a96c2fef4a962e7fdc3683%40group.calendar.google.com&ctz=Asia%2FTokyo" frameborder="0" scrolling="no" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
         </div>
     </div>
 
