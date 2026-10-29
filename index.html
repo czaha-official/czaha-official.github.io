@@ -37,6 +37,7 @@
             --text-color: #2c3e50;
             --white: #ffffff;
             --x-color: #000000;
+            --github-color: #24292e;
             --insta-color: #E1306C;
             --yt-color: #FF0000;
             --discord-color: #5865F2;
@@ -314,6 +315,8 @@
         }
         .btn-disabled { background-color: #bdc3c7 !important; color: #7f8c8d !important; border-color: #bdc3c7 !important; cursor: not-allowed !important; pointer-events: none; }
         .link-btn:hover, .btn:hover { background: #f8f9fa; transform: translateY(-2px); }
+        .link-btn.btn-x:hover { background: var(--x-color); color: white; border-color: var(--x-color); }
+        .link-btn.btn-github:hover { background: var(--github-color); color: white; border-color: var(--github-color); }
         .link-btn.btn-discord:hover, .btn-discord:hover { background: var(--discord-color); color: white; border-color: var(--discord-color); }
         .link-btn.btn-primary, .btn-primary { background: var(--accent-color); color: white; border-color: var(--accent-color); }
 
@@ -387,11 +390,11 @@
                 MinecraftのMod開発などを通じ、新しい体験を届けることを目標にしています。
             </p>
             <div class="button-group">
-                <a href="https://x.com/czaha-official" class="link-btn btn-x" target="_blank"><i class="fab fa-x-twitter"></i> X</a>
-                <a href="https://www.youtube.com/@czaha-official" class="link-btn" style="color:#FF0000; border-color:#FF0000;" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+                <a href="https://x.com/czaha-official" class="link-btn btn-x" target="_blank" rel="noopener noreferrer"><i class="fab fa-x-twitter"></i> X</a>
+                <a href="https://github.com/czaha-official" class="link-btn btn-github" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
+                <a href="https://www.youtube.com/@czaha-official" class="link-btn" style="color:#FF0000; border-color:#FF0000;" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i> YouTube</a>
             </div>
-            </div> 
-        </div>
+        </div> 
     </div>
 
     <div id="special-event-container" style="grid-column: 1 / -1;"></div>
@@ -586,7 +589,7 @@
                         </div>
                         <h3 style="margin:0 0 6px; font-size:1.05rem; color:${isUrgent ? '#78281f' : '#7e5109'};">${topU.title}</h3>
                         ${topU.body ? `<p style="margin:0; font-size:0.85rem; color:#444;">${topU.body}</p>` : ''}
-                        ${topU.link ? `<div style="margin-top:8px;"><a href="${safeHttpUrl(topU.link)}" target="_blank" style="color:${isUrgent ? '#e74c3c' : '#e67e22'}; font-size:0.8rem; font-weight:bold;">詳細を確認 →</a></div>` : ''}
+                        ${topU.link ? `<div style="margin-top:8px;"><a href="${safeHttpUrl(topU.link)}" target="_blank" rel="noopener noreferrer" style="color:${isUrgent ? '#e74c3c' : '#e67e22'}; font-size:0.8rem; font-weight:bold;">詳細を確認 →</a></div>` : ''}
                     </div>
                 `;
             }
@@ -645,7 +648,7 @@
                                     <div class="countdown-title"><i class="fas fa-hourglass-half"></i> イベント開催まで</div>
                                     <div class="countdown-digits"><span class="countdown-num" id="cd-d">0</span><span class="countdown-unit">日</span><span class="countdown-num" id="cd-h">00</span><span class="countdown-unit">時間</span></div>
                                 </div>` : ''}
-                                ${link ? `<div style="text-align:right; margin-top:10px;"><a href="${safeHttpUrl(link)}" target="_blank" style="display:inline-block; font-weight:bold; text-decoration:none; padding:8px 16px; background:#d35400; color:white; border-radius:50px; font-size:0.8rem;">${btn} <i class="fas fa-arrow-right"></i></a></div>` : ''}
+                                ${link ? `<div style="text-align:right; margin-top:10px;"><a href="${safeHttpUrl(link)}" target="_blank" rel="noopener noreferrer" style="display:inline-block; font-weight:bold; text-decoration:none; padding:8px 16px; background:#d35400; color:white; border-radius:50px; font-size:0.8rem;">${btn} <i class="fas fa-arrow-right"></i></a></div>` : ''}
                             </div>
                         `;
 
@@ -697,7 +700,6 @@
         // 3. スケジュールの描画
         const scContainer = document.getElementById('schedule-list');
         if (scheduleItems.length > 0) {
-            // 日付順にソート (降順・昇順はお好みで。ここでは昇順(古い/近い順))
             scheduleItems.sort((a, b) => new Date(a.date) - new Date(b.date));
             scContainer.replaceChildren();
 
@@ -707,7 +709,7 @@
                 
                 let linkHtml = '';
                 if (item.link) {
-                    linkHtml = `<a href="${item.link}" target="_blank" class="schedule-link"><i class="fas fa-external-link-alt"></i></a>`;
+                    linkHtml = `<a href="${item.link}" target="_blank" rel="noopener noreferrer" class="schedule-link"><i class="fas fa-external-link-alt"></i></a>`;
                 }
 
                 div.innerHTML = `
