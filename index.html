@@ -12,7 +12,6 @@
     
     <!-- 外部への不要なリファラー漏洩を防ぐ -->
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    
     <!-- 画像をGoogle画像検索等にインデックスさせない -->
     <meta name="robots" content="noimageindex">
 
@@ -203,75 +202,132 @@
         .news-more-link a:hover { text-decoration: underline; }
 
         /* ----------------------------------
-            6. スケジュールセクション (新設コンパクト仕様)
+            6. イベントカレンダーセクション（カレンダーらしいグリッド形式）
         ---------------------------------- */
-        .schedule-section {
+        .calendar-section {
             background: var(--white);
             border-radius: 12px;
-            padding: 18px 20px;
+            padding: 20px;
             margin-bottom: 2rem;
             box-shadow: 0 4px 12px rgba(0,0,0,0.04);
         }
 
-        .schedule-section h2 {
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .calendar-header h2 {
             font-size: 1.15rem;
-            margin: 0 0 12px 0;
+            margin: 0;
             color: var(--primary-color);
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .schedule-list {
-            max-height: 250px;
-            overflow-y: auto;
-            padding-right: 10px;
+        .calendar-nav-btns {
+            display: flex;
+            gap: 6px;
         }
-        
-        .schedule-list::-webkit-scrollbar { width: 6px; }
-        .schedule-list::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-        .schedule-list::-webkit-scrollbar-thumb { background: #bdc3c7; border-radius: 10px; }
 
-        .schedule-item {
+        .calendar-nav-btn {
+            background: #f0f2f5;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            padding: 10px 8px;
-            border-bottom: 1px dashed #e0e0e0;
-            font-size: 0.9rem;
-            gap: 12px;
+            justify-content: center;
+            color: var(--primary-color);
             transition: background 0.2s;
         }
-        .schedule-item:hover { background: #f8f9fa; border-radius: 6px; }
-        .schedule-item:last-child { border-bottom: none; }
+        .calendar-nav-btn:hover { background: #e2e8f0; }
 
-        .schedule-date {
-            font-weight: 600;
-            color: var(--accent-color);
-            flex-shrink: 0;
-            width: 90px;
-            font-size: 0.85rem;
-        }
-        .schedule-title {
-            flex-grow: 1;
-            color: var(--text-color);
-            font-weight: 500;
-        }
-        .schedule-tag {
-            font-size: 0.65rem;
-            padding: 2px 6px;
-            border-radius: 4px;
+        .calendar-month-title {
             font-weight: bold;
-            flex-shrink: 0;
+            font-size: 1rem;
+            color: var(--primary-color);
         }
-        .tag-special { background: #fbeee6; color: #d35400; }
-        .tag-normal { background: #edf2f7; color: #3498db; }
 
-        .schedule-link {
-            color: #95a5a6;
-            font-size: 0.8rem;
-            transition: color 0.2s;
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            text-align: center;
         }
-        .schedule-link:hover { color: var(--accent-color); }
+
+        .calendar-day-header {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #7f8c8d;
+            padding: 6px 0;
+        }
+        .calendar-day-header:nth-child(1) { color: #e74c3c; } /* 日曜 */
+        .calendar-day-header:nth-child(7) { color: #3498db; } /* 土曜 */
+
+        .calendar-cell {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.82rem;
+            border-radius: 8px;
+            background: #fafbfc;
+            color: #333;
+            position: relative;
+            user-select: none;
+        }
+
+        .calendar-cell.other-month {
+            color: #cbd5e1;
+            background: transparent;
+        }
+
+        .calendar-cell.today {
+            border: 2px solid var(--accent-color);
+            font-weight: bold;
+        }
+
+        .calendar-cell.has-event {
+            background: #fbeee6;
+            color: #d35400;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .calendar-cell.has-event:hover {
+            transform: scale(1.05);
+            background: #f5d0b1;
+        }
+
+        .calendar-cell.has-event::after {
+            content: '';
+            width: 4px;
+            height: 4px;
+            background-color: #d35400;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 4px;
+        }
+
+        /* 予定詳細ツールチップ用モダル/テキスト領域 */
+        .calendar-event-details {
+            margin-top: 12px;
+            padding: 10px 12px;
+            background: #fdf6f0;
+            border-left: 4px solid #d35400;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: #d35400;
+            font-weight: bold;
+            display: none;
+        }
 
         /* ----------------------------------
             7. ユニット（共通カード）化スタイル
@@ -360,8 +416,6 @@
             .profile-card { flex-direction: column; align-items: center; text-align: center; padding: 1.5rem; gap: 15px; }
             .profile-thumb { width: 120px; height: 120px; }
             .button-group { justify-content: center; }
-            .schedule-item { flex-direction: column; align-items: flex-start; gap: 4px; }
-            .schedule-date { width: auto; }
         }
     </style>
 </head>
@@ -390,6 +444,7 @@
                 MinecraftのMod開発などを通じ、新しい体験を届けることを目標にしています。
             </p>
             <div class="button-group">
+                <a href="https://x.com/czaha-official" class="link-btn btn-x" target="_blank" rel="noopener noreferrer"><i class="fab fa-x-twitter"></i> X</a>
                 <a href="https://github.com/czaha-official" class="link-btn btn-github" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
                 <a href="https://www.youtube.com/@czaha-official" class="link-btn" style="color:#FF0000; border-color:#FF0000;" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i> YouTube</a>
             </div>
@@ -409,12 +464,29 @@
         </div>
     </div>
 
-    <!-- スケジュールセクション (2ファイルから統合表示) -->
-    <div class="schedule-section">
-        <h2><i class="fas fa-calendar-check"></i> Schedule</h2>
-        <div id="schedule-list" class="schedule-list">
-            <p style="color: #888; font-size: 0.85rem;">スケジュールを読み込んでいます...</p>
+    <!-- イベントカレンダーセクション（カレンダーらしいグリッド形式） -->
+    <div class="calendar-section">
+        <div class="calendar-header">
+            <h2><i class="fas fa-calendar-alt"></i> Event Calendar</h2>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span id="calendar-month-title" class="calendar-month-title">2026年 12月</span>
+                <div class="calendar-nav-btns">
+                    <button class="calendar-nav-btn" id="prev-month-btn" title="前月"><i class="fas fa-chevron-left"></i></button>
+                    <button class="calendar-nav-btn" id="next-month-btn" title="次月"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
         </div>
+        <div class="calendar-grid">
+            <div class="calendar-day-header">日</div>
+            <div class="calendar-day-header">月</div>
+            <div class="calendar-day-header">火</div>
+            <div class="calendar-day-header">水</div>
+            <div class="calendar-day-header">木</div>
+            <div class="calendar-day-header">金</div>
+            <div class="calendar-day-header">土</div>
+        </div>
+        <div id="calendar-days-grid" class="calendar-grid" style="margin-top: 4px;"></div>
+        <div id="calendar-event-details" class="calendar-event-details"></div>
     </div>
 
     <div class="grid">
@@ -537,6 +609,88 @@
         } catch { return null; }
     }
 
+    // --- イベント＆カレンダーデータ定義 ---
+    // ここにイベントの日付と内容を登録します（2026-12-02に定期演奏会を設定）
+    const eventMap = {
+        '2026-12-02': '綾瀬市立綾瀬中学校吹奏楽部 第18回定期演奏会'
+    };
+
+    let currentCalendarDate = new Date(2026, 11, 1); // 2026年12月を初期表示 (月は0始まりなので11=12月)
+
+    function renderCalendar() {
+        const year = currentCalendarDate.getFullYear();
+        const month = currentCalendarDate.getMonth();
+        
+        document.getElementById('calendar-month-title').textContent = `${year}年 ${month + 1}月`;
+        
+        const gridEl = document.getElementById('calendar-days-grid');
+        gridEl.replaceChildren();
+
+        const firstDayIndex = new Date(year, month, 1).getDay();
+        const lastDay = new Date(year, month + 1, 0).getDate();
+        const prevLastDay = new Date(year, month, 0).getDate();
+        
+        const today = new Date();
+        const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+        // 前月のはみ出し日数分
+        for (let i = firstDayIndex; i > 0; i--) {
+            const cell = document.createElement('div');
+            cell.className = 'calendar-cell other-month';
+            cell.textContent = prevLastDay - i + 1;
+            gridEl.appendChild(cell);
+        }
+
+        // 当月の日付
+        for (let i = 1; i <= lastDay; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'calendar-cell';
+            cell.textContent = i;
+
+            const monthStr = String(month + 1).padStart(2, '0');
+            const dayStr = String(i).padStart(2, '0');
+            const dateStr = `${year}-${monthStr}-${dayStr}`;
+
+            if (dateStr === todayStr) {
+                cell.classList.add('today');
+            }
+
+            if (eventMap[dateStr]) {
+                cell.classList.add('has-event');
+                cell.title = eventMap[dateStr];
+                cell.addEventListener('click', () => {
+                    const detailsBox = document.getElementById('calendar-event-details');
+                    detailsBox.style.display = 'block';
+                    detailsBox.textContent = `${dateStr} の予定: ${eventMap[dateStr]}`;
+                });
+            }
+
+            gridEl.appendChild(cell);
+        }
+
+        // 次月のはみ出し日数分
+        const totalCells = firstDayIndex + lastDay;
+        const nextDaysCount = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+        for (let i = 1; i <= nextDaysCount; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'calendar-cell other-month';
+            cell.textContent = i;
+            gridEl.appendChild(cell);
+        }
+    }
+
+    document.getElementById('prev-month-btn').addEventListener('click', () => {
+        currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+        renderCalendar();
+    });
+
+    document.getElementById('next-month-btn').addEventListener('click', () => {
+        currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+        renderCalendar();
+    });
+
+    renderCalendar();
+
     document.addEventListener('DOMContentLoaded', async () => {
         // --- お知らせ処理 (news-data.txt) ---
         try {
@@ -576,7 +730,6 @@
                 }
             });
 
-            // 緊急お知らせ表示
             if (urgentItems.length > 0) {
                 const topU = urgentItems[0];
                 const isUrgent = topU.category.toLowerCase() === 'urgent';
@@ -594,7 +747,6 @@
                 `;
             }
 
-            // 通常ニュース
             parsedItems.slice(0, 3).forEach(item => {
                 const isRel = item.category.toLowerCase() === 'release' || item.category === 'リリース';
                 const tagBg = isRel ? '#e8f8f5' : '#edf2f7';
@@ -611,117 +763,6 @@
             });
         } catch {
             document.getElementById('top-news-list').innerHTML = '<p style="color:#e74c3c;">読み込みに失敗しました。</p>';
-        }
-
-        // --- スケジュール＆イベント統合処理 ---
-        const scheduleItems = [];
-
-        // 1. event-data.txt から特設イベントを取得
-        try {
-            const evRes = await fetch('event-data.txt');
-            if (evRes.ok) {
-                const text = await evRes.text();
-                if (text.trim()) {
-                    let tag='', date='', targetDate='', title='', body='', link='', btn='特設ページを見る';
-                    text.split('\n').forEach(line => {
-                        const t = line.trim();
-                        if (t.startsWith('[TAG]')) tag = t.replace('[TAG]', '');
-                        else if (t.startsWith('[DATE]')) date = t.replace('[DATE]', '');
-                        else if (t.startsWith('[EVENT_DATE]')) targetDate = t.replace('[EVENT_DATE]', '');
-                        else if (t.startsWith('[TITLE]')) title = t.replace('[TITLE]', '');
-                        else if (t.startsWith('[BODY]')) body = t.replace('[BODY]', '');
-                        else if (t.startsWith('[LINK]')) link = t.replace('[LINK]', '').split('|')[0];
-                        else if (t.startsWith('[BTN_TEXT]')) btn = t.replace('[BTN_TEXT]', '');
-                    });
-                    
-                    if (title) {
-                        // 特設バナー表示
-                        document.getElementById('special-event-container').innerHTML = `
-                            <div style="background:#fff; border-radius:12px; padding:20px; margin:10px 0 20px; box-shadow:0 4px 12px rgba(0,0,0,.05); border-left:5px solid #d35400;">
-                                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                                    <span style="background:#fbeee6; color:#d35400; font-size:0.75rem; font-weight:bold; padding:3px 10px; border-radius:50px;"><i class="fas fa-star"></i> ${tag || 'Special'}</span>
-                                </div>
-                                <h3 style="margin:0 0 8px; color:#2c3e50; font-size:1.15rem;">${title}</h3>
-                                <p style="margin:0 0 10px; font-size:0.85rem; color:#555;">${body}</p>
-                                ${targetDate ? `
-                                <div class="countdown-container">
-                                    <div class="countdown-title"><i class="fas fa-hourglass-half"></i> イベント開催まで</div>
-                                    <div class="countdown-digits"><span class="countdown-num" id="cd-d">0</span><span class="countdown-unit">日</span><span class="countdown-num" id="cd-h">00</span><span class="countdown-unit">時間</span></div>
-                                </div>` : ''}
-                                ${link ? `<div style="text-align:right; margin-top:10px;"><a href="${safeHttpUrl(link)}" target="_blank" rel="noopener noreferrer" style="display:inline-block; font-weight:bold; text-decoration:none; padding:8px 16px; background:#d35400; color:white; border-radius:50px; font-size:0.8rem;">${btn} <i class="fas fa-arrow-right"></i></a></div>` : ''}
-                            </div>
-                        `;
-
-                        // 特設イベントをスケジュール配列にも追加
-                        scheduleItems.push({
-                            date: date.substring(0, 10).replace(/\//g, '-'),
-                            title: title,
-                            link: safeHttpUrl(link),
-                            isSpecial: true,
-                            tag: tag || 'Special'
-                        });
-
-                        // 簡易タイマー処理
-                        if (targetDate) {
-                            const tDate = new Date(targetDate).getTime();
-                            setInterval(() => {
-                                const diff = tDate - new Date().getTime();
-                                if (diff > 0) {
-                                    document.getElementById('cd-d').textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
-                                    document.getElementById('cd-h').textContent = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
-                                }
-                            }, 1000);
-                        }
-                    }
-                }
-            }
-        } catch(e) {}
-
-        // 2. schedule.txt (日付|タイトル|URL形式を想定) から通常スケジュールを取得
-        try {
-            const scRes = await fetch('schedule.txt');
-            if (scRes.ok) {
-                const text = await scRes.text();
-                text.split('\n').forEach(line => {
-                    const parts = line.trim().split('|');
-                    if (parts.length >= 2) {
-                        scheduleItems.push({
-                            date: parts[0].trim(),
-                            title: parts[1].trim(),
-                            link: parts.length > 2 ? safeHttpUrl(parts[2].trim()) : null,
-                            isSpecial: false,
-                            tag: 'Schedule'
-                        });
-                    }
-                });
-            }
-        } catch(e) {}
-
-        // 3. スケジュールの描画
-        const scContainer = document.getElementById('schedule-list');
-        if (scheduleItems.length > 0) {
-            scheduleItems.sort((a, b) => new Date(a.date) - new Date(b.date));
-            scContainer.replaceChildren();
-
-            scheduleItems.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'schedule-item';
-                
-                let linkHtml = '';
-                if (item.link) {
-                    linkHtml = `<a href="${item.link}" target="_blank" rel="noopener noreferrer" class="schedule-link"><i class="fas fa-external-link-alt"></i></a>`;
-                }
-
-                div.innerHTML = `
-                    <div class="schedule-date">${item.date}</div>
-                    <div class="schedule-tag ${item.isSpecial ? 'tag-special' : 'tag-normal'}">${item.tag}</div>
-                    <div class="schedule-title">${item.title}</div>
-                    ${linkHtml}
-                `;
-                scContainer.appendChild(div);
-            });
-        } else {
-            scContainer.innerHTML = '<p style="color:#666; font-size:0.85rem;">現在予定されているスケジュールはありません。</p>';
         }
     });
 </script>
