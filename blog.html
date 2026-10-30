@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog | C'zaha Chell Tia's Official Site</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- セキュリティ対策: DOMPurify (HTMLサニタイズライブラリ) の読み込み -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     <style>
-        /* 共通設定・変数の引き継ぎ */
         :root {
             --primary-color: #2c3e50;
             --accent-color: #3498db;
@@ -49,7 +50,6 @@
             max-width: 1100px; width: 92%; margin: -20px auto 3rem; flex-grow: 1;
         }
 
-        /* ブログ専用レイアウト (2カラム) */
         .blog-layout {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -57,7 +57,6 @@
             align-items: start;
         }
 
-        /* 記事エリア */
         .blog-posts { display: flex; flex-direction: column; gap: 1.5rem; }
 
         .post-card {
@@ -75,7 +74,6 @@
         .post-body { font-size: 0.95rem; color: #444; line-height: 1.8; }
         .post-body img { max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0; }
 
-        /* サイドバー */
         .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
         
         .sidebar-widget {
@@ -89,7 +87,6 @@
         .category-list li { padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 0.9rem; }
         .category-list li:last-child { border-bottom: none; }
         
-        /* フッター */
         footer { background: var(--primary-color); color: rgba(255,255,255,0.7); text-align: center; padding: 2rem 1rem; font-size: 0.8rem; }
 
         @media (max-width: 768px) {
@@ -112,17 +109,16 @@
 
 <div class="container">
     <div class="blog-layout">
-        <!-- メイン記事エリア -->
         <div class="blog-posts" id="blog-container">
             <p style="text-align:center; color:#888;">記事を読み込んでいます...</p>
         </div>
 
-        <!-- サイドバー -->
         <div class="sidebar">
             <div class="sidebar-widget">
                 <h3><i class="fas fa-user"></i> Profile</h3>
                 <div style="display:flex; align-items:center; gap:12px; margin-top:10px;">
-                    <img src="profile_top.jpg" alt="Author" style="width:60px; height:60px; border-radius:50%; object-fit:cover;" onerror="this.src='https://via.placeholder.com/60'">
+                    <!-- onerrorを削除し、JavaScript側で安全に処理 -->
+                    <img id="profile-img" src="profile_top.jpg" alt="Author" style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
                     <p style="margin:0; font-size:0.85rem; font-weight:bold;">C'zaha Chell tia<br><span style="font-weight:normal; color:#666; font-size:0.75rem;">Mod Developer</span></p>
                 </div>
             </div>
@@ -166,9 +162,16 @@
 <script>
     document.getElementById('current-year').textContent = new Date().getFullYear();
 
+    // プロフィール画像エラー時のフォールバック処理（XSS警告回避）
+    const profileImg = document.getElementById('profile-img');
+    if (profileImg) {
+        profileImg.addEventListener('error', function() {
+            this.src = 'https://via.placeholder.com/60';
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', async () => {
         try {
-            // blog-data.txt から記事データを取得
             const res = await fetch('blog-data.txt');
             if (!res.ok) throw new Error();
             const text = await res.text();
@@ -177,10 +180,9 @@
             const categoryList = document.getElementById('category-list');
             blogContainer.replaceChildren();
             
-            // "---" で記事ごとに分割
             const items = text.split('---').map(b => b.trim()).filter(b => b.length > 0);
             if (items.length === 0) {
-                blogContainer.innerHTML = '<p>まだ記事がありません。</p>';
+                blogContainer.textContent = 'まだ記事がありません。';
                 return;
             }
 
@@ -189,7 +191,6 @@
             items.forEach(itemStr => {
                 let date='', category='Uncategorized', title='', bodyLines=[], cur='BODY';
                 
-                // 行ごとに解析（news-data.txtと同じアルゴリズム）
                 itemStr.split('\n').forEach(line => {
                     const t = line.trim();
                     if (t.startsWith('[DATE]')) date = t.replace('[DATE]','').trim();
@@ -200,36 +201,52 @@
                 });
 
                 categories.add(category);
-
-                // HTMLの改行に変換
                 const bodyHtml = bodyLines.join('<br>');
 
-                // 記事カードの生成
                 const article = document.createElement('article');
                 article.className = 'post-card';
+                
+                // HTMLの骨組みだけを先に生成
                 article.innerHTML = `
                     <div class="post-header">
-                        <h2 class="post-title">${title}</h2>
+                        <h2 class="post-title"></h2>
                         <div class="post-meta">
-                            <span><i class="far fa-calendar-alt"></i> ${date}</span>
-                            <span class="post-category"><i class="fas fa-folder"></i> ${category}</span>
+                            <span><i class="far fa-calendar-alt"></i> <span class="post-date-text"></span></span>
+                            <span class="post-category"><i class="fas fa-folder"></i> <span class="post-cat-text"></span></span>
                         </div>
                     </div>
-                    <div class="post-body">${bodyHtml}</div>
+                    <div class="post-body"></div>
                 `;
+                
+                // 安全なテキストとして値をセット
+                article.querySelector('.post-title').textContent = title;
+                article.querySelector('.post-date-text').textContent = date;
+                article.querySelector('.post-cat-text').textContent = category;
+                
+                // 本文はDOMPurifyでサニタイズ（無害化）してから挿入
+                article.querySelector('.post-body').innerHTML = DOMPurify.sanitize(bodyHtml);
+                
                 blogContainer.appendChild(article);
             });
 
-            // サイドバーのカテゴリ一覧を動的生成
+            // サイドバーのカテゴリ一覧を安全に生成
             categoryList.replaceChildren();
             categories.forEach(cat => {
                 const li = document.createElement('li');
-                li.innerHTML = `<i class="fas fa-angle-right" style="color:#ccc; margin-right:8px;"></i> ${cat}`;
+                const icon = document.createElement('i');
+                icon.className = 'fas fa-angle-right';
+                icon.style.color = '#ccc';
+                icon.style.marginRight = '8px';
+                
+                li.appendChild(icon);
+                li.appendChild(document.createTextNode(' ' + cat));
                 categoryList.appendChild(li);
             });
 
         } catch (e) {
-            document.getElementById('blog-container').innerHTML = '<p style="color:#e74c3c;">ブログ記事の読み込みに失敗しました。blog-data.txt が存在するか確認してください。</p>';
+            const container = document.getElementById('blog-container');
+            container.textContent = 'ブログ記事の読み込みに失敗しました。blog-data.txt が存在するか確認してください。';
+            container.style.color = '#e74c3c';
         }
     });
 </script>
