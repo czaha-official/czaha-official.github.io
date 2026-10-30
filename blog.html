@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | C'zaha Chell Tia's Official Site</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* 共通設定・変数の引き継ぎ */
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f0f2f5;
+            --text-color: #2c3e50;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            color: var(--text-color);
+            background: linear-gradient(135deg, #f0f2f5 0%, #e0e6ed 100%);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        nav.top-nav {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 5%;
+            display: flex; justify-content: flex-end; align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky; top: 0; z-index: 100;
+        }
+        
+        .nav-links a { margin-left: 15px; text-decoration: none; color: var(--primary-color); font-weight: bold; font-size: 0.9rem; }
+        .nav-links a:hover { color: var(--accent-color); }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a252f 100%);
+            color: var(--white);
+            padding: 3rem 1rem 4rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+        }
+
+        .container {
+            max-width: 1100px; width: 92%; margin: -20px auto 3rem; flex-grow: 1;
+        }
+
+        /* ブログ専用レイアウト (2カラム) */
+        .blog-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        /* 記事エリア */
+        .blog-posts { display: flex; flex-direction: column; gap: 1.5rem; }
+
+        .post-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .post-header { margin-bottom: 1rem; border-bottom: 1px solid #f0f2f5; padding-bottom: 1rem; }
+        .post-title { font-size: 1.4rem; color: var(--primary-color); margin: 0 0 8px 0; }
+        .post-meta { display: flex; gap: 12px; font-size: 0.85rem; color: #7f8c8d; }
+        .post-category { background: #edf2f7; color: var(--accent-color); padding: 2px 8px; border-radius: 4px; font-weight: bold; }
+        
+        .post-body { font-size: 0.95rem; color: #444; line-height: 1.8; }
+        .post-body img { max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0; }
+
+        /* サイドバー */
+        .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+        
+        .sidebar-widget {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .sidebar-widget h3 { font-size: 1.05rem; margin: 0 0 12px 0; color: var(--primary-color); border-bottom: 2px solid var(--accent-color); display: inline-block; padding-bottom: 4px; }
+        .category-list { list-style: none; padding: 0; margin: 0; }
+        .category-list li { padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 0.9rem; }
+        .category-list li:last-child { border-bottom: none; }
+        
+        /* フッター */
+        footer { background: var(--primary-color); color: rgba(255,255,255,0.7); text-align: center; padding: 2rem 1rem; font-size: 0.8rem; }
+
+        @media (max-width: 768px) {
+            .blog-layout { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="top-nav">
+    <div class="nav-links">
+        <a href="index.html"><i class="fas fa-home"></i> Home</a>
+    </div>
+</nav>
+
+<header>
+    <h1>Developer Blog</h1>
+    <p>開発の裏側や、日々の記録をお届けします</p>
+</header>
+
+<div class="container">
+    <div class="blog-layout">
+        <!-- メイン記事エリア -->
+        <div class="blog-posts" id="blog-container">
+            <p style="text-align:center; color:#888;">記事を読み込んでいます...</p>
+        </div>
+
+        <!-- サイドバー -->
+        <div class="sidebar">
+            <div class="sidebar-widget">
+                <h3><i class="fas fa-user"></i> Profile</h3>
+                <div style="display:flex; align-items:center; gap:12px; margin-top:10px;">
+                    <img src="profile_top.jpg" alt="Author" style="width:60px; height:60px; border-radius:50%; object-fit:cover;" onerror="this.src='https://via.placeholder.com/60'">
+                    <p style="margin:0; font-size:0.85rem; font-weight:bold;">C'zaha Chell tia<br><span style="font-weight:normal; color:#666; font-size:0.75rem;">Mod Developer</span></p>
+                </div>
+            </div>
+
+            <div class="sidebar-widget">
+                <h3><i class="fas fa-tags"></i> Categories</h3>
+                <ul class="category-list" id="category-list">
+                    <!-- JSで動的にカテゴリ一覧を生成 -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p class="sqex-copyright" style="color: #bdc3c7; font-size: 0.75rem; margin-bottom: 15px;">
+        アカウントアイコン、ロードストーンツールチップ、ファンキット等の素材の著作権はスクウェア・エニックスに帰属します。<br>
+        &copy; SQUARE ENIX
+    </p>
+    <a href="https://czaha-official.github.io/policies/terms-of-use/zaha-services" class="link-btn" target="_blank" rel="noopener noreferrer" style="color: #ffffff; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 50px; text-decoration: none; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 6px; margin: 0 4px; transition: all 0.3s;">
+        <i class="fas fa-file-alt"></i> 利用規約
+    </a>
+    <a href="https://czaha-official.github.io/policies/privacy-policies/services-privacy-policy" class="link-btn" target="_blank" rel="noopener noreferrer" style="color: #ffffff; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 50px; text-decoration: none; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 6px; margin: 0 4px; transition: all 0.3s;">
+        <i class="fas fa-file-alt"></i> プライバシーポリシー
+    </a>
+
+    <p style="margin-top: 20px;">&copy; <span id="current-year"></span> warudora / C'zaha Chell tia. All Rights Reserved.</p>
+
+    <div style="margin-top: 15px; font-size: 0.7rem; color: #a0a0a0; display: flex; flex-direction: column; gap: 4px; align-items: center;">
+        <div><span style="color: #3498db; font-weight: bold;">Japanituremod Developers</span></div>
+        <div><span style="font-weight: bold; color: #d0d0d0;">warudora:</span> 5H1H0 Engineer / Admin of MJaS</div>
+        <div><span style="font-weight: bold; color: #d0d0d0;">C'zaha Chell tia:</span> Independent Developer / Trumpet Player / YTE Translator</div>
+        <div style="margin-top: 4px;">Based by <a href="https://warudora.github.io" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: underline;">warudora's Portfolio</a></div>
+        <div style="margin-top: 6px; font-size: 0.65rem; color: #888888; max-width: 600px; text-align: center;">
+            ※演奏依頼は原則お断りしております（所属団体およびその姉妹団体からのご依頼を除く）。<br>
+            このサイト内の画像コンテンツをAIに学習させる行為はおやめください。 
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            // blog-data.txt から記事データを取得
+            const res = await fetch('blog-data.txt');
+            if (!res.ok) throw new Error();
+            const text = await res.text();
+            
+            const blogContainer = document.getElementById('blog-container');
+            const categoryList = document.getElementById('category-list');
+            blogContainer.replaceChildren();
+            
+            // "---" で記事ごとに分割
+            const items = text.split('---').map(b => b.trim()).filter(b => b.length > 0);
+            if (items.length === 0) {
+                blogContainer.innerHTML = '<p>まだ記事がありません。</p>';
+                return;
+            }
+
+            const categories = new Set();
+
+            items.forEach(itemStr => {
+                let date='', category='Uncategorized', title='', bodyLines=[], cur='BODY';
+                
+                // 行ごとに解析（news-data.txtと同じアルゴリズム）
+                itemStr.split('\n').forEach(line => {
+                    const t = line.trim();
+                    if (t.startsWith('[DATE]')) date = t.replace('[DATE]','').trim();
+                    else if (t.startsWith('[CATEGORY]')) category = t.replace('[CATEGORY]','').trim();
+                    else if (t.startsWith('[TITLE]')) title = t.replace('[TITLE]','').trim();
+                    else if (t.startsWith('[BODY]')) { bodyLines.push(t.replace('[BODY]','').trim()); cur='BODY'; }
+                    else if (cur === 'BODY' && t !== '') bodyLines.push(t);
+                });
+
+                categories.add(category);
+
+                // HTMLの改行に変換
+                const bodyHtml = bodyLines.join('<br>');
+
+                // 記事カードの生成
+                const article = document.createElement('article');
+                article.className = 'post-card';
+                article.innerHTML = `
+                    <div class="post-header">
+                        <h2 class="post-title">${title}</h2>
+                        <div class="post-meta">
+                            <span><i class="far fa-calendar-alt"></i> ${date}</span>
+                            <span class="post-category"><i class="fas fa-folder"></i> ${category}</span>
+                        </div>
+                    </div>
+                    <div class="post-body">${bodyHtml}</div>
+                `;
+                blogContainer.appendChild(article);
+            });
+
+            // サイドバーのカテゴリ一覧を動的生成
+            categoryList.replaceChildren();
+            categories.forEach(cat => {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="fas fa-angle-right" style="color:#ccc; margin-right:8px;"></i> ${cat}`;
+                categoryList.appendChild(li);
+            });
+
+        } catch (e) {
+            document.getElementById('blog-container').innerHTML = '<p style="color:#e74c3c;">ブログ記事の読み込みに失敗しました。blog-data.txt が存在するか確認してください。</p>';
+        }
+    });
+</script>
+
+</body>
+</html>
