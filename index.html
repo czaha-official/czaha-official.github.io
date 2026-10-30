@@ -356,25 +356,27 @@
         ---------------------------------- */
         .button-group { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
 
-        .btn, .link-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.75rem;
-            padding: 6px 12px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: 1px solid #ddd;
-            color: var(--text-color);
-        }
-        .btn-disabled { background-color: #bdc3c7 !important; color: #7f8c8d !important; border-color: #bdc3c7 !important; cursor: not-allowed !important; pointer-events: none; }
-        .link-btn:hover, .btn:hover { background: #f8f9fa; transform: translateY(-2px); }
-        .link-btn.btn-x:hover { background: var(--x-color); color: white; border-color: var(--x-color); }
-        .link-btn.btn-github:hover { background: var(--github-color); color: white; border-color: var(--github-color); }
-        .link-btn.btn-discord:hover, .btn-discord:hover { background: var(--discord-color); color: white; border-color: var(--discord-color); }
-        .link-btn.btn-primary, .btn-primary { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+.btn, .link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+    border: 1px solid #ddd;
+    color: var(--text-color);
+}
+.btn-disabled { background-color: #bdc3c7 !important; color: #7f8c8d !important; border-color: #bdc3c7 !important; cursor: not-allowed !important; pointer-events: none; }
+.link-btn:hover, .btn:hover { background: #f8f9fa; transform: translateY(-2px); }
+.link-btn.btn-x:hover { background: var(--x-color); color: white; border-color: var(--x-color); }
+.link-btn.btn-github:hover { background: var(--github-color); color: white; border-color: var(--github-color); }
+.link-btn.btn-discord:hover, .btn-discord:hover { background: var(--discord-color); color: white; border-color: var(--discord-color); }
+/* ↓ ブログボタン用のホバー設定を追加 */
+.link-btn.btn-blog:hover { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+.link-btn.btn-primary, .btn-primary { background: var(--accent-color); color: white; border-color: var(--accent-color); }
 
         /* 特設イベント用：タイマースタイル */
         .countdown-container {
@@ -444,7 +446,7 @@
                 MinecraftのMod開発などを通じ、新しい体験を届けることを目標にしています。
             </p>
             <div class="button-group">
-                <a href="blog.html" class="link-btn" style="color: #ffffff; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 50px; text-decoration: none; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; margin: 0 5px; transition: all 0.3s;"><i class="fas fa-pen-nib"></i> Developer Blog</a>
+                <a href="blog.html" class="link-btn btn-blog"><i class="fas fa-pen-nib"></i> Blog</a>                
                 <a href="https://github.com/czaha-official" class="link-btn btn-github" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
                 <a href="https://www.youtube.com/@czaha-official" class="link-btn" style="color:#FF0000; border-color:#FF0000;" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i> YouTube</a>
             </div>
