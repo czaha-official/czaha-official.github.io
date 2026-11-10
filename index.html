@@ -396,20 +396,6 @@
         .countdown-num { font-size: 1.2rem; font-weight: bold; color: #d35400; }
         .countdown-unit { font-size: 0.7rem; color: #7f8c8d; margin-right: 2px; }
 
-        .special-event-card {
-            background: var(--white);
-            border-left: 6px solid #d35400;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 10px 0 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-        .special-event-meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-        .special-event-tag { color: #d35400; background: #fbeee6; border-radius: 50px; padding: 4px 12px; font-size: 0.8rem; font-weight: bold; }
-        .special-event-date { color: #888; font-size: 0.85rem; }
-        .special-event-card h3 { margin: 0 0 10px; color: var(--primary-color); font-size: 1.2rem; }
-        .special-event-card p { margin: 0 0 15px; color: #555; font-size: 0.9rem; }
-
         /* ----------------------------------
             9. フッター & トップへ戻るボタン
         ---------------------------------- */
@@ -625,84 +611,13 @@
         } catch { return null; }
     }
 
-    const eventMap = {};
-    let currentCalendarDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    // --- イベント＆カレンダーデータ定義 ---
+    // ここにイベントの日付と内容を登録します（2026-12-02に定期演奏会を設定）
+    const eventMap = {
+        '2026-12-02': '綾瀬市立綾瀬中学校吹奏楽部 第18回定期演奏会'
+    };
 
-    function parseEventData(text) {
-        return text.split('---').map(block => {
-            const event = { tag: '', date: '', title: '', body: '', link: '', buttonText: '特設ページを見る' };
-            block.split('\n').forEach(line => {
-                const match = line.match(/^\[(TAG|DATE|TITLE|BODY|LINK|BTN_TEXT)\]\s*(.*)$/);
-                if (!match) return;
-                const [, key, value] = match;
-                if (key === 'TAG') event.tag = value.trim();
-                if (key === 'DATE') event.date = value.trim();
-                if (key === 'TITLE') event.title = value.trim();
-                if (key === 'BODY') event.body = value.trim();
-                if (key === 'LINK') event.link = value.split('|')[0].trim();
-                if (key === 'BTN_TEXT') event.buttonText = value.trim();
-            });
-            const dateMatch = event.date.match(/(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日/);
-            event.dateKey = dateMatch
-                ? `${dateMatch[1]}-${String(dateMatch[2]).padStart(2, '0')}-${String(dateMatch[3]).padStart(2, '0')}`
-                : '';
-            return event;
-        }).filter(event => event.title);
-    }
-
-    function renderSpecialEvents(events) {
-        const container = document.getElementById('special-event-container');
-        container.replaceChildren();
-
-        events.forEach(event => {
-            if (event.dateKey) eventMap[event.dateKey] = event.title;
-
-            const card = document.createElement('article');
-            card.className = 'special-event-card';
-            const meta = document.createElement('div');
-            meta.className = 'special-event-meta';
-            const tag = document.createElement('span');
-            tag.className = 'special-event-tag';
-            tag.textContent = event.tag || 'Event Info';
-            const date = document.createElement('span');
-            date.className = 'special-event-date';
-            date.textContent = event.date;
-            meta.append(tag, date);
-
-            const title = document.createElement('h3');
-            title.textContent = event.title;
-            card.append(meta, title);
-            if (event.body) {
-                const body = document.createElement('p');
-                body.textContent = event.body;
-                card.appendChild(body);
-            }
-            const url = safeHttpUrl(event.link);
-            if (url) {
-                const link = document.createElement('a');
-                link.className = 'btn btn-primary';
-                link.href = url;
-                link.textContent = event.buttonText;
-                if (/^https?:\/\//i.test(event.link)) {
-                    link.target = '_blank';
-                    link.rel = 'noopener noreferrer';
-                }
-                card.appendChild(link);
-            }
-            container.appendChild(card);
-        });
-        renderCalendar();
-    }
-
-    async function loadSpecialEvents() {
-        try {
-            const response = await fetch('event-data.txt');
-            if (!response.ok) throw new Error('イベント情報を取得できませんでした');
-            renderSpecialEvents(parseEventData(await response.text()));
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    let currentCalendarDate = new Date(2026, 11, 1); // 2026年12月を初期表示 (月は0始まりなので11=12月)
 
     function renderCalendar() {
         const year = currentCalendarDate.getFullYear();
@@ -712,9 +627,6 @@
         
         const gridEl = document.getElementById('calendar-days-grid');
         gridEl.replaceChildren();
-        const detailsBox = document.getElementById('calendar-event-details');
-        detailsBox.style.display = 'none';
-        detailsBox.textContent = '';
 
         const firstDayIndex = new Date(year, month, 1).getDay();
         const lastDay = new Date(year, month + 1, 0).getDate();
@@ -782,8 +694,6 @@
     renderCalendar();
 
     document.addEventListener('DOMContentLoaded', async () => {
-        loadSpecialEvents();
-
         // --- お知らせ処理 (news-data.txt) ---
         try {
             const res = await fetch('news-data.txt');
