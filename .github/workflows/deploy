@@ -1,0 +1,40 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # または master
+
+# リポジトリの権限設定
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ★ シークレットから config.js を自動生成するステップ
+      - name: Generate config.js from Secrets
+        run: |
+          echo "window.CONFIG = {" > config.js
+          echo "    SERVICE_DOMAIN: '${{ secrets.MICROCMS_SERVICE_DOMAIN }}'," >> config.js
+          echo "    API_KEY: '${{ secrets.MICROCMS_API_KEY }}'," >> config.js
+          echo "    ENDPOINT: '${{ secrets.MICROCMS_ENDPOINT }}'" >> config.js
+          echo "};" >> config.js
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v3
