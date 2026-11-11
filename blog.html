@@ -64,11 +64,20 @@
             border-radius: 12px;
             padding: 2rem;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            overflow: hidden;
+        }
+
+        .post-thumbnail {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1.2rem;
         }
 
         .post-header { margin-bottom: 1rem; border-bottom: 1px solid #f0f2f5; padding-bottom: 1rem; }
         .post-title { font-size: 1.4rem; color: var(--primary-color); margin: 0 0 8px 0; }
-        .post-meta { display: flex; gap: 12px; font-size: 0.85rem; color: #7f8c8d; }
+        .post-meta { display: flex; gap: 12px; font-size: 0.85rem; color: #7f8c8d; align-items: center; }
         .post-category { background: #edf2f7; color: var(--accent-color); padding: 2px 8px; border-radius: 4px; font-weight: bold; }
         
         .post-body { font-size: 0.95rem; color: #444; line-height: 1.8; }
@@ -109,7 +118,6 @@
 
 <div class="container">
     <div class="blog-layout">
-        <!-- 修正箇所: 初期状態（読み込み中）から白いカードで高さを確保 -->
         <div class="blog-posts" id="blog-container">
             <div class="post-card" style="text-align:center; padding: 4rem 1rem;">
                 <p style="color:#888; margin:0;"><i class="fas fa-spinner fa-spin"></i> 記事を読み込んでいます...</p>
@@ -128,7 +136,7 @@
             <div class="sidebar-widget">
                 <h3><i class="fas fa-tags"></i> Categories</h3>
                 <ul class="category-list" id="category-list">
-                    <!-- JSで動的に生成 -->
+                    <!-- microCMSから取得したカテゴリを動的に表示 -->
                 </ul>
             </div>
         </div>
@@ -140,10 +148,10 @@
         アカウントアイコン、ロードストーンツールチップ、ファンキット等の素材の著作権はスクウェア・エニックスに帰属します。<br>
         &copy; SQUARE ENIX
     </p>
-    <a href="https://czaha-official.github.io/policies/terms-of-use/zaha-services" class="link-btn" target="_blank" rel="noopener noreferrer" style="color: #ffffff; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 50px; text-decoration: none; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 6px; margin: 0 4px; transition: all 0.3s;">
+    <a href="https://czaha-official.github.io/policies/terms-of-use/zaha-services" class="link-btn" target="_blank" rel="noopener noreferrer" style="color: #ffffff; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 50px; text-decoration: none; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 6px; margin: 0 4px;">
         <i class="fas fa-file-alt"></i> 利用規約
     </a>
-    <a href="https://czaha-official.github.io/policies/privacy-policies/services-privacy-policy" class="link-btn" target="_blank" rel="noopener noreferrer" style="color: #ffffff; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 50px; text-decoration: none; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 6px; margin: 0 4px; transition: all 0.3s;">
+    <a href="https://czaha-official.github.io/policies/privacy-policies/services-privacy-policy" class="link-btn" target="_blank" rel="noopener noreferrer" style="color: #ffffff; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 50px; text-decoration: none; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 6px; margin: 0 4px;">
         <i class="fas fa-file-alt"></i> プライバシーポリシー
     </a>
 
@@ -161,6 +169,9 @@
     </div>
 </footer>
 
+<!-- 外部設定ファイル（GitHub Actionsがシークレットから自動生成） -->
+<script src="config.js"></script>
+
 <script>
     document.getElementById('current-year').textContent = new Date().getFullYear();
 
@@ -171,11 +182,11 @@
         });
     }
 
-    document.addEventListener('DOMContentLoaded', async () => {
+    // ★ IIFE（即時実行関数）によるスコープ限定とメモリ即時破棄設計
+    (async function() {
         const blogContainer = document.getElementById('blog-container');
         const categoryList = document.getElementById('category-list');
-        
-        // 修正箇所: メッセージ表示用のヘルパー関数（白カードで表示する）
+
         const showCardMessage = (htmlContent) => {
             blogContainer.innerHTML = DOMPurify.sanitize(`
                 <div class="post-card" style="text-align:center; padding: 4rem 1rem;">
@@ -185,53 +196,72 @@
         };
 
         try {
-            const res = await fetch('blog-data.txt');
-            if (!res.ok) throw new Error();
-            const text = await res.text();
-            
-            const items = text.split('---').map(b => b.trim()).filter(b => b.length > 0);
-            if (items.length === 0) {
+            // 1. 設定値を一時変数に取得
+            const config = window.CONFIG || {};
+            const domain = config.SERVICE_DOMAIN;
+            const apiKey = config.API_KEY;
+            const endpoint = config.ENDPOINT || 'blog';
+
+            // 2. グローバルに残ったCONFIGオブジェクトの参照を即座に削除・消去
+            if (window.CONFIG) {
+                window.CONFIG = null;
+                delete window.CONFIG;
+            }
+
+            if (!domain || !apiKey) {
+                showCardMessage(`
+                    <p style="color:#e74c3c; margin:0;">
+                        <i class="fas fa-exclamation-triangle"></i> 設定ファイル（config.js）が見つからないか、値が設定されていません。
+                    </p>
+                `);
+                return;
+            }
+
+            // 3. APIリクエストを送信
+            const response = await fetch(`https://${domain}.microcms.io/api/v1/${endpoint}?orders=-publishedAt`, {
+                headers: {
+                    'X-MICROCMS-API-KEY': apiKey
+                }
+            });
+
+            if (!response.ok) throw new Error('APIの取得に失敗しました');
+
+            const data = await response.json();
+            const posts = data.contents;
+
+            if (!posts || posts.length === 0) {
                 showCardMessage('<p style="color:#888; margin:0;">まだ記事がありません。</p>');
                 return;
             }
 
-            blogContainer.innerHTML = ''; // 読み込み中のカードをクリア
+            blogContainer.innerHTML = '';
             const categories = new Set();
 
-            items.forEach(itemStr => {
-                let date='', category='Uncategorized', title='', bodyLines=[], cur='BODY';
-                
-                itemStr.split('\n').forEach(line => {
-                    const t = line.trim();
-                    if (t.startsWith('[DATE]')) date = t.replace('[DATE]','').trim();
-                    else if (t.startsWith('[CATEGORY]')) category = t.replace('[CATEGORY]','').trim();
-                    else if (t.startsWith('[TITLE]')) title = t.replace('[TITLE]','').trim();
-                    else if (t.startsWith('[BODY]')) { bodyLines.push(t.replace('[BODY]','').trim()); cur='BODY'; }
-                    else if (cur === 'BODY' && t !== '') bodyLines.push(t);
-                });
-
-                categories.add(category);
-                const bodyHtml = bodyLines.join('<br>');
+            posts.forEach(post => {
+                const dateStr = post.publishedAt ? post.publishedAt.split('T')[0] : (post.createdAt ? post.createdAt.split('T')[0] : '');
+                const title = post.title || '無題';
+                const contentHtml = post.content || '';
+                const eyecatchUrl = post.eyecatch && post.eyecatch.url ? post.eyecatch.url : '';
+                const categoryName = post.category && (post.category.name || post.category.title) ? (post.category.name || post.category.title) : '未分類';
+                categories.add(categoryName);
 
                 const article = document.createElement('article');
                 article.className = 'post-card';
-                
+
+                const imageTag = eyecatchUrl ? `<img src="${DOMPurify.sanitize(eyecatchUrl)}" alt="${DOMPurify.sanitize(title)}" class="post-thumbnail">` : '';
+
                 article.innerHTML = `
+                    ${imageTag}
                     <div class="post-header">
-                        <h2 class="post-title"></h2>
+                        <h2 class="post-title">${DOMPurify.sanitize(title)}</h2>
                         <div class="post-meta">
-                            <span><i class="far fa-calendar-alt"></i> <span class="post-date-text"></span></span>
-                            <span class="post-category"><i class="fas fa-folder"></i> <span class="post-cat-text"></span></span>
+                            <span><i class="far fa-calendar-alt"></i> ${dateStr}</span>
+                            <span class="post-category"><i class="fas fa-folder"></i> ${DOMPurify.sanitize(categoryName)}</span>
                         </div>
                     </div>
-                    <div class="post-body"></div>
+                    <div class="post-body">${DOMPurify.sanitize(contentHtml)}</div>
                 `;
-                
-                article.querySelector('.post-title').textContent = title;
-                article.querySelector('.post-date-text').textContent = date;
-                article.querySelector('.post-cat-text').textContent = category;
-                article.querySelector('.post-body').innerHTML = DOMPurify.sanitize(bodyHtml);
-                
+
                 blogContainer.appendChild(article);
             });
 
@@ -249,15 +279,14 @@
             });
 
         } catch (e) {
-            // 修正箇所: エラー時も白いカードを出してレイアウトを維持
             showCardMessage(`
                 <p style="color:#e74c3c; margin:0; line-height: 1.8;">
                     <i class="fas fa-exclamation-triangle"></i> ブログ記事の読み込みに失敗しました。<br>
-                    <span style="font-size:0.85em; color:#666;">※ローカル環境で直接ファイルを開いている場合、セキュリティ制限で読み込めないことがあります。<br>Webサーバー（GitHub Pages等）上で確認してください。</span>
+                    <span style="font-size:0.85em; color:#666;">※microCMSの設定（サービスドメイン・APIキー）を確認してください。</span>
                 </p>
             `);
         }
-    });
+    })();
 </script>
 
 </body>
