@@ -169,7 +169,7 @@
     </div>
 </footer>
 
-<!-- 外部設定ファイル（GitHub Actionsがシークレットから自動生成） -->
+<!-- 外部設定ファイル（ビルド時にのみシークレットから生成） -->
 <script src="config.js"></script>
 
 <script>
@@ -182,7 +182,7 @@
         });
     }
 
-    // ★ IIFE（即時実行関数）によるスコープ限定とメモリ即時破棄設計
+    // ★ IIFE（即時実行関数）とDOM削除による厳格なメモリ・証拠隠滅設計
     (async function() {
         const blogContainer = document.getElementById('blog-container');
         const categoryList = document.getElementById('category-list');
@@ -196,28 +196,32 @@
         };
 
         try {
-            // 1. 設定値を一時変数に取得
+            // 1. 設定値を安全にローカル変数へ退避
             const config = window.CONFIG || {};
             const domain = config.SERVICE_DOMAIN;
             const apiKey = config.API_KEY;
             const endpoint = config.ENDPOINT || 'blog';
 
-            // 2. グローバルに残ったCONFIGオブジェクトの参照を即座に削除・消去
-            if (window.CONFIG) {
-                window.CONFIG = null;
-                delete window.CONFIG;
+            // 2. windowオブジェクトから設定を完全に消去
+            window.CONFIG = undefined;
+            delete window.CONFIG;
+
+            // 3. HTML上の <script src="config.js"> タグ自体を完全にDOMから削除
+            const configScript = document.querySelector('script[src="config.js"]');
+            if (configScript) {
+                configScript.remove();
             }
 
             if (!domain || !apiKey) {
                 showCardMessage(`
                     <p style="color:#e74c3c; margin:0;">
-                        <i class="fas fa-exclamation-triangle"></i> 設定ファイル（config.js）が見つからないか、値が設定されていません。
+                        <i class="fas fa-exclamation-triangle"></i> 設定が読み込めませんでした。
                     </p>
                 `);
                 return;
             }
 
-            // 3. APIリクエストを送信
+            // 4. microCMSからデータをフェッチ
             const response = await fetch(`https://${domain}.microcms.io/api/v1/${endpoint}?orders=-publishedAt`, {
                 headers: {
                     'X-MICROCMS-API-KEY': apiKey
@@ -282,7 +286,7 @@
             showCardMessage(`
                 <p style="color:#e74c3c; margin:0; line-height: 1.8;">
                     <i class="fas fa-exclamation-triangle"></i> ブログ記事の読み込みに失敗しました。<br>
-                    <span style="font-size:0.85em; color:#666;">※microCMSの設定（サービスドメイン・APIキー）を確認してください。</span>
+                    <span style="font-size:0.85em; color:#666;">※microCMSの設定を確認してください。</span>
                 </p>
             `);
         }
