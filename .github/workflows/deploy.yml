@@ -5,7 +5,7 @@ on:
     branches:
       - main # または master
 
-# リポジトリの権限設定
+# ★このパーミッション設定が必須です
 permissions:
   contents: read
   pages: write
@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ★ シークレットから config.js を自動生成するステップ
+      # シークレットから config.js を自動生成
       - name: Generate config.js from Secrets
         run: |
           echo "window.CONFIG = {" > config.js
