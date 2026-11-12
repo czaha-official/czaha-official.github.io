@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, under_maintenance ]
   schedule:
-    # 1時間ごとに定期実行し、終了時刻（schedule_end）が過ぎたら自動でmain送出に戻す
+    # 1時間ごとに定期実行（メンテナンス中のみ監視ループとして機能させる）
     - cron: '0 * * * *'
   workflow_dispatch:
 
@@ -39,7 +39,7 @@ jobs:
           
           echo "API Response: $RESPONSE"
           
-          # Extract schedule_end field (microCMS date format e.g., 2026-11-12T18:30)
+          # Extract schedule_end field
           SCHEDULE_END=$(echo "$RESPONSE" | jq -r '.schedule_end // empty')
           
           NOW_EPOCH=$(date +%s)
@@ -47,35 +47,44 @@ jobs:
 
           # If schedule_end is set, check if current time is before the end time
           if [ -n "$SCHEDULE_END" ] && [ "$SCHEDULE_END" != "null" ]; then
-            # Convert microCMS datetime format to epoch seconds safely
             END_EPOCH=$(date -d "$SCHEDULE_END" +%s 2>/dev/null || echo 0)
             if [ "$NOW_EPOCH" -lt "$END_EPOCH" ]; then
               ACTIVE=true
             fi
           fi
 
+          # 【最適化】平常時かつcron実行（pushや手動ではなく定期実行）の場合は、無駄なデプロイ処理をスキップしてトークンとビルドを節約
+          # ※手動実行（workflow_dispatch）やpushの時は強制的に処理を通す
+          TRIGGER_EVENT="${{ github.event_name }}"
+          
+          if [ "$ACTIVE" = "false" ] && [ "$TRIGGER_EVENT" = "schedule" ]; then
+            echo "✨ Normal state and triggered by schedule. Skipping deployment to save tokens."
+            echo "skip=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "skip=false" >> $GITHUB_OUTPUT
           if [ "$ACTIVE" = "true" ]; then
             echo "status=maintenance" >> $GITHUB_OUTPUT
-            echo "Maintenance period active based on schedule_end. Deploying under_maintenance branch content."
+            echo "Maintenance period active. Deploying under_maintenance branch content."
           else
             echo "status=normal" >> $GITHUB_OUTPUT
             echo "Maintenance inactive or expired. Deploying main branch content."
           fi
 
       - name: Select Target Branch Content
+        if: steps.check-maintenance.outputs.skip != 'true'
         run: |
           mkdir -p public
           if [ "${{ steps.check-maintenance.outputs.status }}" = "maintenance" ]; then
-            # Use files from under_maintenance branch without creating new branches
             cp -r repo-maintenance/* public/
           else
-            # Use files from main branch (normal site & separate blog API loader)
             cp -r repo-main/* public/
           fi
 
       - name: Deploy to Hosting / GitHub Pages
+        if: steps.check-maintenance.outputs.skip != 'true'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
-```[cite: 3]
