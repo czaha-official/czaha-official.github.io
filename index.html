@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title id="page-title">システムメンテナンス・お知らせ | C'zaha Chell Tia's Official Site</title>
-
+    <title id="page-title">システムメンテナンス実施のお知らせ | C'zaha Chell Tia's Official Site</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- セキュリティ対策: DOMPurify -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     <style>
         :root {
             --bg-color: #f8f9fa;
@@ -127,9 +129,9 @@
 
 <div class="container">
     <article class="maintenance-card">
-        <div id="category-badge" class="category-badge">お知らせ</div>
+        <div id="category-badge" class="category-badge">メンテナンス</div>
         <div id="maintenance-title" class="maintenance-title">
-            情報を読み込んでいます...
+            <i class="fas fa-spinner fa-spin"></i> 情報を読み込んでいます...
         </div>
         <div class="maintenance-body">
             日頃は本サイトおよび各種コンテンツをご利用いただき、誠にありがとうございます。<br><br>
@@ -168,31 +170,62 @@
     </div>
 </footer>
 
+<!-- 外部設定ファイル（ビルド時にのみシークレットから生成） -->
+<script src="config.js"></script>
+
 <script>
-    document.addEventListener('DOMContentLoaded', async () => {
+    (async function() {
+        const titleEl = document.getElementById('maintenance-title');
+        const badgeEl = document.getElementById('category-badge');
+        const scheduleEl = document.getElementById('maintenance-schedule');
+        const contentEl = document.getElementById('maintenance-content');
+        const pageTitleEl = document.getElementById('page-title');
+
         try {
-            const domain = window.CONFIG && window.CONFIG.SERVICE_DOMAIN ? window.CONFIG.SERVICE_DOMAIN : 'YOUR_MAINTENANCE_DOMAIN';
-            const apiKey = window.CONFIG && window.CONFIG.API_KEY ? window.CONFIG.API_KEY : 'YOUR_MAINTENANCE_API_KEY';
+            // 1. 設定値を安全にローカル変数へ退避
+            const config = window.CONFIG || {};
+            const domain = config.SERVICE_DOMAIN;
+            const apiKey = config.API_KEY;
+            const endpoint = config.ENDPOINT || 'maintenance-reg';
 
-            // maintenance-reg エンドポイントから取得
-            const res = await fetch(`https://${domain}.microcms.io/api/v1/maintenance-reg`, {
-                headers: { 'X-MICROCMS-API-KEY': apiKey }
+            // 2. windowオブジェクトから設定を完全に消去
+            window.CONFIG = undefined;
+            delete window.CONFIG;
+
+            // 3. HTML上の <script src="config.js"> タグ自体を完全にDOMから削除
+            const configScript = document.querySelector('script[src="config.js"]');
+            if (configScript) {
+                configScript.remove();
+            }
+
+            if (!domain || !apiKey) {
+                throw new Error('Config missing');
+            }
+
+            // 4. microCMSからデータをフェッチ
+            const response = await fetch(`https://${domain}.microcms.io/api/v1/${endpoint}`, {
+                headers: {
+                    'MAINTENANCE_API_KEY': apiKey
+                }
             });
-            
-            if (!res.ok) throw new Error();
-            const data = await res.json();
-            
+
+            if (!response.ok) throw new Error('APIの取得に失敗しました');
+
+            const data = await response.json();
+
             if (data) {
+                // カテゴリ
                 if (data.category) {
-                    document.getElementById('category-badge').textContent = data.category;
+                    badgeEl.textContent = data.category;
                 }
 
+                // タイトル
                 if (data.title) {
-                    document.getElementById('maintenance-title').textContent = data.title;
-                    document.getElementById('page-title').textContent = `${data.title} | C'zaha Chell Tia's Official Site`;
+                    titleEl.textContent = data.title;
+                    pageTitleEl.textContent = `${data.title} | C'zaha Chell Tia's Official Site`;
                 }
 
-                const scheduleEl = document.getElementById('maintenance-schedule');
+                // 日時フォーマット処理
                 const formatDate = (isoString) => {
                     if (!isoString) return '';
                     const date = new Date(isoString);
@@ -213,22 +246,19 @@
                 
                 scheduleEl.textContent = `${startTimeStr} 〜 ${endTimeStr}`;
 
+                // 本文（リッチエディタ等）
                 if (data.content) {
-                    document.getElementById('maintenance-content').innerHTML = data.content;
+                    contentEl.innerHTML = DOMPurify.sanitize(data.content);
                 }
             }
         } catch (error) {
-            document.getElementById('category-badge').textContent = 'メンテナンス';
-            document.getElementById('maintenance-title').textContent = 'システムメンテナンス作業について';
-            document.getElementById('maintenance-schedule').textContent = '随時 〜 未定';
-            document.getElementById('maintenance-content').innerHTML = '現在システムメンテナンスを実施しております。';
-        } finally {
-            if (window.CONFIG) {
-                delete window.CONFIG.API_KEY;
-                window.CONFIG = {};
-            }
+            // フォールバック表示
+            badgeEl.textContent = 'メンテナンス';
+            titleEl.textContent = 'システムメンテナンス作業について';
+            scheduleEl.textContent = '随時 〜 未定';
+            contentEl.innerHTML = DOMPurify.sanitize('現在システムメンテナンスを実施しております。');
         }
-    });
+    })();
 </script>
 
 </body>
