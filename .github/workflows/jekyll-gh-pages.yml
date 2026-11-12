@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
       - name: Checkout main branch
         uses: actions/checkout@v4
@@ -58,17 +59,17 @@ jobs:
 
           if [ "$ACTIVE" = "true" ]; then
             echo "status=maintenance" >> $GITHUB_OUTPUT
-            echo "Maintenance period active. Deploying under_maintenance branch."
+            echo "🚨 Maintenance period active. Deploying under_maintenance branch content."
           else
             echo "status=normal" >> $GITHUB_OUTPUT
-            echo "Maintenance inactive or expired. Deploying main branch."
+            echo "✨ Maintenance inactive or expired. Deploying main branch content."
           fi
 
       - name: Select Target Branch Content
         run: |
           mkdir -p public
           if [ "${{ steps.check-maintenance.outputs.status }}" = "maintenance" ]; then
-            # Use files from under_maintenance branch
+            # Use files from under_maintenance branch without creating new branches
             cp -r repo-maintenance/* public/
           else
             # Use files from main branch (normal site & blog API loader)
