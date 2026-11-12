@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title id="page-title">システムメンテナンス実施のお知らせ | C'zaha Chell Tia's Official Site</title>
+    <title id="page-title">システムメンテナンス・お知らせ | C'zaha Chell Tia's Official Site</title>
 
     <style>
         :root {
@@ -122,18 +122,18 @@
 
 <header>
     <h1>System Maintenance & Notice</h1>
-    <p id="header-subtitle">システムメンテナンス・お知らせ</p>
+    <p>システムメンテナンス・お知らせ</p>
 </header>
 
 <div class="container">
     <article class="maintenance-card">
-        <div id="category-badge" class="category-badge">メンテナンス</div>
+        <div id="category-badge" class="category-badge">お知らせ</div>
         <div id="maintenance-title" class="maintenance-title">
             情報を読み込んでいます...
         </div>
         <div class="maintenance-body">
             日頃は本サイトおよび各種コンテンツをご利用いただき、誠にありがとうございます。<br><br>
-            現在、以下の内容に関するお知らせおよびシステムメンテナンスを実施しております。
+            現在、以下の内容に関するお知らせおよびメンテナンスを実施しております。
 
             <div class="section-subheading">■ 対象期間・日時</div>
             <div id="maintenance-schedule" style="font-weight: bold; color: var(--text-main);">
@@ -174,7 +174,8 @@
             const domain = window.CONFIG && window.CONFIG.SERVICE_DOMAIN ? window.CONFIG.SERVICE_DOMAIN : 'YOUR_MAINTENANCE_DOMAIN';
             const apiKey = window.CONFIG && window.CONFIG.API_KEY ? window.CONFIG.API_KEY : 'YOUR_MAINTENANCE_API_KEY';
 
-            const res = await fetch(`https://${domain}.microcms.io/api/v1/maintenance`, {
+            // maintenance-reg エンドポイントから取得
+            const res = await fetch(`https://${domain}.microcms.io/api/v1/maintenance-reg`, {
                 headers: { 'X-MICROCMS-API-KEY': apiKey }
             });
             
@@ -182,18 +183,15 @@
             const data = await res.json();
             
             if (data) {
-                // カテゴリ（category）の反映
                 if (data.category) {
                     document.getElementById('category-badge').textContent = data.category;
                 }
 
-                // タイトル反映
                 if (data.title) {
                     document.getElementById('maintenance-title').textContent = data.title;
                     document.getElementById('page-title').textContent = `${data.title} | C'zaha Chell Tia's Official Site`;
                 }
 
-                // 日時フォーマット処理
                 const scheduleEl = document.getElementById('maintenance-schedule');
                 const formatDate = (isoString) => {
                     if (!isoString) return '';
@@ -215,13 +213,11 @@
                 
                 scheduleEl.textContent = `${startTimeStr} 〜 ${endTimeStr}`;
 
-                // 本文反映
                 if (data.content) {
                     document.getElementById('maintenance-content').innerHTML = data.content;
                 }
             }
         } catch (error) {
-            // フォールバック
             document.getElementById('category-badge').textContent = 'メンテナンス';
             document.getElementById('maintenance-title').textContent = 'システムメンテナンス作業について';
             document.getElementById('maintenance-schedule').textContent = '随時 〜 未定';
