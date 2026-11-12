@@ -27,30 +27,27 @@ jobs:
           ref: under_maintenance
           path: repo-maintenance
 
-      - name: Check Maintenance Status & schedule_end via microCMS
+      - name: Check Maintenance Schedule via microCMS
         id: check-maintenance
         env:
-          SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
-          API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+          MAINTENANCE_SERVICE_DOMAIN: ${{ secrets.MAINTENANCE_SERVICE_DOMAIN }}
+          MAINTENANCE_API_KEY: ${{ secrets.MAINTENANCE_API_KEY }}
         run: |
-          # Fetch data from microCMS object API
-          RESPONSE=$(curl -s "https://${SERVICE_DOMAIN}.microcms.io/api/v1/maintenance" \
-            -H "X-MICROCMS-API-KEY: ${API_KEY}")
+          # Fetch data from the maintenance management API
+          RESPONSE=$(curl -s "https://${MAINTENANCE_SERVICE_DOMAIN}.microcms.io/api/v1/maintenance" \
+            -H "X-MICROCMS-API-KEY: ${MAINTENANCE_API_KEY}")
           
           echo "API Response: $RESPONSE"
           
-          # Extract schedule_end and isMaintenance flag
+          # Extract schedule_end field (microCMS date format e.g., 2026-11-12T18:30)
           SCHEDULE_END=$(echo "$RESPONSE" | jq -r '.schedule_end // empty')
-          IS_MAINTENANCE_FLAG=$(echo "$RESPONSE" | jq -r '.isMaintenance // false')
           
           NOW_EPOCH=$(date +%s)
           ACTIVE=false
 
-          # Check 1: Explicit maintenance flag is true
-          if [ "$IS_MAINTENANCE_FLAG" = "true" ]; then
-            ACTIVE=true
-          # Check 2: schedule_end is set and current time is before the end time
-          elif [ -n "$SCHEDULE_END" ] && [ "$SCHEDULE_END" != "null" ]; then
+          # If schedule_end is set, check if current time is before the end time
+          if [ -n "$SCHEDULE_END" ] && [ "$SCHEDULE_END" != "null" ]; then
+            # Convert microCMS datetime format to epoch seconds safely
             END_EPOCH=$(date -d "$SCHEDULE_END" +%s 2>/dev/null || echo 0)
             if [ "$NOW_EPOCH" -lt "$END_EPOCH" ]; then
               ACTIVE=true
@@ -59,10 +56,10 @@ jobs:
 
           if [ "$ACTIVE" = "true" ]; then
             echo "status=maintenance" >> $GITHUB_OUTPUT
-            echo "🚨 Maintenance period active. Deploying under_maintenance branch content."
+            echo "Maintenance period active based on schedule_end. Deploying under_maintenance branch content."
           else
             echo "status=normal" >> $GITHUB_OUTPUT
-            echo "✨ Maintenance inactive or expired. Deploying main branch content."
+            echo "Maintenance inactive or expired. Deploying main branch content."
           fi
 
       - name: Select Target Branch Content
@@ -72,7 +69,7 @@ jobs:
             # Use files from under_maintenance branch without creating new branches
             cp -r repo-maintenance/* public/
           else
-            # Use files from main branch (normal site & blog API loader)
+            # Use files from main branch (normal site & separate blog API loader)
             cp -r repo-main/* public/
           fi
 
@@ -81,3 +78,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
+```[cite: 3]
