@@ -1,63 +1,80 @@
-# Sample workflow for building and deploying a Jekyll site to GitHub Pages
-name: Deploy Jekyll with GitHub Pages dependencies preinstalled
+name: Auto Deploy Switcher
 
 on:
-  # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches: [ main, under_maintenance ]
+  schedule:
+    # 1時間ごとに定期実行し、終了時刻（schedule_end）が過ぎたら自動でmain送出に戻す
+    - cron: '0 * * * *'
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
-  # Build job
-  build:
+  switch-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout main branch
         uses: actions/checkout@v4
-
-      # ★ シークレットから安全に config.js を自動生成するステップ
-      - name: Generate config.js from Secrets
-        run: |
-          echo "window.CONFIG = {" > config.js
-          echo "    SERVICE_DOMAIN: '${{ secrets.MICROCMS_SERVICE_DOMAIN }}'," >> config.js
-          echo "    API_KEY: '${{ secrets.MICROCMS_API_KEY }}'," >> config.js
-          echo "    ENDPOINT: '${{ secrets.MICROCMS_ENDPOINT }}'" >> config.js
-          echo "};" >> config.js
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
         with:
-          source: ./
-          destination: ./_site
-          
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+          ref: main
+          path: repo-main
 
-  # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+      - name: Checkout under_maintenance branch
+        uses: actions/checkout@v4
+        with:
+          ref: under_maintenance
+          path: repo-maintenance
+
+      - name: Check Maintenance Status & schedule_end via microCMS
+        id: check-maintenance
+        env:
+          SERVICE_DOMAIN: ${{ secrets.MICROCMS_SERVICE_DOMAIN }}
+          API_KEY: ${{ secrets.MICROCMS_API_KEY }}
+        run: |
+          # Fetch data from microCMS object API
+          RESPONSE=$(curl -s "https://${SERVICE_DOMAIN}.microcms.io/api/v1/maintenance" \
+            -H "X-MICROCMS-API-KEY: ${API_KEY}")
+          
+          echo "API Response: $RESPONSE"
+          
+          # Extract schedule_end and isMaintenance flag
+          SCHEDULE_END=$(echo "$RESPONSE" | jq -r '.schedule_end // empty')
+          IS_MAINTENANCE_FLAG=$(echo "$RESPONSE" | jq -r '.isMaintenance // false')
+          
+          NOW_EPOCH=$(date +%s)
+          ACTIVE=false
+
+          # Check 1: Explicit maintenance flag is true
+          if [ "$IS_MAINTENANCE_FLAG" = "true" ]; then
+            ACTIVE=true
+          # Check 2: schedule_end is set and current time is before the end time
+          elif [ -n "$SCHEDULE_END" ] && [ "$SCHEDULE_END" != "null" ]; then
+            END_EPOCH=$(date -d "$SCHEDULE_END" +%s 2>/dev/null || echo 0)
+            if [ "$NOW_EPOCH" -lt "$END_EPOCH" ]; then
+              ACTIVE=true
+            fi
+          fi
+
+          if [ "$ACTIVE" = "true" ]; then
+            echo "status=maintenance" >> $GITHUB_OUTPUT
+            echo "Maintenance period active. Deploying under_maintenance branch."
+          else
+            echo "status=normal" >> $GITHUB_OUTPUT
+            echo "Maintenance inactive or expired. Deploying main branch."
+          fi
+
+      - name: Select Target Branch Content
+        run: |
+          mkdir -p public
+          if [ "${{ steps.check-maintenance.outputs.status }}" = "maintenance" ]; then
+            # Use files from under_maintenance branch
+            cp -r repo-maintenance/* public/
+          else
+            # Use files from main branch (normal site & blog API loader)
+            cp -r repo-main/* public/
+          fi
+
+      - name: Deploy to Hosting / GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
