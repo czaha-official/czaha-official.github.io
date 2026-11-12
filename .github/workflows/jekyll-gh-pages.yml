@@ -11,6 +11,8 @@ on:
 jobs:
   switch-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout main branch
         uses: actions/checkout@v4
