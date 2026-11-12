@@ -24,6 +24,8 @@
     <meta name="twitter:site" content="@czaha-official">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- セキュリティ対策: DOMPurify -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     
     <style>
         /* ----------------------------------
@@ -316,21 +318,52 @@
             bottom: 4px;
         }
 
-        /* 予定詳細ツールチップ用モダル/テキスト領域 */
+        /* 予定詳細表示領域 */
         .calendar-event-details {
-            margin-top: 12px;
-            padding: 10px 14px;
+            margin-top: 14px;
+            padding: 14px 16px;
             background: #fdf6f0;
             border-left: 4px solid #d35400;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            color: #d35400;
-            font-weight: bold;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            color: #333;
             display: none;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 10px;
+        }
+
+        .calendar-event-item {
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #e6cbb8;
+        }
+        .calendar-event-item:last-child {
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .calendar-event-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #d35400;
+            margin: 0 0 6px 0;
+        }
+
+        .calendar-event-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        .calendar-event-overview {
+            font-size: 0.85rem;
+            color: #444;
+            line-height: 1.5;
+        }
+        .calendar-event-overview p {
+            margin: 4px 0;
         }
 
         .calendar-detail-btn {
@@ -341,8 +374,10 @@
             color: #ffffff;
             text-decoration: none;
             font-size: 0.75rem;
-            padding: 4px 12px;
+            font-weight: bold;
+            padding: 5px 14px;
             border-radius: 50px;
+            margin-top: 6px;
             transition: background 0.2s, transform 0.1s;
         }
         .calendar-detail-btn:hover {
@@ -608,6 +643,9 @@
 
 <button id="back-to-top" title="Go to top"><i class="fas fa-chevron-up"></i></button>
 
+<!-- ビルド時にシークレットから自動生成される設定ファイル -->
+<script src="config.js"></script>
+
 <script>
     /* 画像フォールバック処理・年数取得 */
     const fallbackImages = [
@@ -631,16 +669,27 @@
         } catch { return null; }
     }
 
-    // --- イベント＆カレンダーデータ定義 ---
-    // title（イベント名）と url（詳細リンク ※不要な場合は省略可）を設定できます
-    const eventMap = {
-        '2026-12-02': {
-            title: '綾瀬市立綾瀬中学校吹奏楽部 第18回定期演奏会',
-            url: '' // ★詳細ページのURLがある場合はここに記入（空欄ならボタン非表示）
-        }
-    };
+    // 日時文字列（ISO形式）から日本の日付（YYYY-MM-DD）を取得するヘルパー
+    function formatJstDate(isoString) {
+        if (!isoString) return '';
+        const d = new Date(isoString);
+        if (isNaN(d.getTime())) return isoString.split('T')[0];
+        const jst = new Date(d.getTime() + (9 * 60 * 60 * 1000));
+        return jst.toISOString().split('T')[0];
+    }
 
-    let currentCalendarDate = new Date(2026, 11, 1); // 2026年12月を初期表示 (月は0始まりなので11=12月)
+    // 日時文字列（ISO形式）から日本の時刻（HH:MM）を取得するヘルパー
+    function formatJstTime(isoString) {
+        if (!isoString) return '';
+        const d = new Date(isoString);
+        if (isNaN(d.getTime())) return '';
+        const jst = new Date(d.getTime() + (9 * 60 * 60 * 1000));
+        return jst.toISOString().split('T')[1].substring(0, 5);
+    }
+
+    // --- イベント＆カレンダーデータ管理 ---
+    let eventMap = {};
+    let currentCalendarDate = new Date(); // 初期表示を現在の年月に設定
 
     function renderCalendar() {
         const year = currentCalendarDate.getFullYear();
@@ -656,37 +705,83 @@
         const prevLastDay = new Date(year, month, 0).getDate();
         
         const today = new Date();
-        const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;  // 前月のはみ出し日数分 for (let i = firstDayIndex; i > 0; i--) { const cell = document.createElement('div'); cell.className = 'calendar-cell other-month'; cell.textContent = prevLastDay - i + 1; gridEl.appendChild(cell); }  // 当月の日付 for (let i = 1; i <= lastDay; i++) { const cell = document.createElement('div'); cell.className = 'calendar-cell'; cell.textContent = i;  const monthStr = String(month + 1).padStart(2, '0'); const dayStr = String(i).padStart(2, '0'); const dateStr = `${year}-${monthStr}-${dayStr}`;
+        const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+        // 前月のはみ出し日数分
+        for (let i = firstDayIndex; i > 0; i--) {
+            const cell = document.createElement('div');
+            cell.className = 'calendar-cell other-month';
+            cell.textContent = prevLastDay - i + 1;
+            gridEl.appendChild(cell);
+        }
+
+        // 当月の日付
+        for (let i = 1; i <= lastDay; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'calendar-cell';
+            cell.textContent = i;
+
+            const monthStr = String(month + 1).padStart(2, '0');
+            const dayStr = String(i).padStart(2, '0');
+            const dateStr = `${year}-${monthStr}-${dayStr}`;
 
             if (dateStr === todayStr) {
                 cell.classList.add('today');
             }
 
-            const eventData = eventMap[dateStr];
-            if (eventData) {
-                const eventTitle = typeof eventData === 'string' ? eventData : eventData.title;
-                const eventUrl = typeof eventData === 'object' && eventData.url ? safeHttpUrl(eventData.url) : null;
-
+            const dayEvents = eventMap[dateStr];
+            if (dayEvents && dayEvents.length > 0) {
                 cell.classList.add('has-event');
-                cell.title = eventTitle;
+                cell.title = dayEvents.map(ev => ev.title).join(' / ');
                 cell.addEventListener('click', () => {
                     const detailsBox = document.getElementById('calendar-event-details');
                     detailsBox.replaceChildren();
                     detailsBox.style.display = 'flex';
 
-                    const textSpan = document.createElement('span');
-                    textSpan.textContent = `${dateStr} の予定: ${eventTitle}`;
-                    detailsBox.appendChild(textSpan);
+                    dayEvents.forEach(ev => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'calendar-event-item';
 
-                    if (eventUrl) {
-                        const detailLink = document.createElement('a');
-                        detailLink.href = eventUrl;
-                        detailLink.target = '_blank';
-                        detailLink.rel = 'noopener noreferrer';
-                        detailLink.className = 'calendar-detail-btn';
-                        detailLink.innerHTML = '詳細 <i class="fas fa-external-link-alt"></i>';
-                        detailsBox.appendChild(detailLink);
-                    }
+                        const titleEl = document.createElement('div');
+                        titleEl.className = 'calendar-event-title';
+                        titleEl.textContent = `${dateStr} : ${ev.title}`;
+                        itemDiv.appendChild(titleEl);
+
+                        // 開場・開演・場所メタ情報
+                        const metaParts = [];
+                        if (ev.openingTime) metaParts.push(`開場 ${ev.openingTime}`);
+                        if (ev.showTime) metaParts.push(`開演 ${ev.showTime}`);
+                        if (ev.place) metaParts.push(`場所: ${ev.place}`);
+
+                        if (metaParts.length > 0) {
+                            const metaEl = document.createElement('div');
+                            metaEl.className = 'calendar-event-meta';
+                            metaEl.textContent = metaParts.join('  |  ');
+                            itemDiv.appendChild(metaEl);
+                        }
+
+                        // 概要（リッチエディタ内容）
+                        if (ev.overview) {
+                            const overviewEl = document.createElement('div');
+                            overviewEl.className = 'calendar-event-overview';
+                            overviewEl.innerHTML = DOMPurify.sanitize(ev.overview);
+                            itemDiv.appendChild(overviewEl);
+                        }
+
+                        // 特設サイトリンク
+                        const safeUrl = ev.siteUrl ? safeHttpUrl(ev.siteUrl) : null;
+                        if (safeUrl) {
+                            const detailLink = document.createElement('a');
+                            detailLink.href = safeUrl;
+                            detailLink.target = '_blank';
+                            detailLink.rel = 'noopener noreferrer';
+                            detailLink.className = 'calendar-detail-btn';
+                            detailLink.innerHTML = '特設サイト・詳細 <i class="fas fa-external-link-alt"></i>';
+                            itemDiv.appendChild(detailLink);
+                        }
+
+                        detailsBox.appendChild(itemDiv);
+                    });
                 });
             }
 
@@ -702,6 +797,7 @@
             cell.textContent = i;
             gridEl.appendChild(cell);
         }
+    }
 
     document.getElementById('prev-month-btn').addEventListener('click', () => {
         currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
@@ -713,7 +809,64 @@
         renderCalendar();
     });
 
+    // 初期描画（データ取得前でも枠を表示）
     renderCalendar();
+
+    // --- microCMS イベント取得＆メモリ破棄処理 (IIFE) ---
+    (async function() {
+        const rawConfig = window.CONFIG || {};
+        const eventConfig = rawConfig.event || {};
+        const domain = eventConfig.SERVICE_DOMAIN;
+        const apiKey = eventConfig.API_KEY;
+        const endpoint = eventConfig.ENDPOINT || 'events';
+
+        // セキュリティ対策：取得後直ちにグローバル変数とscriptタグを破棄
+        window.CONFIG = undefined;
+        delete window.CONFIG;
+        const configScript = document.querySelector('script[src="config.js"]');
+        if (configScript) {
+            configScript.remove();
+        }
+
+        if (!domain || !apiKey) return;
+
+        try {
+            const response = await fetch(`https://${domain}.microcms.io/api/v1/${endpoint}?limit=100`, {
+                headers: {
+                    'X-MICROCMS-API-KEY': apiKey
+                }
+            });
+
+            if (!response.ok) throw new Error('イベントデータの取得に失敗しました');
+
+            const data = await response.json();
+            const contents = data.contents || [];
+
+            const mappedEvents = {};
+            contents.forEach(item => {
+                const dateStr = formatJstDate(item.date);
+                if (!dateStr) return;
+
+                if (!mappedEvents[dateStr]) {
+                    mappedEvents[dateStr] = [];
+                }
+
+                mappedEvents[dateStr].push({
+                    title: item.name || item.title || 'イベント',
+                    openingTime: formatJstTime(item.opening_time),
+                    showTime: formatJstTime(item.show_time),
+                    place: item.place || '',
+                    overview: item.overview || '',
+                    siteUrl: item.site_url || ''
+                });
+            });
+
+            eventMap = mappedEvents;
+            renderCalendar();
+        } catch (err) {
+            console.error('Event Calendar Error:', err);
+        }
+    })();
 
     document.addEventListener('DOMContentLoaded', async () => {
         // --- お知らせ処理 (news-data.txt) ---
