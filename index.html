@@ -27,7 +27,7 @@
     
     <style>
         /* ----------------------------------
-            1. 変数定義・基本設定
+           1. 変数定義・基本設定
         ---------------------------------- */
         :root {
             --primary-color: #2c3e50;
@@ -56,7 +56,7 @@
         }
 
         /* ----------------------------------
-            2. ヘッダー & ナビゲーション
+           2. ヘッダー & ナビゲーション
         ---------------------------------- */
         nav.top-nav {
             background: rgba(255, 255, 255, 0.95);
@@ -91,7 +91,7 @@
         }
 
         /* ----------------------------------
-            3. レイアウトコンテナ
+           3. レイアウトコンテナ
         ---------------------------------- */
         .container {
             max-width: 1100px;
@@ -109,7 +109,7 @@
         }
 
         /* ----------------------------------
-            4. プロフィールカード
+           4. プロフィールカード
         ---------------------------------- */
         .profile-card {
             background: var(--white);
@@ -135,7 +135,7 @@
         }
 
         /* ----------------------------------
-            5. ニュース & 緊急お知らせ
+           5. ニュース & 緊急お知らせ
         ---------------------------------- */
         .urgent-card {
             background: #fdf2f2;
@@ -202,7 +202,7 @@
         .news-more-link a:hover { text-decoration: underline; }
 
         /* ----------------------------------
-            6. イベントカレンダーセクション（カレンダーらしいグリッド形式）
+           6. イベントカレンダーセクション（カレンダーらしいグリッド形式）
         ---------------------------------- */
         .calendar-section {
             background: var(--white);
@@ -319,7 +319,7 @@
         /* 予定詳細ツールチップ用モダル/テキスト領域 */
         .calendar-event-details {
             margin-top: 12px;
-            padding: 10px 12px;
+            padding: 10px 14px;
             background: #fdf6f0;
             border-left: 4px solid #d35400;
             border-radius: 6px;
@@ -327,10 +327,31 @@
             color: #d35400;
             font-weight: bold;
             display: none;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .calendar-detail-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #d35400;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 50px;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .calendar-detail-btn:hover {
+            background: #b84700;
+            transform: translateY(-1px);
         }
 
         /* ----------------------------------
-            7. ユニット（共通カード）化スタイル
+           7. ユニット（共通カード）化スタイル
         ---------------------------------- */
         .card {
             background: var(--white);
@@ -352,31 +373,30 @@
         .card-tag { display: inline-block; font-size: 0.65rem; font-weight: bold; padding: 2px 8px; border-radius: 50px; background: #edf2f7; color: var(--accent-color); }
 
         /* ----------------------------------
-            8. 共通ボタンユニット
+           8. 共通ボタンユニット
         ---------------------------------- */
         .button-group { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
 
-.btn, .link-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.75rem;
-    padding: 6px 12px;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s;
-    border: 1px solid #ddd;
-    color: var(--text-color);
-}
-.btn-disabled { background-color: #bdc3c7 !important; color: #7f8c8d !important; border-color: #bdc3c7 !important; cursor: not-allowed !important; pointer-events: none; }
-.link-btn:hover, .btn:hover { background: #f8f9fa; transform: translateY(-2px); }
-.link-btn.btn-x:hover { background: var(--x-color); color: white; border-color: var(--x-color); }
-.link-btn.btn-github:hover { background: var(--github-color); color: white; border-color: var(--github-color); }
-.link-btn.btn-discord:hover, .btn-discord:hover { background: var(--discord-color); color: white; border-color: var(--discord-color); }
-/* ↓ ブログボタン用のホバー設定を追加 */
-.link-btn.btn-blog:hover { background: var(--accent-color); color: white; border-color: var(--accent-color); }
-.link-btn.btn-primary, .btn-primary { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .btn, .link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 1px solid #ddd;
+            color: var(--text-color);
+        }
+        .btn-disabled { background-color: #bdc3c7 !important; color: #7f8c8d !important; border-color: #bdc3c7 !important; cursor: not-allowed !important; pointer-events: none; }
+        .link-btn:hover, .btn:hover { background: #f8f9fa; transform: translateY(-2px); }
+        .link-btn.btn-x:hover { background: var(--x-color); color: white; border-color: var(--x-color); }
+        .link-btn.btn-github:hover { background: var(--github-color); color: white; border-color: var(--github-color); }
+        .link-btn.btn-discord:hover, .btn-discord:hover { background: var(--discord-color); color: white; border-color: var(--discord-color); }
+        .link-btn.btn-blog:hover { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .link-btn.btn-primary, .btn-primary { background: var(--accent-color); color: white; border-color: var(--accent-color); }
 
         /* 特設イベント用：タイマースタイル */
         .countdown-container {
@@ -397,7 +417,7 @@
         .countdown-unit { font-size: 0.7rem; color: #7f8c8d; margin-right: 2px; }
 
         /* ----------------------------------
-            9. フッター & トップへ戻るボタン
+           9. フッター & トップへ戻るボタン
         ---------------------------------- */
         footer { background: var(--primary-color); color: rgba(255,255,255,0.7); text-align: center; padding: 2.5rem 1rem; margin-top: 3rem; font-size: 0.8rem; }
         footer p { margin: 0.4rem 0; }
@@ -612,9 +632,12 @@
     }
 
     // --- イベント＆カレンダーデータ定義 ---
-    // ここにイベントの日付と内容を登録します（2026-12-02に定期演奏会を設定）
+    // title（イベント名）と url（詳細リンク ※不要な場合は省略可）を設定できます
     const eventMap = {
-        '2026-12-02': '綾瀬市立綾瀬中学校吹奏楽部 第18回定期演奏会'
+        '2026-12-02': {
+            title: '綾瀬市立綾瀬中学校吹奏楽部 第18回定期演奏会',
+            url: '' // ★詳細ページのURLがある場合はここに記入（空欄ならボタン非表示）
+        }
     };
 
     let currentCalendarDate = new Date(2026, 11, 1); // 2026年12月を初期表示 (月は0始まりなので11=12月)
@@ -633,37 +656,37 @@
         const prevLastDay = new Date(year, month, 0).getDate();
         
         const today = new Date();
-        const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-
-        // 前月のはみ出し日数分
-        for (let i = firstDayIndex; i > 0; i--) {
-            const cell = document.createElement('div');
-            cell.className = 'calendar-cell other-month';
-            cell.textContent = prevLastDay - i + 1;
-            gridEl.appendChild(cell);
-        }
-
-        // 当月の日付
-        for (let i = 1; i <= lastDay; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'calendar-cell';
-            cell.textContent = i;
-
-            const monthStr = String(month + 1).padStart(2, '0');
-            const dayStr = String(i).padStart(2, '0');
-            const dateStr = `${year}-${monthStr}-${dayStr}`;
+        const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;  // 前月のはみ出し日数分 for (let i = firstDayIndex; i > 0; i--) { const cell = document.createElement('div'); cell.className = 'calendar-cell other-month'; cell.textContent = prevLastDay - i + 1; gridEl.appendChild(cell); }  // 当月の日付 for (let i = 1; i <= lastDay; i++) { const cell = document.createElement('div'); cell.className = 'calendar-cell'; cell.textContent = i;  const monthStr = String(month + 1).padStart(2, '0'); const dayStr = String(i).padStart(2, '0'); const dateStr = `${year}-${monthStr}-${dayStr}`;
 
             if (dateStr === todayStr) {
                 cell.classList.add('today');
             }
 
-            if (eventMap[dateStr]) {
+            const eventData = eventMap[dateStr];
+            if (eventData) {
+                const eventTitle = typeof eventData === 'string' ? eventData : eventData.title;
+                const eventUrl = typeof eventData === 'object' && eventData.url ? safeHttpUrl(eventData.url) : null;
+
                 cell.classList.add('has-event');
-                cell.title = eventMap[dateStr];
+                cell.title = eventTitle;
                 cell.addEventListener('click', () => {
                     const detailsBox = document.getElementById('calendar-event-details');
-                    detailsBox.style.display = 'block';
-                    detailsBox.textContent = `${dateStr} の予定: ${eventMap[dateStr]}`;
+                    detailsBox.replaceChildren();
+                    detailsBox.style.display = 'flex';
+
+                    const textSpan = document.createElement('span');
+                    textSpan.textContent = `${dateStr} の予定: ${eventTitle}`;
+                    detailsBox.appendChild(textSpan);
+
+                    if (eventUrl) {
+                        const detailLink = document.createElement('a');
+                        detailLink.href = eventUrl;
+                        detailLink.target = '_blank';
+                        detailLink.rel = 'noopener noreferrer';
+                        detailLink.className = 'calendar-detail-btn';
+                        detailLink.innerHTML = '詳細 <i class="fas fa-external-link-alt"></i>';
+                        detailsBox.appendChild(detailLink);
+                    }
                 });
             }
 
@@ -679,7 +702,6 @@
             cell.textContent = i;
             gridEl.appendChild(cell);
         }
-    }
 
     document.getElementById('prev-month-btn').addEventListener('click', () => {
         currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
@@ -742,8 +764,7 @@
                             <span class="${isUrgent ? 'urgent-badge' : 'important-badge'}">${isUrgent ? '緊急' : '重要'}</span>
                             <span style="font-size:0.8rem; color:#666; font-weight:bold;">${topU.date}</span>
                         </div>
-                        <h3 style="margin:0 0 6px; font-size:1.05rem; color:${isUrgent ? '#78281f' : '#7e5109'};">${topU.title}</h3>
-                        ${topU.body ? `<p style="margin:0; font-size:0.85rem; color:#444;">${topU.body}</p>` : ''}
+                        <h3 style="margin:0 0 6px; font-size:1.05rem; color:${isUrgent ? '#78281f' : '#7e5109'};">${topU.title}</h3>${topU.body ? `<p style="margin:0; font-size:0.85rem; color:#444;">${topU.body}</p>` : ''}
                         ${topU.link ? `<div style="margin-top:8px;"><a href="${safeHttpUrl(topU.link)}" target="_blank" rel="noopener noreferrer" style="color:${isUrgent ? '#e74c3c' : '#e67e22'}; font-size:0.8rem; font-weight:bold;">詳細を確認 →</a></div>` : ''}
                     </div>
                 `;

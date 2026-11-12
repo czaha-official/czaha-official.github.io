@@ -1,3 +1,9 @@
+[DATE] 2026-11-11
+[CATEGORY] info
+[TITLE] ブログを更新しました
+[BODY]
+---
+
 [DATE] 2026-10-17
 [CATEGORY] info
 [TITLE] Japaniture Mod 10,000DL突破！
