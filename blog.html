@@ -182,7 +182,7 @@
         });
     }
 
-    // ★ IIFE（即時実行関数）とDOM削除による厳格なメモリ・証拠隠滅設計
+// ★ IIFE（即時実行関数）とDOM削除による厳格なメモリ・証拠隠滅設計
     (async function() {
         const blogContainer = document.getElementById('blog-container');
         const categoryList = document.getElementById('category-list');
@@ -196,11 +196,12 @@
         };
 
         try {
-            // 1. 設定値を安全にローカル変数へ退避
-            const config = window.CONFIG || {};
-            const domain = config.SERVICE_DOMAIN;
-            const apiKey = config.API_KEY;
-            const endpoint = config.ENDPOINT || 'blog';
+            // 1. ネストされた構造（window.CONFIG.blog）から設定値を安全にローカル変数へ退避
+            const rawConfig = window.CONFIG || {};
+            const blogConfig = rawConfig.blog || {}; // ブログ用設定を取得
+            const domain = blogConfig.SERVICE_DOMAIN;
+            const apiKey = blogConfig.API_KEY;
+            const endpoint = blogConfig.ENDPOINT || 'blogs'; // microCMSのブログ用エンドポイント名
 
             // 2. windowオブジェクトから設定を完全に消去
             window.CONFIG = undefined;
