@@ -69,10 +69,14 @@ jobs:
           ref: ${{ steps.check-maintenance.outputs.status == 'maintenance' && 'under_maintenance' || 'main' }}
 
       # ★ モード（メンテナンス or 通常）に応じて config.js を完全に分離して生成
+     # ★ 構造を変えず、EVENT_SYS_* シークレットを追加して config.js を生成
       - name: Generate config.js from Secrets
         if: steps.check-maintenance.outputs.skip != 'true'
         env:
           STATUS: ${{ steps.check-maintenance.outputs.status }}
+          EVENT_SERVICE_DOMAIN: ${{ secrets.EVENT_SYS_SERVICE_DOMAIN }}
+          EVENT_API_KEY: ${{ secrets.EVENT_SYS_API_KEY }}
+          EVENT_ENDPOINT: ${{ secrets.EVENT_SYS_ENDPOINT }}
         run: |
           if [ "$STATUS" = "maintenance" ]; then
             echo "Generating config for Maintenance Mode..."
@@ -82,14 +86,20 @@ jobs:
             echo "    ENDPOINT: '${{ secrets.MAINTENANCE_MAINTENANCE_ENDPOINT }}'" >> config.js
             echo "};" >> config.js
           else
-            echo "Generating config for Normal Mode (Blog)..."
+            echo "Generating config for Normal Mode (Blog & Events)..."
             echo "window.CONFIG = {" > config.js
-            echo "    SERVICE_DOMAIN: '${{ secrets.MICROCMS_SERVICE_DOMAIN }}'," >> config.js
-            echo "    API_KEY: '${{ secrets.MICROCMS_API_KEY }}'," >> config.js
-            echo "    ENDPOINT: '${{ secrets.MICROCMS_ENDPOINT }}'" >> config.js
+            echo "    blog: {" >> config.js
+            echo "        SERVICE_DOMAIN: '${{ secrets.MICROCMS_SERVICE_DOMAIN }}'," >> config.js
+            echo "        API_KEY: '${{ secrets.MICROCMS_API_KEY }}'," >> config.js
+            echo "        ENDPOINT: '${{ secrets.MICROCMS_ENDPOINT }}'" >> config.js
+            echo "    }," >> config.js
+            echo "    event: {" >> config.js
+            echo "        SERVICE_DOMAIN: '$EVENT_SERVICE_DOMAIN'," >> config.js
+            echo "        API_KEY: '$EVENT_API_KEY'," >> config.js
+            echo "        ENDPOINT: '$EVENT_ENDPOINT'" >> config.js
+            echo "    }" >> config.js
             echo "};" >> config.js
           fi
-
       - name: Setup Pages
         if: steps.check-maintenance.outputs.skip != 'true'
         uses: actions/configure-pages@v5
