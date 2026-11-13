@@ -43,10 +43,10 @@
             --yt-color: #FF0000;
             --discord-color: #5865F2;
 
-            /* カレンダーの大きさ調整用変数（ここを変更するだけで全体を小さく・大きく調整可能） */
-            --cal-cell-size: 32px;
-            --cal-font-size: 0.78rem;
-            --cal-padding: 12px;
+            /* カレンダーの大きさ調整用変数 */
+            --cal-cell-size: 30px;
+            --cal-font-size: 0.75rem;
+            --cal-padding: 15px;
         }
 
         body {
@@ -142,8 +142,16 @@
         }
 
         /* ----------------------------------
-           5. ニュース & 緊急お知らせ
+           5. ニュース & カレンダーの2カラム配置エリア
         ---------------------------------- */
+        .info-calendar-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            align-items: start;
+        }
+
         .urgent-card {
             background: #fdf2f2;
             border-left: 5px solid #e74c3c;
@@ -176,12 +184,15 @@
             background: var(--white);
             border-radius: 12px;
             padding: 18px 20px;
-            margin-bottom: 2rem;
             box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .top-news-section h2 {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             margin: 0 0 12px 0;
             color: var(--primary-color);
             display: flex;
@@ -190,7 +201,7 @@
         }
 
         .news-item-summary {
-            padding: 10px 0;
+            padding: 8px 0;
             border-bottom: 1px solid #f0f2f5;
         }
         .news-item-summary:last-child { border-bottom: none; }
@@ -199,27 +210,26 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
-        .news-date { font-size: 0.8rem; color: #7f8c8d; }
-        .news-title-text { font-size: 0.92rem; font-weight: bold; color: var(--primary-color); margin: 0; }
+        .news-date { font-size: 0.78rem; color: #7f8c8d; }
+        .news-title-text { font-size: 0.9rem; font-weight: bold; color: var(--primary-color); margin: 0; }
         
         .news-more-link { text-align: right; margin-top: 10px; }
-        .news-more-link a { color: var(--accent-color); text-decoration: none; font-size: 0.85rem; font-weight: bold; }
+        .news-more-link a { color: var(--accent-color); text-decoration: none; font-size: 0.82rem; font-weight: bold; }
         .news-more-link a:hover { text-decoration: underline; }
 
         /* ----------------------------------
-           6. イベントカレンダーセクション（コンパクト＆サイズ調整可能）
+           6. イベントカレンダーセクション（半分サイズ対応）
         ---------------------------------- */
         .calendar-section {
             background: var(--white);
             border-radius: 12px;
             padding: var(--cal-padding);
-            margin-bottom: 2rem;
             box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-            max-width: 500px; /* カレンダーをコンパクトに収める幅制限 */
-            margin-left: auto;
-            margin-right: auto;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .calendar-header {
@@ -230,7 +240,7 @@
         }
 
         .calendar-header h2 {
-            font-size: 1rem;
+            font-size: 1.1rem;
             margin: 0;
             color: var(--primary-color);
             display: flex;
@@ -254,29 +264,29 @@
             align-items: center;
             justify-content: center;
             color: var(--primary-color);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             transition: background 0.2s;
         }
         .calendar-nav-btn:hover { background: #e2e8f0; }
 
         .calendar-month-title {
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: var(--primary-color);
         }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 3px;
+            gap: 2px;
             text-align: center;
         }
 
         .calendar-day-header {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             font-weight: bold;
             color: #7f8c8d;
-            padding: 4px 0;
+            padding: 3px 0;
         }
         .calendar-day-header:nth-child(1) { color: #e74c3c; } /* 日曜 */
         .calendar-day-header:nth-child(7) { color: #3498db; } /* 土曜 */
@@ -288,7 +298,7 @@
             align-items: center;
             justify-content: center;
             font-size: var(--cal-font-size);
-            border-radius: 6px;
+            border-radius: 5px;
             background: #fafbfc;
             color: #333;
             position: relative;
@@ -324,25 +334,25 @@
             background-color: #d35400;
             border-radius: 50%;
             position: absolute;
-            bottom: 3px;
+            bottom: 2px;
         }
 
         /* 予定詳細表示領域 */
         .calendar-event-details {
             margin-top: 10px;
-            padding: 10px 12px;
+            padding: 8px 10px;
             background: #fdf6f0;
             border-left: 3px solid #d35400;
             border-radius: 6px;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             color: #333;
             display: none;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .calendar-event-item {
-            padding-bottom: 8px;
+            padding-bottom: 6px;
             border-bottom: 1px dashed #e6cbb8;
         }
         .calendar-event-item:last-child {
@@ -351,23 +361,23 @@
         }
 
         .calendar-event-title {
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             font-weight: bold;
             color: #d35400;
-            margin: 0 0 4px 0;
+            margin: 0 0 3px 0;
         }
 
         .calendar-event-meta {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            font-size: 0.75rem;
+            gap: 8px;
+            font-size: 0.72rem;
             color: #666;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
         .calendar-event-overview {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: #444;
             line-height: 1.4;
         }
@@ -382,9 +392,9 @@
             background: #d35400;
             color: #ffffff;
             text-decoration: none;
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             font-weight: bold;
-            padding: 4px 10px;
+            padding: 3px 8px;
             border-radius: 50px;
             margin-top: 4px;
             transition: background 0.2s, transform 0.1s;
@@ -464,6 +474,8 @@
             .profile-card { flex-direction: column; align-items: center; text-align: center; padding: 1.5rem; gap: 15px; }
             .profile-thumb { width: 120px; height: 120px; }
             .button-group { justify-content: center; }
+            /* スマホなど狭い画面では縦並びに自動切り替え */
+            .info-calendar-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -502,39 +514,45 @@
     <div id="special-event-container" style="grid-column: 1 / -1;"></div>
     <div id="urgent-news-container" style="display: none; margin-bottom: 1.5rem;"></div>
 
-    <div class="top-news-section">
-        <h2><i class="fas fa-bullhorn"></i> News & Updates</h2>
-        <div id="top-news-list">
-            <p style="color: #888; font-size: 0.85rem;"><i class="fas fa-spinner fa-spin"></i> お知らせを読み込んでいます...</p>
-        </div>
-        <div class="news-more-link">
-            <a href="news.html">お知らせ一覧・詳細を見る &rarr;</a>
-        </div>
-    </div>
-
-    <!-- イベントカレンダーセクション（コンパクト＆サイズ調整可能） -->
-    <div class="calendar-section">
-        <div class="calendar-header">
-            <h2><i class="fas fa-calendar-alt"></i> Event Calendar</h2>
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <span id="calendar-month-title" class="calendar-month-title">2026年 12月</span>
-                <div class="calendar-nav-btns">
-                    <button class="calendar-nav-btn" id="prev-month-btn" title="前月"><i class="fas fa-chevron-left"></i></button>
-                    <button class="calendar-nav-btn" id="next-month-btn" title="次月"><i class="fas fa-chevron-right"></i></button>
+    <!-- ニュースとカレンダーを横並び（半分ずつ）にするラッパーグリッド -->
+    <div class="info-calendar-grid">
+        <!-- ニュースセクション -->
+        <div class="top-news-section">
+            <div>
+                <h2><i class="fas fa-bullhorn"></i> News & Updates</h2>
+                <div id="top-news-list">
+                    <p style="color: #888; font-size: 0.85rem;"><i class="fas fa-spinner fa-spin"></i> お知らせを読み込んでいます...</p>
                 </div>
             </div>
+            <div class="news-more-link">
+                <a href="news.html">お知らせ一覧・詳細を見る &rarr;</a>
+            </div>
         </div>
-        <div class="calendar-grid">
-            <div class="calendar-day-header">日</div>
-            <div class="calendar-day-header">月</div>
-            <div class="calendar-day-header">火</div>
-            <div class="calendar-day-header">水</div>
-            <div class="calendar-day-header">木</div>
-            <div class="calendar-day-header">金</div>
-            <div class="calendar-day-header">土</div>
+
+        <!-- イベントカレンダーセクション -->
+        <div class="calendar-section">
+            <div class="calendar-header">
+                <h2><i class="fas fa-calendar-alt"></i> Event Calendar</h2>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span id="calendar-month-title" class="calendar-month-title">2026年 12月</span>
+                    <div class="calendar-nav-btns">
+                        <button class="calendar-nav-btn" id="prev-month-btn" title="前月"><i class="fas fa-chevron-left"></i></button>
+                        <button class="calendar-nav-btn" id="next-month-btn" title="次月"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="calendar-grid">
+                <div class="calendar-day-header">日</div>
+                <div class="calendar-day-header">月</div>
+                <div class="calendar-day-header">火</div>
+                <div class="calendar-day-header">水</div>
+                <div class="calendar-day-header">木</div>
+                <div class="calendar-day-header">金</div>
+                <div class="calendar-day-header">土</div>
+            </div>
+            <div id="calendar-days-grid" class="calendar-grid" style="margin-top: 2px;"></div>
+            <div id="calendar-event-details" class="calendar-event-details"></div>
         </div>
-        <div id="calendar-days-grid" class="calendar-grid" style="margin-top: 3px;"></div>
-        <div id="calendar-event-details" class="calendar-event-details"></div>
     </div>
 
     <div class="grid">
@@ -903,14 +921,12 @@
                     }
                 }
 
-                // 重要度5、またはカテゴリ名に緊急・重要が含まれるものをピックアップ
                 const catLower = categoryName.toLowerCase();
                 if (importance >= 5 || catLower.includes('緊急') || catLower.includes('重要')) {
                     urgentItems.push({ ...item, date: dateStr, category: categoryName, importance });
                 }
             });
 
-            // 緊急・重要アラートの表示（最新の1件）
             if (urgentItems.length > 0) {
                 const topU = urgentItems[0];
                 const isUrgent = topU.importance >= 5 || topU.category.toLowerCase().includes('緊急');
@@ -951,7 +967,7 @@
                     <div class="news-item-summary">
                         <div class="news-meta-line">
                             <span class="news-date">${dateStr}</span>
-                            <span style="background:${tagBg}; font-size:0.65rem; padding:1px 6px; border-radius:4px; font-weight:bold; color:${tagCol};">${categoryName.toUpperCase()}</span>
+                            <span style="background:${tagBg}; font-size:0.6rem; padding:1px 5px; border-radius:4px; font-weight:bold; color:${tagCol};">${categoryName.toUpperCase()}</span>
                         </div>
                         <p class="news-title-text">${DOMPurify.sanitize(item.title)}</p>
                     </div>
