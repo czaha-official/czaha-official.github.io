@@ -92,7 +92,7 @@ jobs:
             echo "        SERVICE_DOMAIN: '${{ secrets.MICROCMS_SERVICE_DOMAIN }}'," >> config.js
             echo "        API_KEY: '${{ secrets.MICROCMS_API_KEY }}'," >> config.js
             echo "        ENDPOINT: '${{ secrets.MICROCMS_ENDPOINT }}'," >> config.js
-            echo "        CATEGORY_ENDPOINT: 'cat'" >> config.js
+            echo "        CATEGORY_ENDPOINT: 'blog_categories'" >> config.js
             echo "    }," >> config.js
             echo "    news: {" >> config.js
             echo "        SERVICE_DOMAIN: '${{ secrets.MICROCMS_SERVICE_DOMAIN }}'," >> config.js
