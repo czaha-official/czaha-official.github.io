@@ -136,7 +136,7 @@
             <div class="sidebar-widget">
                 <h3><i class="fas fa-tags"></i> Categories</h3>
                 <ul class="category-list" id="category-list">
-                    <!-- microCMSから取得したカテゴリを動的に表示 -->
+                    <!-- microCMS (blog_categories) から取得したカテゴリを動的に表示 -->
                 </ul>
             </div>
         </div>
@@ -182,7 +182,7 @@
         });
     }
 
-// ★ IIFE（即時実行関数）とDOM削除による厳格なメモリ・証拠隠滅設計
+    // ★ IIFE（即時実行関数）とDOM削除による厳格なメモリ・証拠隠滅設計
     (async function() {
         const blogContainer = document.getElementById('blog-container');
         const categoryList = document.getElementById('category-list');
@@ -196,12 +196,13 @@
         };
 
         try {
-            // 1. ネストされた構造（window.CONFIG.blog）から設定値を安全にローカル変数へ退避
+            // 1. 設定値を安全にローカル変数へ退避（blogオブジェクト対応 + 互換フォールバック）
             const rawConfig = window.CONFIG || {};
-            const blogConfig = rawConfig.blog || {}; // ブログ用設定を取得
+            const blogConfig = rawConfig.blog || rawConfig;
             const domain = blogConfig.SERVICE_DOMAIN;
             const apiKey = blogConfig.API_KEY;
-            const endpoint = blogConfig.ENDPOINT || 'blogs'; // microCMSのブログ用エンドポイント名
+            const endpoint = blogConfig.ENDPOINT || 'blogs';
+            const catEndpoint = blogConfig.CATEGORY_ENDPOINT || 'blog_categories';
 
             // 2. windowオブジェクトから設定を完全に消去
             window.CONFIG = undefined;
@@ -222,53 +223,64 @@
                 return;
             }
 
-            // 4. microCMSからデータをフェッチ
-            const response = await fetch(`https://${domain}.microcms.io/api/v1/${endpoint}?orders=-publishedAt`, {
-                headers: {
-                    'X-MICROCMS-API-KEY': apiKey
-                }
-            });
+            // 4. microCMSから記事一覧(blogs)とカテゴリー一覧(blog_categories)を並行フェッチ
+            const [response, catResponse] = await Promise.all([
+                fetch(`https://${domain}.microcms.io/api/v1/${endpoint}?orders=-publishedAt`, {
+                    headers: { 'X-MICROCMS-API-KEY': apiKey }
+                }),
+                fetch(`https://${domain}.microcms.io/api/v1/${catEndpoint}?limit=100`, {
+                    headers: { 'X-MICROCMS-API-KEY': apiKey }
+                }).catch(() => null)
+            ]);
 
             if (!response.ok) throw new Error('APIの取得に失敗しました');
 
             const data = await response.json();
             const posts = data.contents;
 
-            if (!posts || posts.length === 0) {
-                showCardMessage('<p style="color:#888; margin:0;">まだ記事がありません。</p>');
-                return;
+            // blog_categories エンドポイントからカテゴリー名一覧を構築
+            const categories = new Set();
+            if (catResponse && catResponse.ok) {
+                const catData = await catResponse.json();
+                (catData.contents || []).forEach(c => {
+                    const name = c.name || c.title;
+                    if (name) categories.add(name);
+                });
             }
 
-            blogContainer.innerHTML = '';
-            const categories = new Set();
+            if (!posts || posts.length === 0) {
+                showCardMessage('<p style="color:#888; margin:0;">まだ記事がありません。</p>');
+            } else {
+                blogContainer.innerHTML = '';
 
-            posts.forEach(post => {
-                const dateStr = post.publishedAt ? post.publishedAt.split('T')[0] : (post.createdAt ? post.createdAt.split('T')[0] : '');
-                const title = post.title || '無題';
-                const contentHtml = post.content || '';
-                const eyecatchUrl = post.eyecatch && post.eyecatch.url ? post.eyecatch.url : '';
-                const categoryName = post.category && (post.category.name || post.category.title) ? (post.category.name || post.category.title) : '未分類';
-                categories.add(categoryName);
+                posts.forEach(post => {
+                    const dateStr = post.publishedAt ? post.publishedAt.split('T')[0] : (post.createdAt ? post.createdAt.split('T')[0] : '');
+                    const title = post.title || '無題';
+                    const contentHtml = post.content || '';
+                    const eyecatchUrl = post.eyecatch && post.eyecatch.url ? post.eyecatch.url : '';
+                    const categoryName = post.category && (post.category.name || post.category.title) ? (post.category.name || post.category.title) : '未分類';
+                    categories.add(categoryName);
 
-                const article = document.createElement('article');
-                article.className = 'post-card';
+                    const article = document.createElement('article');
+                    article.className = 'post-card';
 
-                const imageTag = eyecatchUrl ? `<img src="${DOMPurify.sanitize(eyecatchUrl)}" alt="${DOMPurify.sanitize(title)}" class="post-thumbnail">` : '';
+                    const imageTag = eyecatchUrl ? `<img src="${DOMPurify.sanitize(eyecatchUrl)}" alt="${DOMPurify.sanitize(title)}" class="post-thumbnail">` : '';
 
-                article.innerHTML = `
-                    ${imageTag}
-                    <div class="post-header">
-                        <h2 class="post-title">${DOMPurify.sanitize(title)}</h2>
-                        <div class="post-meta">
-                            <span><i class="far fa-calendar-alt"></i> ${dateStr}</span>
-                            <span class="post-category"><i class="fas fa-folder"></i> ${DOMPurify.sanitize(categoryName)}</span>
+                    article.innerHTML = `
+                        ${imageTag}
+                        <div class="post-header">
+                            <h2 class="post-title">${DOMPurify.sanitize(title)}</h2>
+                            <div class="post-meta">
+                                <span><i class="far fa-calendar-alt"></i> ${dateStr}</span>
+                                <span class="post-category"><i class="fas fa-folder"></i> ${DOMPurify.sanitize(categoryName)}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="post-body">${DOMPurify.sanitize(contentHtml)}</div>
-                `;
+                        <div class="post-body">${DOMPurify.sanitize(contentHtml)}</div>
+                    `;
 
-                blogContainer.appendChild(article);
-            });
+                    blogContainer.appendChild(article);
+                });
+            }
 
             categoryList.replaceChildren();
             categories.forEach(cat => {
@@ -287,6 +299,7 @@
             showCardMessage(`
                 <p style="color:#e74c3c; margin:0; line-height: 1.8;">
                     <i class="fas fa-exclamation-triangle"></i> ブログ記事の読み込みに失敗しました。<br>
+                    <span style="font-size:0.85em; color:#666;">管理人に問い合わせるか当該リポジトリのissueにバグとして追加してください。</span>
                 </p>
             `);
         }

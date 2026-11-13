@@ -9,6 +9,8 @@
     <link rel="canonical" href="https://czaha-official.github.io/news.html">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- セキュリティ対策: DOMPurify -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
     
     <style>
         :root {
@@ -86,6 +88,7 @@
         }
 
         .news-card.has-link { cursor: pointer; }
+        .news-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.07); }
         .news-card.border-urgent { border-left-color: #e74c3c; }
         .news-card.border-important { border-left-color: #e67e22; }
 
@@ -102,16 +105,14 @@
             color: var(--primary-color);
         }
 
-        /* カテゴリ毎の色設定 */
+        /* カテゴリ毎・重要度毎の色設定 */
         .badge-info { background: #e3f2fd; color: #1976d2; }
-        .badge-update { background: #e8f5e9; color: #2e7d32; }
-        .badge-release { background: #e8f8f5; color: #1abc9c; }
-        .badge-event { background: #fff3e0; color: #e65100; }
-        .badge-urgent { background: #fadbd8; color: #78281f; } /* 赤：緊急 */
-        .badge-important { background: #fdebd0; color: #7e5109; } /* 橙：重要 */
+        .badge-urgent { background: #fadbd8; color: #78281f; } /* 重要度5など */
+        .badge-important { background: #fdebd0; color: #7e5109; } /* 重要度4など */
 
         .news-title { margin: 0 0 0.8rem 0; font-size: 1.25rem; color: var(--primary-color); }
-        .news-body { font-size: 0.92rem; color: #555; margin: 0; white-space: pre-wrap; word-break: break-word; }
+        .news-body { font-size: 0.92rem; color: #555; margin: 0; line-height: 1.75; word-break: break-word; }
+        .news-body p { margin: 0.4rem 0; }
 
         .news-link-btn {
             display: inline-flex;
@@ -125,7 +126,9 @@
             font-size: 0.85rem;
             text-decoration: none;
             font-weight: bold;
+            transition: background 0.2s;
         }
+        .news-link-btn:hover { background: #e2e8f0; }
 
         footer {
             background: var(--primary-color);
@@ -151,7 +154,7 @@
 
 <div class="container">
     <div id="all-news-list" class="news-list">
-        <p style="text-align: center; padding: 2rem; color: #666;">お知らせを読み込んでいます...</p>
+        <p style="text-align: center; padding: 2rem; color: #666;"><i class="fas fa-spinner fa-spin"></i> お知らせを読み込んでいます...</p>
     </div>
 </div>
 
@@ -172,9 +175,11 @@
     </div>
 </footer>
 
+<!-- 外部設定ファイル（ビルド時にシークレットから生成） -->
+<script src="config.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- 簡易Markdown & URL自動リンク変換用ヘルパー関数 ---
         function safeHttpUrl(value) {
             try {
                 const url = new URL(value, window.location.href);
@@ -182,136 +187,160 @@
             } catch { return null; }
         }
 
-        function appendFormattedText(parent, inputText) {
-            const text = inputText || '';
-            const tokenRegex = /(https?:\/\/[^\s]+|\*\*[^*]+\*\*)/g;
-            let lastIndex = 0;
-            for (const match of text.matchAll(tokenRegex)) {
-                parent.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
-                const token = match[0];
-                if (token.startsWith('**')) {
-                    const strong = document.createElement('strong');
-                    strong.textContent = token.slice(2, -2);
-                    parent.appendChild(strong);
-                } else {
-                    const url = safeHttpUrl(token);
-                    if (url) {
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.target = '_blank';
-                        link.rel = 'noopener noreferrer';
-                        link.style.cssText = 'color: inherit; text-decoration: underline;';
-                        link.textContent = token;
-                        parent.appendChild(link);
-                    } else {
-                        parent.appendChild(document.createTextNode(token));
-                    }
-                }
-                lastIndex = match.index + token.length;
-            }
-            parent.appendChild(document.createTextNode(text.slice(lastIndex)));
+        function formatJstDate(isoString) {
+            if (!isoString) return '';
+            const d = new Date(isoString);
+            if (isNaN(d.getTime())) return isoString.split('T')[0];
+            const jst = new Date(d.getTime() + (9 * 60 * 60 * 1000));
+            return jst.toISOString().split('T')[0];
         }
 
-        fetch('news-data.txt')
-            .then(res => res.text())
-            .then(text => {
-                const container = document.getElementById('all-news-list');
-                container.replaceChildren();
-                const items = text.split('---').map(b => b.trim()).filter(b => b.length > 0);
+        // --- microCMS (news / news-category) 取得処理 ---
+        (async function() {
+            const container = document.getElementById('all-news-list');
 
-                if (items.length === 0) {
-                    const empty = document.createElement('p');
-                    empty.style.cssText = 'text-align: center; color: #666;';
-                    empty.textContent = '現在お知らせはありません。';
-                    container.appendChild(empty);
+            const showMessage = (msg, isError = false) => {
+                container.replaceChildren();
+                const p = document.createElement('p');
+                p.style.cssText = `text-align: center; padding: 2rem; color: ${isError ? '#e74c3c' : '#666'};`;
+                p.textContent = msg;
+                container.appendChild(p);
+            };
+
+            try {
+                const rawConfig = window.CONFIG || {};
+                const newsConfig = rawConfig.news || {};
+                const domain = newsConfig.SERVICE_DOMAIN;
+                const apiKey = newsConfig.API_KEY;
+                const endpoint = newsConfig.ENDPOINT || 'news';
+
+                // セキュリティ対策：取得後直ちにグローバル変数とscriptタグを破棄
+                window.CONFIG = undefined;
+                delete window.CONFIG;
+                const configScript = document.querySelector('script[src="config.js"]');
+                if (configScript) configScript.remove();
+
+                if (!domain || !apiKey) {
+                    showMessage('設定が読み込めませんでした。', true);
                     return;
                 }
 
-                items.forEach(itemStr => {
-                    let date = '', category = 'INFO', title = '', link = '', btnText = '詳細を見る';
-                    let bodyLines = [];
-                    let currentTag = '';
+                // microCMSからお知らせ一覧をフェッチ（publishedAt降順）
+                const response = await fetch(`https://${domain}.microcms.io/api/v1/${endpoint}?orders=-publishedAt&limit=100`, {
+                    headers: { 'X-MICROCMS-API-KEY': apiKey }
+                });
 
-                    itemStr.split('\n').forEach(line => {
-                        const trimmed = line.trim();
-                        if (trimmed.startsWith('[DATE]')) { date = trimmed.replace('[DATE]', '').trim(); currentTag = 'DATE'; }
-                        else if (trimmed.startsWith('[CATEGORY]')) { category = trimmed.replace('[CATEGORY]', '').trim(); currentTag = 'CATEGORY'; }
-                        else if (trimmed.startsWith('[TITLE]')) { title = trimmed.replace('[TITLE]', '').trim(); currentTag = 'TITLE'; }
-                        else if (trimmed.startsWith('[LINK]')) {
-                            const linkRaw = trimmed.replace('[LINK]', '').trim();
-                            if (linkRaw.includes('|')) {
-                                const parts = linkRaw.split('|');
-                                link = parts[0].trim();
-                                btnText = parts[1].trim();
-                            } else { link = linkRaw; }
-                            currentTag = 'LINK';
-                        }
-                        else if (trimmed.startsWith('[BODY]')) { bodyLines.push(trimmed.replace('[BODY]', '').trim()); currentTag = 'BODY'; }
-                        else if (currentTag === 'BODY' && trimmed !== '') { bodyLines.push(trimmed); }
-                    });
+                if (!response.ok) throw new Error('APIの取得に失敗しました');
 
-                    const body = bodyLines.join('\n');
-                    const catLower = category.toLowerCase();
+                const data = await response.json();
+                const items = data.contents || [];
+
+                if (items.length === 0) {
+                    showMessage('現在お知らせはありません。');
+                    return;
+                }
+
+                container.replaceChildren();
+
+                items.forEach(item => {
+                    const dateStr = formatJstDate(item.publishedAt || item.createdAt);
                     
-                    let catLabel = category.toUpperCase();
+                    // カテゴリ情報と重要度（importance: 1〜5）の抽出
+                    let categoryName = 'INFO';
+                    let importance = 1; // デフォルト重要度
+                    
+                    if (item.category) {
+                        if (typeof item.category === 'object') {
+                            categoryName = item.category.name || item.category.title || 'INFO';
+                            if (item.category.importance !== undefined) {
+                                importance = Number(item.category.importance) || 1;
+                            }
+                        } else {
+                            categoryName = String(item.category);
+                        }
+                    }
+
+                    let catLabel = categoryName;
                     let extraCardClass = '';
-                    if (catLower === 'urgent') { catLabel = '緊急'; extraCardClass = 'border-urgent'; }
-                    else if (catLower === 'important') { catLabel = '重要'; extraCardClass = 'border-important'; }
+
+                    // 重要度（1〜5、将来の通知機能や重要度5＝重要などに対応）
+                    if (importance >= 5) {
+                        catLabel = categoryName; // または「重要」など
+                        extraCardClass = 'border-urgent';
+                    } else if (importance === 4) {
+                        extraCardClass = 'border-important';
+                    }
+
+                    const title = item.title || '無題のお知らせ';
+                    const bodyHtml = item.content || item.body || '';
+                    
+                    // URL_ON-OFF が true の場合のみ product フィールドをリンクとして扱う
+                    const hasUrl = item['URL_ON-OFF'] === true;
+                    const linkUrl = hasUrl && item.product ? item.product : '';
+                    const safeCardLink = linkUrl ? safeHttpUrl(linkUrl) : null;
 
                     const card = document.createElement('article');
-                    card.className = `news-card ${extraCardClass} ${link ? 'has-link' : ''}`;
+                    card.className = `news-card ${extraCardClass} ${safeCardLink ? 'has-link' : ''}`;
 
-                    const safeCardLink = safeHttpUrl(link);
                     if (safeCardLink) {
                         card.addEventListener('click', (e) => {
-                            if (e.target.tagName !== 'A') window.location.href = safeCardLink;
+                            if (!e.target.closest('a')) {
+                                window.open(safeCardLink, '_blank', 'noopener,noreferrer');
+                            }
                         });
                     }
 
                     const meta = document.createElement('div');
                     meta.className = 'news-meta';
+
                     const dateEl = document.createElement('span');
                     dateEl.className = 'news-date';
-                    dateEl.textContent = date;
+                    dateEl.textContent = dateStr;
+
                     const badge = document.createElement('span');
-                    badge.className = `badge badge-${catLower.replace(/[^a-z0-9_-]/gi, '')}`;
+                    badge.className = `badge ${importance >= 5 ? 'badge-urgent' : (importance === 4 ? 'badge-important' : 'badge-info')}`;
                     badge.textContent = catLabel;
+
                     meta.append(dateEl, badge);
+
                     const titleEl = document.createElement('h2');
                     titleEl.className = 'news-title';
-                    appendFormattedText(titleEl, title);
-                    const bodyEl = document.createElement('p');
+                    titleEl.textContent = title;
+
+                    const bodyEl = document.createElement('div');
                     bodyEl.className = 'news-body';
-                    appendFormattedText(bodyEl, body);
+                    bodyEl.innerHTML = DOMPurify.sanitize(bodyHtml);
+
                     card.append(meta, titleEl, bodyEl);
-                    const safeLink = safeHttpUrl(link);
-                    if (safeLink) {
+
+                    // URL_ON-OFF が有効でリンクがある場合のみ詳細ボタンを表示
+                    if (safeCardLink) {
                         const linkWrap = document.createElement('div');
                         linkWrap.style.textAlign = 'left';
+
                         const linkEl = document.createElement('a');
-                        linkEl.href = safeLink;
+                        linkEl.href = safeCardLink;
                         linkEl.target = '_blank';
                         linkEl.rel = 'noopener noreferrer';
                         linkEl.className = 'news-link-btn';
-                        linkEl.textContent = btnText;
+                        linkEl.textContent = '詳細を見る';
+
                         const arrow = document.createElement('i');
                         arrow.className = 'fas fa-arrow-right';
                         linkEl.append(' ', arrow);
+
                         linkWrap.appendChild(linkEl);
                         card.appendChild(linkWrap);
                     }
+
                     container.appendChild(card);
                 });
-            })
-            .catch(err => {
-                console.error(err);
-                const container = document.getElementById('all-news-list');
-                container.replaceChildren();
-                const error = document.createElement('p');
-                error.style.cssText = 'text-align: center; color: #666;';
-                error.textContent = 'お知らせの読み込みに失敗しました。';
-                container.appendChild(error);
-            });
+
+            } catch (err) {
+                console.error('News Load Error:', err);
+                showMessage('お知らせの読み込みに失敗しました。', true);
+            }
+        })();
     });
 </script>
 </body>
