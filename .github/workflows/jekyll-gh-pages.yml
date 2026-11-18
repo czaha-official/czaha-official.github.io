@@ -28,37 +28,34 @@ jobs:
         env:
           MAINTENANCE_SERVICE_DOMAIN: ${{ secrets.MAINTENANCE_SERVICE_DOMAIN }}
           MAINTENANCE_API_KEY: ${{ secrets.MAINTENANCE_API_KEY }}
-          MAINTENANCE_ENDPOINT: ${{ secrets.MAINTENANCE_MAINTENANCE_ENDPOINT }}
+          # ★ タイポ修正（MAINTENANCE_MAINTENANCE_ENDPOINT -> MAINTENANCE_ENDPOINT）
+          MAINTENANCE_ENDPOINT: ${{ secrets.MAINTENANCE_ENDPOINT }}
         run: |
           RESPONSE=$(curl -s "https://${MAINTENANCE_SERVICE_DOMAIN}.microcms.io/api/v1/${MAINTENANCE_ENDPOINT}" \
             -H "X-MICROCMS-API-KEY: ${MAINTENANCE_API_KEY}")
           
           echo "API Response: $RESPONSE"
           
-          SCHEDULE_END=$(echo "$RESPONSE" | jq -r '.schedule_end // empty')
+          # ★ オブジェクト形式・リスト形式どちらでも取得できるよう修正
+          SCHEDULE_END=$(echo "$RESPONSE" | jq -r '.schedule_end // .contents[0].schedule_end // empty')
           
           NOW_EPOCH=$(date +%s)
           ACTIVE=false
 
           if [ -n "$SCHEDULE_END" ] && [ "$SCHEDULE_END" != "null" ]; then
             END_EPOCH=$(date -d "$SCHEDULE_END" +%s 2>/dev/null || echo 0)
+            echo "Now: $NOW_EPOCH / End: $END_EPOCH"
             if [ "$NOW_EPOCH" -lt "$END_EPOCH" ]; then
               ACTIVE=true
             fi
           fi
 
-          TRIGGER_EVENT="${{ github.event_name }}"
-          
-          if [ "$ACTIVE" = "false" ] && [ "$TRIGGER_EVENT" == "schedule" ]; then
-            echo "✨ Normal state and triggered by schedule. Skipping."
-            echo "skip=true" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
           echo "skip=false" >> $GITHUB_OUTPUT
           if [ "$ACTIVE" = "true" ]; then
+            echo "🚧 Maintenance Mode Active"
             echo "status=maintenance" >> $GITHUB_OUTPUT
           else
+            echo "✨ Normal Mode Active"
             echo "status=normal" >> $GITHUB_OUTPUT
           fi
 
@@ -68,8 +65,6 @@ jobs:
         with:
           ref: ${{ steps.check-maintenance.outputs.status == 'maintenance' && 'under_maintenance' || 'main' }}
 
-      # ★ モード（メンテナンス or 通常）に応じて config.js を完全に分離して生成
-     # ★ 構造を変えず、EVENT_SYS_* シークレットを追加して config.js を生成
       - name: Generate config.js from Secrets
         if: steps.check-maintenance.outputs.skip != 'true'
         env:
@@ -80,32 +75,37 @@ jobs:
         run: |
           if [ "$STATUS" = "maintenance" ]; then
             echo "Generating config for Maintenance Mode..."
-            echo "window.CONFIG = {" > config.js
-            echo "    SERVICE_DOMAIN: '${{ secrets.MAINTENANCE_SERVICE_DOMAIN }}'," >> config.js
-            echo "    API_KEY: '${{ secrets.MAINTENANCE_API_KEY }}'," >> config.js
-            echo "    ENDPOINT: '${{ secrets.MAINTENANCE_MAINTENANCE_ENDPOINT }}'" >> config.js
-            echo "};" >> config.js
+            cat <<EOF > config.js
+          window.CONFIG = {
+              SERVICE_DOMAIN: '${{ secrets.MAINTENANCE_SERVICE_DOMAIN }}',
+              API_KEY: '${{ secrets.MAINTENANCE_API_KEY }}',
+              ENDPOINT: '${{ secrets.MAINTENANCE_ENDPOINT }}'
+          };
+          EOF
           else
             echo "Generating config for Normal Mode..."
-            echo "window.CONFIG = {" > config.js
-            echo "    blog: {" >> config.js
-            echo "        SERVICE_DOMAIN: '${{ secrets.MICROCMS_SERVICE_DOMAIN }}'," >> config.js
-            echo "        API_KEY: '${{ secrets.MICROCMS_API_KEY }}'," >> config.js
-            echo "        ENDPOINT: '${{ secrets.MICROCMS_ENDPOINT }}'," >> config.js
-            echo "        CATEGORY_ENDPOINT: 'blog_categories'" >> config.js
-            echo "    }," >> config.js
-            echo "    news: {" >> config.js
-            echo "        SERVICE_DOMAIN: '${{ secrets.MICROCMS_SERVICE_DOMAIN }}'," >> config.js
-            echo "        API_KEY: '${{ secrets.MICROCMS_API_KEY }}'," >> config.js
-            echo "        ENDPOINT: 'news'" >> config.js
-            echo "    }," >> config.js
-            echo "    event: {" >> config.js
-            echo "        SERVICE_DOMAIN: '$EVENT_SERVICE_DOMAIN'," >> config.js
-            echo "        API_KEY: '$EVENT_API_KEY'," >> config.js
-            echo "        ENDPOINT: '$EVENT_ENDPOINT'" >> config.js
-            echo "    }" >> config.js
-            echo "};" >> config.js
+            cat <<EOF > config.js
+          window.CONFIG = {
+              blog: {
+                  SERVICE_DOMAIN: '${{ secrets.MICROCMS_SERVICE_DOMAIN }}',
+                  API_KEY: '${{ secrets.MICROCMS_API_KEY }}',
+                  ENDPOINT: '${{ secrets.MICROCMS_ENDPOINT }}',
+                  CATEGORY_ENDPOINT: 'blog_categories'
+              },
+              news: {
+                  SERVICE_DOMAIN: '${{ secrets.MICROCMS_SERVICE_DOMAIN }}',
+                  API_KEY: '${{ secrets.MICROCMS_API_KEY }}',
+                  ENDPOINT: 'news'
+              },
+              event: {
+                  SERVICE_DOMAIN: '$EVENT_SERVICE_DOMAIN',
+                  API_KEY: '$EVENT_API_KEY',
+                  ENDPOINT: '$EVENT_ENDPOINT'
+              }
+          };
+          EOF
           fi
+
       - name: Setup Pages
         if: steps.check-maintenance.outputs.skip != 'true'
         uses: actions/configure-pages@v5
