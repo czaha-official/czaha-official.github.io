@@ -23,7 +23,7 @@ jobs:
       status: ${{ steps.check-maintenance.outputs.status }}
       skip: ${{ steps.check-maintenance.outputs.skip }}
     steps:
-     - name: Check Maintenance Schedule via microCMS
+      - name: Check Maintenance Schedule via microCMS
         id: check-maintenance
         env:
           MAINTENANCE_SERVICE_DOMAIN: ${{ secrets.MAINTENANCE_SERVICE_DOMAIN }}
@@ -35,7 +35,6 @@ jobs:
           
           echo "API Response: $RESPONSE"
           
-          # 正しいフィールドID（schedule と schedule_end）を参照
           SCHEDULE_START=$(echo "$RESPONSE" | jq -r '.schedule // .contents[0].schedule // empty')
           SCHEDULE_END=$(echo "$RESPONSE" | jq -r '.schedule_end // .contents[0].schedule_end // empty')
           
@@ -46,16 +45,13 @@ jobs:
             START_EPOCH=$(date -d "$SCHEDULE_START" +%s 2>/dev/null || echo 0)
             echo "Now: $NOW_EPOCH / Start: $START_EPOCH"
 
-            # 現在時刻が開始日時を過ぎているかチェック
             if [ "$START_EPOCH" -gt 0 ] && [ "$NOW_EPOCH" -ge "$START_EPOCH" ]; then
               if [ -z "$SCHEDULE_END" ] || [ "$SCHEDULE_END" = "null" ]; then
-                # 終了日時が未設定（未定）の場合はメンテナンス継続
                 echo "End time is undecided (null/empty)."
                 ACTIVE=true
               else
                 END_EPOCH=$(date -d "$SCHEDULE_END" +%s 2>/dev/null || echo 0)
                 echo "End: $END_EPOCH"
-                # 終了日時より前であればメンテナンス中
                 if [ "$NOW_EPOCH" -lt "$END_EPOCH" ]; then
                   ACTIVE=true
                 fi
@@ -88,7 +84,7 @@ jobs:
         run: |
           if [ "$STATUS" = "maintenance" ]; then
             echo "Generating config for Maintenance Mode..."
-            cat <<EOF > config.js
+            cat << 'EOF' > config.js
           window.CONFIG = {
               SERVICE_DOMAIN: '${{ secrets.MAINTENANCE_SERVICE_DOMAIN }}',
               API_KEY: '${{ secrets.MAINTENANCE_API_KEY }}',
@@ -97,7 +93,7 @@ jobs:
           EOF
           else
             echo "Generating config for Normal Mode..."
-            cat <<EOF > config.js
+            cat << 'EOF' > config.js
           window.CONFIG = {
               blog: {
                   SERVICE_DOMAIN: '${{ secrets.MICROCMS_SERVICE_DOMAIN }}',
