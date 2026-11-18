@@ -28,15 +28,13 @@ jobs:
         env:
           MAINTENANCE_SERVICE_DOMAIN: ${{ secrets.MAINTENANCE_SERVICE_DOMAIN }}
           MAINTENANCE_API_KEY: ${{ secrets.MAINTENANCE_API_KEY }}
-          # ★ タイポ修正（MAINTENANCE_MAINTENANCE_ENDPOINT -> MAINTENANCE_ENDPOINT）
-          MAINTENANCE_ENDPOINT: ${{ secrets.MAINTENANCE_ENDPOINT }}
+          MAINTENANCE_ENDPOINT: ${{ secrets.MAINTENANCE_MAINTENANCE_ENDPOINT }}
         run: |
           RESPONSE=$(curl -s "https://${MAINTENANCE_SERVICE_DOMAIN}.microcms.io/api/v1/${MAINTENANCE_ENDPOINT}" \
             -H "X-MICROCMS-API-KEY: ${MAINTENANCE_API_KEY}")
           
           echo "API Response: $RESPONSE"
           
-          # ★ オブジェクト形式・リスト形式どちらでも取得できるよう修正
           SCHEDULE_END=$(echo "$RESPONSE" | jq -r '.schedule_end // .contents[0].schedule_end // empty')
           
           NOW_EPOCH=$(date +%s)
@@ -52,10 +50,10 @@ jobs:
 
           echo "skip=false" >> $GITHUB_OUTPUT
           if [ "$ACTIVE" = "true" ]; then
-            echo "🚧 Maintenance Mode Active"
+            echo "Maintenance Mode Active"
             echo "status=maintenance" >> $GITHUB_OUTPUT
           else
-            echo "✨ Normal Mode Active"
+            echo "Normal Mode Active"
             echo "status=normal" >> $GITHUB_OUTPUT
           fi
 
@@ -79,7 +77,7 @@ jobs:
           window.CONFIG = {
               SERVICE_DOMAIN: '${{ secrets.MAINTENANCE_SERVICE_DOMAIN }}',
               API_KEY: '${{ secrets.MAINTENANCE_API_KEY }}',
-              ENDPOINT: '${{ secrets.MAINTENANCE_ENDPOINT }}'
+              ENDPOINT: '${{ secrets.MAINTENANCE_MAINTENANCE_ENDPOINT }}'
           };
           EOF
           else
