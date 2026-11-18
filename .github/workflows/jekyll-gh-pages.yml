@@ -1,0 +1,132 @@
+name: Deploy Jekyll with GitHub Pages dependencies preinstalled
+
+on:
+  push:
+    branches: ["main", "under_maintenance"]
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.check-maintenance.outputs.status }}
+      skip: ${{ steps.check-maintenance.outputs.skip }}
+    steps:
+      - name: Check Maintenance Schedule via microCMS
+        id: check-maintenance
+        env:
+          MAINTENANCE_SERVICE_DOMAIN: ${{ secrets.MAINTENANCE_SERVICE_DOMAIN }}
+          MAINTENANCE_API_KEY: ${{ secrets.MAINTENANCE_API_KEY }}
+          MAINTENANCE_ENDPOINT: ${{ secrets.MAINTENANCE_MAINTENANCE_ENDPOINT }}
+        run: |
+          RESPONSE=$(curl -s "https://${MAINTENANCE_SERVICE_DOMAIN}.microcms.io/api/v1/${MAINTENANCE_ENDPOINT}" \
+            -H "X-MICROCMS-API-KEY: ${MAINTENANCE_API_KEY}")
+          
+          echo "API Response: $RESPONSE"
+          
+          SCHEDULE_END=$(echo "$RESPONSE" | jq -r '.schedule_end // .contents[0].schedule_end // empty')
+          
+          NOW_EPOCH=$(date +%s)
+          ACTIVE=false
+
+          if [ -n "$SCHEDULE_END" ] && [ "$SCHEDULE_END" != "null" ]; then
+            END_EPOCH=$(date -d "$SCHEDULE_END" +%s 2>/dev/null || echo 0)
+            echo "Now: $NOW_EPOCH / End: $END_EPOCH"
+            if [ "$NOW_EPOCH" -lt "$END_EPOCH" ]; then
+              ACTIVE=true
+            fi
+          fi
+
+          echo "skip=false" >> $GITHUB_OUTPUT
+          if [ "$ACTIVE" = "true" ]; then
+            echo "🚧 Maintenance Mode Active"
+            echo "status=maintenance" >> $GITHUB_OUTPUT
+          else
+            echo "✨ Normal Mode Active"
+            echo "status=normal" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Checkout appropriate branch
+        if: steps.check-maintenance.outputs.skip != 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.check-maintenance.outputs.status == 'maintenance' && 'under_maintenance' || 'main' }}
+
+      - name: Generate config.js from Secrets
+        if: steps.check-maintenance.outputs.skip != 'true'
+        env:
+          STATUS: ${{ steps.check-maintenance.outputs.status }}
+          EVENT_SERVICE_DOMAIN: ${{ secrets.EVENT_SYS_SERVICE_DOMAIN }}
+          EVENT_API_KEY: ${{ secrets.EVENT_SYS_API_KEY }}
+          EVENT_ENDPOINT: ${{ secrets.EVENT_SYS_ENDPOINT }}
+        run: |
+          if [ "$STATUS" = "maintenance" ]; then
+            echo "Generating config for Maintenance Mode..."
+            cat <<EOF > config.js
+          window.CONFIG = {
+              SERVICE_DOMAIN: '${{ secrets.MAINTENANCE_SERVICE_DOMAIN }}',
+              API_KEY: '${{ secrets.MAINTENANCE_API_KEY }}',
+              ENDPOINT: '${{ secrets.MAINTENANCE_MAINTENANCE_ENDPOINT }}'
+          };
+          EOF
+          else
+            echo "Generating config for Normal Mode..."
+            cat <<EOF > config.js
+          window.CONFIG = {
+              blog: {
+                  SERVICE_DOMAIN: '${{ secrets.MICROCMS_SERVICE_DOMAIN }}',
+                  API_KEY: '${{ secrets.MICROCMS_API_KEY }}',
+                  ENDPOINT: '${{ secrets.MICROCMS_ENDPOINT }}',
+                  CATEGORY_ENDPOINT: 'blog_categories'
+              },
+              news: {
+                  SERVICE_DOMAIN: '${{ secrets.MICROCMS_SERVICE_DOMAIN }}',
+                  API_KEY: '${{ secrets.MICROCMS_API_KEY }}',
+                  ENDPOINT: 'news'
+              },
+              event: {
+                  SERVICE_DOMAIN: '$EVENT_SERVICE_DOMAIN',
+                  API_KEY: '$EVENT_API_KEY',
+                  ENDPOINT: '$EVENT_ENDPOINT'
+              }
+          };
+          EOF
+          fi
+
+      - name: Setup Pages
+        if: steps.check-maintenance.outputs.skip != 'true'
+        uses: actions/configure-pages@v5
+
+      - name: Build with Jekyll
+        if: steps.check-maintenance.outputs.skip != 'true'
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+
+      - name: Upload artifact
+        if: steps.check-maintenance.outputs.skip != 'true'
+        uses: actions/upload-pages-artifact@v3
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    if: needs.build.outputs.skip != 'true'
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
