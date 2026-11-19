@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 検索エンジン除外が必要な場合（LINE用等）は下の行のコメントアウトを外してください -->
+<meta name="robots" content="noindex, nofollow"> 
+    <title>利用規約 | C'zaha Chell Tia's Official Site</title>
+
+    <meta name="description" content="C'zaha Chell Tia(ザハ)の公式サイト 公式SNSアカウント用ガイドラインページです。">
+    
+    <!-- Marked.js（Markdownパーサー） -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f0f2f5;
+            --text-color: #2c3e50;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            line-height: 1.7;
+            margin: 0;
+            color: var(--text-color);
+            background: linear-gradient(135deg, #f0f2f5 0%, #e0e6ed 100%);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        nav.top-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            padding: 10px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-back-link {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logo-area img { height: 30px; width: auto; }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a252f 100%);
+            color: var(--white);
+            padding: 4rem 1rem 6rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+        }
+
+        header h1 { font-size: 2rem; margin: 0; }
+        header p { margin: 0.5rem 0 0; color: #bdc3c7; font-size: 0.95rem; }
+
+        .container {
+            max-width: 900px;
+            width: 90%;
+            margin: -20px auto 0;
+            padding: 0 0 3rem 0;
+            flex-grow: 1;
+        }
+
+        /* 記事カード風のコンテナ */
+        .policy-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            border-left: 5px solid var(--accent-color);
+        }
+
+        /* Markdown描画内容のスタイル調整 */
+        .policy-content h1 { font-size: 1.6rem; color: var(--primary-color); border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; margin-top: 0; }
+        .policy-content h2 { font-size: 1.25rem; color: var(--primary-color); border-left: 4px solid var(--accent-color); padding-left: 10px; margin-top: 2rem; }
+        .policy-content h3 { font-size: 1.1rem; color: var(--primary-color); margin-top: 1.5rem; }
+        .policy-content p { margin: 1em 0; color: #444; word-break: break-word; }
+        .policy-content ul, .policy-content ol { padding-left: 1.5rem; color: #444; }
+        .policy-content li { margin-bottom: 0.5rem; }
+        .policy-content blockquote { border-left: 4px solid #cbd5e1; margin: 1rem 0; padding-left: 1rem; color: #64748b; background: #f8fafc; padding: 10px; border-radius: 0 8px 8px 0; }
+        .policy-content code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; color: #e11d48; }
+        .policy-content a { color: var(--accent-color); text-decoration: underline; font-weight: bold; }
+
+        footer {
+            background: var(--primary-color);
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-top: 3rem;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+<!--<nav class="top-nav">
+    <a href="../index.html" class="nav-back-link"><i class="fas fa-arrow-left"></i> ホームに戻る</a>
+    <div class="logo-area"><img id="site-logo" src="../logo.png" alt="warudora logo"></div>
+</nav> -->
+
+<header>
+    <h1>Guidelines for viewing zaha's LINE account</h1>
+    <p>ザハのLINEアカウント閲覧に関するガイドライン</p>
+</header>
+
+<div class="container">
+    <article class="policy-card">
+        <!-- Markdownが自動でパースされ、ここに反映されます -->
+        <div id="markdown-output" class="policy-content">
+            <p style="color: #666; text-align: center;">読み込み中...</p>
+        </div>
+    </article>
+</div>
+
+<!-- ↓↓↓ ここにMarkdownを直接記述してください ↓↓↓ -->
+<textarea id="markdown-src" style="display: none;">
+# プライベートLINE・実生活上の接触に関する利用ガイドライン
+
+**制定・改定日：令和8年11月20日**
+
+本ガイドラインは、C'zaha Chell tiaに関係する当方のプライベートLINEアカウント（以下「本アカウント」といいます。）におけるやり取り、および当方との実生活上の接触に関する基本的な条件、禁止事項、対応方針を定めるものです。
+
+本ガイドラインは、当方および関係者の安全、プライバシー、円滑なコミュニケーションを確保することを目的とします。
+
+---
+
+## 第1条（適用範囲および同意）
+
+1. 本ガイドラインは、本アカウントへの友達登録、メッセージの送受信、通話、その他本アカウントを通じた一切のやり取りに適用されます。
+2. また、当方との実生活上の接触において、本ガイドラインに定める迷惑行為、嫌がらせ、脅迫、その他安全を損なう行為があった場合にも、当方は本ガイドラインの趣旨に基づき対応することがあります。
+3. 本アカウントを継続的に利用する者は、本ガイドラインの内容を確認し、これを遵守するものとします。
+4. 本ガイドラインは、法令上認められる権利や正当な意見表明を不当に制限するものではありません。
+
+## 第2条（友達登録の対象者および利用条件）
+
+1. 当方のプライベートLINEアカウントへの友達登録は、原則として、当方が本人および関係性を確認できる関係者に限定します。
+2. 友達登録を認める対象者は、主に以下の関係にある者とします。
+
+   - 友人・親友
+   - クラスメイト・クラス仲間
+   - 先輩・後輩
+   - 身内・親族
+   - 部活動の仲間
+   - その他、当方が適切と判断した関係者
+
+3. 上記に該当する場合であっても、本人確認ができない場合や、安全上の懸念がある場合には、友達登録を認めないことがあります。
+4. 友達登録は、当方が承認した場合に限り成立するものとし、登録申請を行ったことのみをもって登録が保証されるものではありません。
+5. 当方は、必要に応じて友達登録の承認を取り消し、または登録を拒否することができます。
+
+## 第3条（LINE利用規約等の遵守）
+
+1. 利用者は、本ガイドラインに加え、LINEヤフー株式会社が定める利用規約、プライバシーポリシーおよび関連ガイドラインを遵守するものとします。
+2. LINEの利用規約等に違反する行為が確認された場合、当方はその内容および影響を考慮し、本アカウントの利用制限等を行うことがあります。
+3. LINEの公式規約への違反が疑われる場合であっても、当方は事実関係を確認したうえで対応を判断します。
+
+## 第4条（本人確認およびなりすましの禁止）
+
+1. 本人、友人、知人、関係者その他の第三者になりすます行為を禁止します。
+2. 年齢、氏名、所属、関係性その他の属性について、意図的に虚偽の申告を行い、当方との接触や友達登録を試みる行為を禁止します。
+3. なりすまし、またはその合理的な疑いがある場合、当方は追加の本人確認を求めることがあります。
+4. 本人確認は、原則として、既存の連絡手段、本人からの説明、当方が既に把握している情報等を用いて、必要かつ相当な範囲で実施します。
+5. 電話連絡や対面による確認を行う場合は、状況に応じて本人の意思や安全に配慮します。学校、友人、所属団体等の第三者に対する確認は、正当な必要性があり、適法かつ相当な方法で実施できる場合に限ります。
+6. 本人確認に応じない場合や、確認結果に重大な不整合がある場合には、友達登録の拒否、利用制限、登録解除等の措置を行うことがあります。
+
+## 第5条（禁止事項）
+
+利用者は、本アカウントおよび当方との実生活上の接触において、以下の行為を行ってはなりません。
+
+1. 意味のない文字列の大量送信、不要な連投、スタンプの連続送信など、相手の意思に反する迷惑なメッセージ送信。
+2. 返信を強要する行為、執拗な連絡、拒否された後の継続的な接触。
+3. 宗教、政治、思想その他の勧誘・宣伝活動を、相手の意思に反して執拗に行う行為。
+4. ヘイト、差別的言動、侮辱、暴言、過度な煽り、脅迫、誹謗中傷、名誉や信用を不当に傷つける行為。
+5. スパム、詐欺、虚偽情報の流布、悪意あるリンクやファイルの送信。
+6. 氏名、所属、関係性その他の属性について、虚偽の申告を行う行為。
+7. 当方または関係者の個人情報、連絡先、会話内容、画像等を、本人の同意なく不適切に公開・拡散する行為。
+8. 当方または関係者へのつきまとい、待ち伏せ、無断訪問、執拗な接触その他の安全や平穏を脅かす行為。
+9. 本アカウントの利用を妨害する行為、または当方の管理・運用を不当に妨げる行為。
+10. その他、当方または関係者に対して重大な迷惑や危険を生じさせる行為。
+11. 公序良俗に反する性的・猥褻な表現、成人向けの内容、過度に刺激的または不快感を与える画像・動画・音声・文章等の送信、投稿および共有。
+12. 特定の人物や作品等を題材とした、不適切なインターネットミーム、下品な定型文、性的・猥褻なパロディその他これらに類する表現の送信、投稿および共有。
+13. 当方または関係者が不快感や拒否の意思を示した表現を、繰り返し提示・送信する行為。
+
+これらの禁止事項は、LINE上のやり取りに限らず、当方との実生活上の接触において行われた場合にも適用されます。
+
+## 第6条（違反時の対応および利用制限）
+
+1. 利用者が本ガイドラインに違反した場合、当方は違反の内容、悪質性、継続性、被害の程度、再発のおそれ等を総合的に考慮し、必要な措置を講じることがあります。
+2. 措置には、以下のものが含まれます。
+
+   - 注意、警告、改善要請
+   - メッセージへの返信停止
+   - LINE上でのブロック
+   - 友達登録の解除
+   - 当方との連絡・接触の制限または停止
+   - 当方が管理・提供するサービスの利用制限またはアカウント停止
+   - 悪質性や再発のおそれが高い場合の永久的な利用拒否
+   - 必要性および技術的な実施可能性を確認したうえでのIPアドレス等によるアクセス制限
+
+3. 重大な違反、脅迫、なりすまし、継続的な嫌がらせ、その他安全上の緊急性が高い行為については、事前の警告を行わず、直ちにブロック、登録解除、サービス利用停止等を実施することがあります。
+4. 当方が提供するサービスに登録していない者であっても、本人であることおよび利用拒否を必要とする合理的な理由が確認された場合には、将来の利用申請を拒否することがあります。
+5. 外部コミュニティ等から提供された注意喚起や違反情報を判断材料とする場合は、情報の信頼性、具体性、関連性を確認し、当方自身の判断と責任において対応を決定します。
+6. 利用制限等は、当方が管理・提供する範囲に限って実施するものであり、第三者が管理するサービスやコミュニティに対して処分を強制するものではありません。
+
+## 第7条（実生活上の関係および接触の停止）
+
+1. 当方は、迷惑行為、嫌がらせ、脅迫、信頼関係を著しく損なう行為等が確認された場合、実生活上の連絡や交流を停止することがあります。
+2. 必要に応じて、会話、連絡、共同活動その他の関係を終了し、今後の接触を拒否することがあります。
+3. 当方が接触を拒否した後も、繰り返し接触を試みる行為は、状況に応じて追加の対応の対象となります。
+4. 当方は、自身および関係者の安全を確保するため、合理的に必要な範囲で接触を制限します。
+
+## 第8条（処分に対する申し出および再確認）
+
+1. 利用制限、登録解除その他の措置について、事実誤認や本人の取り違え等があると考える場合、利用者は当方に対して再確認を申し出ることができます。
+2. 当方は、申し出の内容を確認し、必要に応じて判断を再検討します。
+3. ただし、脅迫、嫌がらせ、執拗な連絡、虚偽の主張、業務妨害等を伴う申し出や、既に回答した内容を合理的な理由なく繰り返す行為については、対応を制限または終了することがあります。
+4. 再確認の申し出を行ったことのみを理由として、利用制限等が自動的に解除されるものではありません。
+5. 安全上の懸念がある場合、再確認の期間中も既存の利用制限等を継続することがあります。
+
+## 第9条（連絡情報および個人情報の取り扱い）
+
+1. 当方は、本アカウントの管理、本人確認、安全確保、迷惑行為への対応、再接触の防止等に必要な範囲で、連絡情報その他の個人情報を取り扱います。
+2. 友達登録の解除やブロック、アカウントの削除等が行われた場合であっても、対応の経緯や安全確保のために必要な情報については、必要性が認められる期間、適切に保管することがあります。
+3. 保管期間は、利用目的、情報の性質、トラブルの内容、法令上の必要性等を考慮して定め、保管する必要がなくなった情報は、適切な方法で削除または廃棄します。
+4. 個人情報へのアクセスは、管理上必要な範囲に制限し、不正な閲覧、漏えい、改ざん等を防止するため、合理的な安全管理措置を講じます。
+5. 個人情報の取り扱いについて、本ガイドラインに定めのない事項は、当方が別途定めるプライバシーポリシーに従います。
+
+## 第10条（反社会的勢力の排除および法的対応）
+
+1. 反社会的勢力との関与、悪質な詐欺、脅迫、業務妨害、名誉毀損、その他重大な違法行為が確認された場合、当方は関係の遮断、サービス利用拒否等の必要な措置を講じます。
+2. 犯罪行為またはそのおそれがある場合、当方は証拠や状況を確認したうえで、警察、弁護士その他の適切な機関への相談・通報を行うことがあります。
+3. 法的措置については、事案の内容および証拠等を踏まえ、法令に従って判断します。
+
+## 第11条（免責および責任の範囲）
+
+1. 当方は、法令上認められる範囲において、本アカウントの利用または利用者間のやり取りに関連して発生した損害について、責任を負わない場合があります。
+2. ただし、当方の故意または過失、法令違反その他当方に責任が認められる場合についてまで、一律に責任を免れるものではありません。
+3. LINEヤフー株式会社その他第三者が提供するサービスの障害、仕様変更、利用制限等については、当方が管理できない範囲において責任を負いかねます。
+
+## 第12条（ガイドラインの改定）
+
+1. 当方は、法令、サービスの運用状況、安全上の必要性等に応じて、本ガイドラインを改定することがあります。
+2. 重要な変更を行う場合は、必要に応じて当方が適切と判断する方法で周知します。
+3. 改定後のガイドラインは、別途定める適用日から適用されます。
+
+制定者：C'zaha Chell tia
+
+以上
+</textarea>
+
+<footer>
+    <p class="sqex-copyright">
+        アカウントアイコン、ロードストーンツールチップ、ファンキット等の素材の著作権はスクウェア・エニックスに帰属します。<br>
+        &copy; SQUARE ENIX
+    </p>
+    <a href="https://czaha-official.github.io/policies/terms-of-use/zaha-services" class="link-btn" target="_blank" rel="noopener noreferrer" style="color: #ffffff; border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.1);">
+        <i class="fas fa-file-alt"></i> 利用規約
+    </a>
+    <a href="https://czaha-official.github.io/policies/privacy-policies/services-privacy-policy" class="link-btn" target="_blank" rel="noopener noreferrer" style="color: #ffffff; border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.1);">
+        <i class="fas fa-file-alt"></i> プライバシーポリシー
+    </a>
+
+    <p style="margin-top: 15px;">&copy; <span id="current-year"></span> warudora / C'zaha Chell tia. All Rights Reserved.</p>
+
+    <div style="margin-top: 15px; font-size: 0.7rem; color: #a0a0a0; display: flex; flex-direction: column; gap: 4px; align-items: center;">
+        <div><span style="color: #3498db; font-weight: bold;">Japanituremod Developers</span></div>
+        <div><span style="font-weight: bold; color: #d0d0d0;">warudora:</span> 5H1H0 Engineer / Admin of MJaS</div>
+        <div><span style="font-weight: bold; color: #d0d0d0;">C'zaha Chell tia:</span> Independent Developer / Admin of MJX|JMC / Trumpet Player / YTE Translator</div>
+        <div style="margin-top: 4px;">Based by <a href="https://warudora.github.io" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: underline;">warudora's Portfolio</a></div>
+        <div style="margin-top: 6px; font-size: 0.65rem; color: #888888; max-width: 600px; text-align: center;">
+            ※演奏依頼は原則お断りしております（所属団体およびその姉妹団体からのご依頼を除く）。<br>
+            このサイト内の画像コンテンツをAIに学習させる行為はおやめください。 
+        </div>
+    </div>
+</footer>
+
+<script>
+    const siteLogo = document.getElementById('site-logo');
+    if (siteLogo) {
+        siteLogo.addEventListener('error', event => {
+            event.currentTarget.src = 'https://via.placeholder.com/200x50?text=WARUDORA+LOGO';
+        }, { once: true });
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        const mdSrc = document.getElementById('markdown-src').value;
+        const output = document.getElementById('markdown-output');
+        
+        function safeMarkdownFragment(markup) {
+            const parsed = new DOMParser().parseFromString(markup, 'text/html');
+            const allowedTags = new Set(['A', 'BLOCKQUOTE', 'BR', 'CODE', 'DEL', 'EM', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'HR', 'LI', 'OL', 'P', 'PRE', 'STRONG', 'TABLE', 'TBODY', 'TD', 'TH', 'THEAD', 'TR', 'UL']);
+            const dangerousTags = parsed.body.querySelectorAll('script, iframe, object, embed, style, link, form');
+            dangerousTags.forEach(element => element.remove());
+            parsed.body.querySelectorAll('*').forEach(element => {
+                if (!allowedTags.has(element.tagName)) {
+                    while (element.firstChild) element.parentNode.insertBefore(element.firstChild, element);
+                    element.remove();
+                    return;
+                }
+                Array.from(element.attributes).forEach(attribute => {
+                    const name = attribute.name.toLowerCase();
+                    if (name.startsWith('on') || name === 'style' || !['class', 'href', 'title', 'target', 'rel'].includes(name)) element.removeAttribute(attribute.name);
+                    if (name === 'href') {
+                        try {
+                            const url = new URL(attribute.value, window.location.href);
+                            if (!['http:', 'https:'].includes(url.protocol)) element.removeAttribute(attribute.name);
+                        } catch { element.removeAttribute(attribute.name); }
+                    }
+                });
+            });
+            const fragment = document.createDocumentFragment();
+            while (parsed.body.firstChild) fragment.appendChild(parsed.body.firstChild);
+            return fragment;
+        }
+        if (mdSrc && typeof marked !== 'undefined') {
+            output.replaceChildren(safeMarkdownFragment(marked.parse(mdSrc)));
+        } else {
+            const error = document.createElement('p');
+            error.style.color = '#e74c3c';
+            error.textContent = 'コンテンツの読み込みに失敗しました。';
+            output.replaceChildren(error);
+        }
+    });
+</script>
+</body>
+</html>
