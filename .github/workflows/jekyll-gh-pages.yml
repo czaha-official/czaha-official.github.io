@@ -32,12 +32,12 @@ jobs:
         run: |
           RESPONSE=$(curl -s "https://${MAINTENANCE_SERVICE_DOMAIN}.microcms.io/api/v1/${MAINTENANCE_ENDPOINT}" \
             -H "X-MICROCMS-API-KEY: ${MAINTENANCE_API_KEY}")
-          
+
           echo "API Response: $RESPONSE"
-          
+
           SCHEDULE_START=$(echo "$RESPONSE" | jq -r '.schedule // .contents[0].schedule // empty')
           SCHEDULE_END=$(echo "$RESPONSE" | jq -r '.schedule_end // .contents[0].schedule_end // empty')
-          
+
           NOW_EPOCH=$(date +%s)
           ACTIVE=false
 
@@ -61,10 +61,10 @@ jobs:
 
           echo "skip=false" >> $GITHUB_OUTPUT
           if [ "$ACTIVE" = "true" ]; then
-            echo "🚧 Maintenance Mode Active"
+            echo "Maintenance Mode Active"
             echo "status=maintenance" >> $GITHUB_OUTPUT
           else
-            echo "✨ Normal Mode Active"
+            echo "Normal Mode Active"
             echo "status=normal" >> $GITHUB_OUTPUT
           fi
 
@@ -84,7 +84,7 @@ jobs:
         run: |
           if [ "$STATUS" = "maintenance" ]; then
             echo "Generating config for Maintenance Mode..."
-            cat << 'EOF' > config.js
+            cat <<EOF > config.js
           window.CONFIG = {
               SERVICE_DOMAIN: '${{ secrets.MAINTENANCE_SERVICE_DOMAIN }}',
               API_KEY: '${{ secrets.MAINTENANCE_API_KEY }}',
@@ -93,7 +93,7 @@ jobs:
           EOF
           else
             echo "Generating config for Normal Mode..."
-            cat << 'EOF' > config.js
+            cat <<EOF > config.js
           window.CONFIG = {
               blog: {
                   SERVICE_DOMAIN: '${{ secrets.MICROCMS_SERVICE_DOMAIN }}',
@@ -107,9 +107,9 @@ jobs:
                   ENDPOINT: 'news'
               },
               event: {
-                  SERVICE_DOMAIN: '$EVENT_SERVICE_DOMAIN',
-                  API_KEY: '$EVENT_API_KEY',
-                  ENDPOINT: '$EVENT_ENDPOINT'
+                  SERVICE_DOMAIN: '${EVENT_SERVICE_DOMAIN}',
+                  API_KEY: '${EVENT_API_KEY}',
+                  ENDPOINT: '${EVENT_ENDPOINT}'
               }
           };
           EOF
